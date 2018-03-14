@@ -5,6 +5,29 @@
     <UserSecretsId>aspnet-Fault_handling_system-96BE7559-A836-41EB-A131-55052B7D97F2</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20180314124216_FirstReportPrototypeMigration.cs" />
+    <Compile Remove="Data\Migrations\20180314124216_FirstReportPrototypeMigration.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180314125603_FirstReportPrototypeMigration.cs" />
+    <Compile Remove="Data\Migrations\20180314125603_FirstReportPrototypeMigration.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180314130155_FirstReportPrototypeMigration.cs" />
+    <Compile Remove="Data\Migrations\20180314130155_FirstReportPrototypeMigration.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180314130438_FirstReportPrototypeMigration.cs" />
+    <Compile Remove="Data\Migrations\20180314130438_FirstReportPrototypeMigration.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180314130758_FirstReportPrototypeMigration.cs" />
+    <Compile Remove="Data\Migrations\20180314130758_FirstReportPrototypeMigration.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180314130917_FirstReportPrototypeMigration.cs" />
+    <Compile Remove="Data\Migrations\20180314130917_FirstReportPrototypeMigration.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180314131247_FirstReportPrototypeMigration.cs" />
+    <Compile Remove="Data\Migrations\20180314131247_FirstReportPrototypeMigration.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180314131432_FirstReportPrototypeMigration.cs" />
+    <Compile Remove="Data\Migrations\20180314131432_FirstReportPrototypeMigration.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180314131745_FirstReportPrototypeMigration.cs" />
+    <Compile Remove="Data\Migrations\20180314131745_FirstReportPrototypeMigration.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180314133645_FirstReportPrototypeMigration.cs" />
+    <Compile Remove="Data\Migrations\20180314133645_FirstReportPrototypeMigration.Designer.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />

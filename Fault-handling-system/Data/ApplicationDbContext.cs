@@ -22,5 +22,11 @@ namespace Fault_handling_system.Data
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
         }
-    }
+
+		public DbSet<Report> Report { get; set; }
+		public DbSet<Zone> Zone { get; set; }
+		public DbSet<EtrType> EtrType { get; set; }
+		public DbSet<EtrStatus> EtrStatus { get; set; }
+		public DbSet<TroubleType> TroubleType { get; set; }
+	}
 }
