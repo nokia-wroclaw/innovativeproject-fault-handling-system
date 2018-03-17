@@ -27,6 +27,5 @@ namespace Fault_handling_system.Data
 		public DbSet<Zone> Zone { get; set; }
 		public DbSet<EtrType> EtrType { get; set; }
 		public DbSet<EtrStatus> EtrStatus { get; set; }
-		public DbSet<TroubleType> TroubleType { get; set; }
 	}
 }

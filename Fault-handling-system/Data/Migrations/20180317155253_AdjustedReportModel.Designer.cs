@@ -11,9 +11,10 @@ using System;
 namespace Fault_handling_system.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180317155253_AdjustedReportModel")]
+    partial class AdjustedReportModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -109,8 +110,7 @@ namespace Fault_handling_system.Data.Migrations
                     b.Property<string>("EtrDescription")
                         .IsRequired();
 
-                    b.Property<string>("EtrNumber")
-                        .IsRequired();
+                    b.Property<string>("EtrNumber");
 
                     b.Property<string>("EtrStatusStatus")
                         .IsRequired();
