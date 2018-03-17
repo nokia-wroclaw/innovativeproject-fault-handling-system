@@ -3,16 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MailKit.Net.Imap;
-using MailKit.Search;
-using MailKit;
-using MimeKit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Fault_handling_system.Data;
 using Fault_handling_system.Models;
@@ -44,39 +41,9 @@ namespace Fault_handling_system
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddSingleton<IHostedService, MailboxFetcherService>();
 
             services.AddMvc();
-
-            ThreadPool.QueueUserWorkItem(delegate {
-                while (true) {
-                    _logger.LogInformation("Checking mailbox...");
-
-                    using (var client = new ImapClient()) {
-                        // For demo-purposes, accept all SSL certificates
-                        client.ServerCertificateValidationCallback = (s,c,h,e) => true;
-
-                        client.Connect("imap.poczta.onet.pl", 993, true);
-
-                        client.Authenticate("pwr.fhs@onet.pl", "FaultHandlingSystem1");
-
-                        var inbox = client.Inbox;
-                        inbox.Open(FolderAccess.ReadOnly);
-
-                        _logger.LogInformation("Total messages: {0}", inbox.Count);
-                        _logger.LogInformation("Recent messages: {0}", inbox.Recent);
-
-                        for (int i = 0; i < inbox.Count; ++i) {
-                            var message = inbox.GetMessage(i);
-                            _logger.LogInformation("Subject: {0}", message.Subject);
-                        }
-
-                        client.Disconnect(true);
-                    }
-
-                    _logger.LogInformation("Finished checking. Next check after a while...");
-                    Thread.Sleep(15000);
-                }
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
