@@ -27,8 +27,8 @@ namespace Fault_handling_system.Services
             stoppingToken.Register(() => 
                     _logger.LogDebug("Mail fetcher task is stopping..."));
 
-            IMailboxFetcher fetcher = new MailboxFetcher(_logger,
-                     "imap.poczta.onet.pl", 993, true,
+            IMailboxFetcher fetcher = new MailboxFetcher(_logger);
+            fetcher.Configure("imap.poczta.onet.pl", 993, true,
                      "pwr.fhs@onet.pl", "FaultHandlingSystem1");
 
             while (!stoppingToken.IsCancellationRequested) {
