@@ -12,14 +12,14 @@ namespace Fault_handling_system.Services
 {
     public class MailboxFetcher : IMailboxFetcher
     {
-        private readonly ILogger<MailboxFetcherService> _logger;
+        private readonly ILogger<MailboxFetcher> _logger;
         private string _host;
         private int _port;
         private bool _useSSL;
         private string _username;
         private string _password;
 
-        public MailboxFetcher(ILogger<MailboxFetcherService> logger)
+        public MailboxFetcher(ILogger<MailboxFetcher> logger)
         {
             _logger = logger;
             _logger.LogInformation("Constructed MailboxFetcher");
