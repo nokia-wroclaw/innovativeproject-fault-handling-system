@@ -14,12 +14,15 @@ namespace Fault_handling_system.Services
     {
         private readonly ILogger<MailboxFetcherService> _logger;
         private readonly MailboxFetcherSettings _settings;
+        private readonly IMailboxFetcher _fetcher;
 
         public MailboxFetcherService(IOptions<MailboxFetcherSettings> settings,
-                                     ILogger<MailboxFetcherService> logger)
+                                     ILogger<MailboxFetcherService> logger,
+                                     IMailboxFetcher fetcher)
         {
             _logger = logger;
             _settings = settings.Value;
+            _fetcher = fetcher;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -27,12 +30,11 @@ namespace Fault_handling_system.Services
             stoppingToken.Register(() => 
                     _logger.LogDebug("Mail fetcher task is stopping..."));
 
-            IMailboxFetcher fetcher = new MailboxFetcher(_logger);
-            fetcher.Configure("imap.poczta.onet.pl", 993, true,
+            _fetcher.Configure("imap.poczta.onet.pl", 993, true,
                      "pwr.fhs@onet.pl", "FaultHandlingSystem1");
 
             while (!stoppingToken.IsCancellationRequested) {
-                await fetcher.FetchMailbox();
+                await _fetcher.FetchMailbox();
                 int checkInterval = _settings.CheckInterval;
                 _logger.LogInformation("Next check after {0} s...", checkInterval);
                 await Task.Delay(checkInterval * 1000, stoppingToken);

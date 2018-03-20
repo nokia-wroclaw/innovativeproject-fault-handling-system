@@ -42,6 +42,7 @@ namespace Fault_handling_system
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddSingleton<IHostedService, MailboxFetcherService>();
+            services.AddSingleton<IMailboxFetcher, MailboxFetcher>();
 
             services.AddMvc();
         }
