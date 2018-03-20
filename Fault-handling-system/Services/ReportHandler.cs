@@ -16,14 +16,14 @@ namespace Fault_handling_system.Services
             _logger.LogInformation("Constructed ReportHandler");
         }
 
-        public Task HandleReportAsync(string sender, string subject, string message)
+        public bool HandleReport(string sender, string subject, string message)
         {
             _logger.LogInformation("Handling report:\n" +
                                    "  Sender: {0}\n" +
                                    "  Subject: {1}",
                                    sender,
                                    subject);
-            return Task.CompletedTask;
+            return false;
         }
     }
 }
