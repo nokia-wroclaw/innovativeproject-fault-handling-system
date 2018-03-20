@@ -1,0 +1,137 @@
+﻿@model IEnumerable<Fault_handling_system.Models.Report>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.EtrNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NokiaCaseId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.RfaId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.RfaName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.AssignedTo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Priority)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Grade)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TroubleType)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DateIssued)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DateSent)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EtrToDes)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ClosingDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EtrDescription)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Comment)
+                </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NsnCoordinator)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Requestor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Subcontractor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Zone)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EtrNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NokiaCaseId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RfaId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RfaName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AssignedTo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Priority)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Grade)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TroubleType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateIssued)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateSent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EtrToDes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ClosingDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EtrDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NsnCoordinator.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Requestor.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Subcontractor.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Zone.Id)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
