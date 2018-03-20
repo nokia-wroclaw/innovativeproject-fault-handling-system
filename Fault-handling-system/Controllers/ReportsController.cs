@@ -57,7 +57,10 @@ namespace Fault_handling_system.Controllers
             ViewData["RequestorId"] = new SelectList(_context.Users, "UserName", "UserName");
             ViewData["SubcontractorId"] = new SelectList(_context.Users, "UserName", "UserName");
             ViewData["ZoneId"] = new SelectList(_context.Zone, "ZoneName", "ZoneName");
-            return View();
+			//---
+			ViewData["EtrType"] = new SelectList(_context.EtrType, "Type", "Type");
+			ViewData["EtrStatus"] = new SelectList(_context.EtrStatus, "Status", "Status");
+			return View();
         }
 
         // POST: Reports/Create
