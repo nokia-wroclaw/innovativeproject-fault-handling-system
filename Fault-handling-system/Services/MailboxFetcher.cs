@@ -7,6 +7,7 @@ using MailKit.Search;
 using MailKit;
 using MimeKit;
 using Microsoft.Extensions.Logging;
+using Fault_handling_system.Models;
 
 namespace Fault_handling_system.Services
 {
@@ -57,7 +58,31 @@ namespace Fault_handling_system.Services
 
                 for (int i = 0; i < inbox.Count; ++i) {
                     var message = inbox.GetMessage(i);
-                    _logger.LogInformation("Subject: {0}", message.Subject);
+
+                    string sender;
+                    string subject;
+                    string body;
+
+                    if (message.Sender != null)
+                        sender = message.Sender.Address;
+                    else
+                        sender = "<null>";
+                    if (message.Subject != null)
+                        subject = message.Subject;
+                    else
+                        subject = "<null>";
+                    if (message.Body != null)
+                        body  = message.Body.ToString();
+                    else
+                        body = "<null>";
+
+                    Report report = _reportParser.ParseReport(sender, subject, body);
+
+                    if (report != null) {
+
+                    } else {
+
+                    }
                 }
 
                 client.Disconnect(true);
