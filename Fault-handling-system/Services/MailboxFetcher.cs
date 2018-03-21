@@ -13,16 +13,19 @@ namespace Fault_handling_system.Services
     public class MailboxFetcher : IMailboxFetcher
     {
         private readonly ILogger<MailboxFetcher> _logger;
+        private readonly IReportParser _reportParser;
         private string _host;
         private int _port;
         private bool _useSSL;
         private string _username;
         private string _password;
 
-        public MailboxFetcher(ILogger<MailboxFetcher> logger)
+        public MailboxFetcher(ILogger<MailboxFetcher> logger,
+                              IReportParser reportParser)
         {
             _logger = logger;
             _logger.LogInformation("Constructed MailboxFetcher");
+            _reportParser = reportParser;
         }
 
         public void Configure(string host, int port, bool useSSL, string username, string password)
