@@ -11,9 +11,10 @@ using System;
 namespace Fault_handling_system.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180321171639_DebugReportModel2")]
+    partial class DebugReportModel2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,8 +77,7 @@ namespace Fault_handling_system.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Status")
-                        .IsRequired();
+                    b.Property<string>("Status");
 
                     b.HasKey("Id");
 
@@ -89,8 +89,7 @@ namespace Fault_handling_system.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Type")
-                        .IsRequired();
+                    b.Property<string>("Type");
 
                     b.HasKey("Id");
 
@@ -118,11 +117,17 @@ namespace Fault_handling_system.Data.Migrations
                     b.Property<string>("EtrNumber")
                         .IsRequired();
 
-                    b.Property<int>("EtrStatusId");
+                    b.Property<string>("EtrStatusId")
+                        .IsRequired();
+
+                    b.Property<int?>("EtrStatusId1");
 
                     b.Property<DateTime?>("EtrToDes");
 
-                    b.Property<int>("EtrTypeId");
+                    b.Property<string>("EtrTypeId")
+                        .IsRequired();
+
+                    b.Property<int?>("EtrTypeId1");
 
                     b.Property<int?>("Grade");
 
@@ -147,9 +152,9 @@ namespace Fault_handling_system.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EtrStatusId");
+                    b.HasIndex("EtrStatusId1");
 
-                    b.HasIndex("EtrTypeId");
+                    b.HasIndex("EtrTypeId1");
 
                     b.HasIndex("NsnCoordinatorId");
 
@@ -167,8 +172,7 @@ namespace Fault_handling_system.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ZoneName")
-                        .IsRequired();
+                    b.Property<string>("ZoneName");
 
                     b.HasKey("Id");
 
@@ -287,13 +291,11 @@ namespace Fault_handling_system.Data.Migrations
                 {
                     b.HasOne("Fault_handling_system.Models.EtrStatus", "EtrStatus")
                         .WithMany()
-                        .HasForeignKey("EtrStatusId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("EtrStatusId1");
 
                     b.HasOne("Fault_handling_system.Models.EtrType", "EtrType")
                         .WithMany()
-                        .HasForeignKey("EtrTypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("EtrTypeId1");
 
                     b.HasOne("Fault_handling_system.Models.ApplicationUser", "NsnCoordinator")
                         .WithMany()

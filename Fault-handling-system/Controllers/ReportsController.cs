@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Fault_handling_system.Data;
 using Fault_handling_system.Models;
-using System.Security.Claims;
 
 namespace Fault_handling_system.Controllers
 {
@@ -23,8 +22,7 @@ namespace Fault_handling_system.Controllers
         // GET: Reports
         public async Task<IActionResult> Index()
         {
-			var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-			var applicationDbContext = _context.Report.Include(r => r.NsnCoordinator).Include(r => r.Requestor).Include(r => r.Subcontractor).Include(r => r.Zone).Where(r => r.NsnCoordinatorId == userId || r.SubcontractorId == userId || r.RequestorId == userId);//added where
+            var applicationDbContext = _context.Report.Include(r => r.EtrStatus).Include(r => r.EtrType).Include(r => r.NsnCoordinator).Include(r => r.Requestor).Include(r => r.Subcontractor).Include(r => r.Zone);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -37,6 +35,8 @@ namespace Fault_handling_system.Controllers
             }
 
             var report = await _context.Report
+                .Include(r => r.EtrStatus)
+                .Include(r => r.EtrType)
                 .Include(r => r.NsnCoordinator)
                 .Include(r => r.Requestor)
                 .Include(r => r.Subcontractor)
@@ -53,14 +53,13 @@ namespace Fault_handling_system.Controllers
         // GET: Reports/Create
         public IActionResult Create()
         {
-            ViewData["NsnCoordinatorId"] = new SelectList(_context.Users, "UserName", "UserName");//Id,Id by default
-            ViewData["RequestorId"] = new SelectList(_context.Users, "UserName", "UserName");
-            ViewData["SubcontractorId"] = new SelectList(_context.Users, "UserName", "UserName");
-            ViewData["ZoneId"] = new SelectList(_context.Zone, "ZoneName", "ZoneName");
-			//---
-			ViewData["EtrType"] = new SelectList(_context.EtrType, "Type", "Type");
-			ViewData["EtrStatus"] = new SelectList(_context.EtrStatus, "Status", "Status");
-			return View();
+            ViewData["EtrStatusId"] = new SelectList(_context.EtrStatus, "Id", "Status");
+            ViewData["EtrTypeId"] = new SelectList(_context.EtrType, "Id", "Type");
+            ViewData["NsnCoordinatorId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["RequestorId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["SubcontractorId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["ZoneId"] = new SelectList(_context.Zone, "Id", "ZoneName");
+            return View();
         }
 
         // POST: Reports/Create
@@ -68,7 +67,7 @@ namespace Fault_handling_system.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,EtrNumber,NokiaCaseId,RfaId,RfaName,ZoneId,AssignedTo,Priority,RequestorId,NsnCoordinatorId,SubcontractorId,Grade,TroubleType,DateIssued,DateSent,EtrToDes,ClosingDate,EtrDescription,Comment")] Report report)
+        public async Task<IActionResult> Create([Bind("Id,EtrNumber,NokiaCaseId,RfaId,RfaName,ZoneId,AssignedTo,Priority,EtrTypeId,EtrStatusId,RequestorId,NsnCoordinatorId,SubcontractorId,Grade,TroubleType,DateIssued,DateSent,EtrToDes,ClosingDate,EtrDescription,Comment")] Report report)
         {
             if (ModelState.IsValid)
             {
@@ -76,10 +75,12 @@ namespace Fault_handling_system.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["EtrStatusId"] = new SelectList(_context.EtrStatus, "Id", "Status", report.EtrStatusId);
+            ViewData["EtrTypeId"] = new SelectList(_context.EtrType, "Id", "Type", report.EtrTypeId);
             ViewData["NsnCoordinatorId"] = new SelectList(_context.Users, "Id", "Id", report.NsnCoordinatorId);
             ViewData["RequestorId"] = new SelectList(_context.Users, "Id", "Id", report.RequestorId);
             ViewData["SubcontractorId"] = new SelectList(_context.Users, "Id", "Id", report.SubcontractorId);
-            ViewData["ZoneId"] = new SelectList(_context.Zone, "Id", "Id", report.ZoneId);
+            ViewData["ZoneId"] = new SelectList(_context.Zone, "Id", "ZoneName", report.ZoneId);
             return View(report);
         }
 
@@ -96,10 +97,12 @@ namespace Fault_handling_system.Controllers
             {
                 return NotFound();
             }
+            ViewData["EtrStatusId"] = new SelectList(_context.EtrStatus, "Id", "Status", report.EtrStatusId);
+            ViewData["EtrTypeId"] = new SelectList(_context.EtrType, "Id", "Type", report.EtrTypeId);
             ViewData["NsnCoordinatorId"] = new SelectList(_context.Users, "Id", "Id", report.NsnCoordinatorId);
             ViewData["RequestorId"] = new SelectList(_context.Users, "Id", "Id", report.RequestorId);
             ViewData["SubcontractorId"] = new SelectList(_context.Users, "Id", "Id", report.SubcontractorId);
-            ViewData["ZoneId"] = new SelectList(_context.Zone, "Id", "Id", report.ZoneId);
+            ViewData["ZoneId"] = new SelectList(_context.Zone, "Id", "ZoneName", report.ZoneId);
             return View(report);
         }
 
@@ -108,7 +111,7 @@ namespace Fault_handling_system.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,EtrNumber,NokiaCaseId,RfaId,RfaName,ZoneId,AssignedTo,Priority,RequestorId,NsnCoordinatorId,SubcontractorId,Grade,TroubleType,DateIssued,DateSent,EtrToDes,ClosingDate,EtrDescription,Comment")] Report report)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,EtrNumber,NokiaCaseId,RfaId,RfaName,ZoneId,AssignedTo,Priority,EtrTypeId,EtrStatusId,RequestorId,NsnCoordinatorId,SubcontractorId,Grade,TroubleType,DateIssued,DateSent,EtrToDes,ClosingDate,EtrDescription,Comment")] Report report)
         {
             if (id != report.Id)
             {
@@ -135,10 +138,12 @@ namespace Fault_handling_system.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["EtrStatusId"] = new SelectList(_context.EtrStatus, "Id", "Status", report.EtrStatusId);
+            ViewData["EtrTypeId"] = new SelectList(_context.EtrType, "Id", "Type", report.EtrTypeId);
             ViewData["NsnCoordinatorId"] = new SelectList(_context.Users, "Id", "Id", report.NsnCoordinatorId);
             ViewData["RequestorId"] = new SelectList(_context.Users, "Id", "Id", report.RequestorId);
             ViewData["SubcontractorId"] = new SelectList(_context.Users, "Id", "Id", report.SubcontractorId);
-            ViewData["ZoneId"] = new SelectList(_context.Zone, "Id", "Id", report.ZoneId);
+            ViewData["ZoneId"] = new SelectList(_context.Zone, "Id", "ZoneName", report.ZoneId);
             return View(report);
         }
 
@@ -151,6 +156,8 @@ namespace Fault_handling_system.Controllers
             }
 
             var report = await _context.Report
+                .Include(r => r.EtrStatus)
+                .Include(r => r.EtrType)
                 .Include(r => r.NsnCoordinator)
                 .Include(r => r.Requestor)
                 .Include(r => r.Subcontractor)

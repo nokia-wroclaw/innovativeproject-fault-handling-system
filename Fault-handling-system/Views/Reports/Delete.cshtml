@@ -96,6 +96,18 @@
             @Html.DisplayFor(model => model.Comment)
         </dd>
         <dt>
+            @Html.DisplayNameFor(model => model.EtrStatus)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EtrStatus.Status)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EtrType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EtrType.Type)
+        </dd>
+        <dt>
             @Html.DisplayNameFor(model => model.NsnCoordinator)
         </dt>
         <dd>
@@ -117,7 +129,7 @@
             @Html.DisplayNameFor(model => model.Zone)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Zone.Id)
+            @Html.DisplayFor(model => model.Zone.ZoneName)
         </dd>
     </dl>
     

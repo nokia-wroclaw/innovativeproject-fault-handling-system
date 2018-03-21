@@ -9,7 +9,8 @@ namespace Fault_handling_system.Models
     public class EtrStatus
     {
 		[Key]
-		//public int Id { get; set; }
+		public int Id { get; set; }
+		[Required]
 		public string Status { get; set; }
     }
 }

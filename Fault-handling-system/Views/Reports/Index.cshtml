@@ -55,6 +55,12 @@
                     @Html.DisplayNameFor(model => model.Comment)
                 </th>
             <th>
+                @Html.DisplayNameFor(model => model.EtrStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EtrType)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.NsnCoordinator)
             </th>
             <th>
@@ -115,6 +121,12 @@
                 @Html.DisplayFor(modelItem => item.Comment)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.EtrStatus.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EtrType.Type)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.NsnCoordinator.Id)
             </td>
             <td>
@@ -124,7 +136,7 @@
                 @Html.DisplayFor(modelItem => item.Subcontractor.Id)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Zone.Id)
+                @Html.DisplayFor(modelItem => item.Zone.ZoneName)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

@@ -10,6 +10,7 @@ namespace Fault_handling_system.Models
     {
 		[Key]
 		public int Id { get; set; }
+		[Required]
 		public string ZoneName { get; set; }
     }
 }

@@ -20,9 +20,11 @@ namespace Fault_handling_system.Models
 		public string AssignedTo { get; set; } //change to enum or make a model for it?
 		public string Priority { get; set; }
 		[Required]
-		public EtrType EtrType { get; set; }
+		public int EtrTypeId { get; set; }
+		public virtual EtrType EtrType { get; set; }
 		[Required]
-		public EtrStatus EtrStatus { get; set; }
+		public int EtrStatusId { get; set; }
+		public virtual EtrStatus EtrStatus { get; set; }
 		[Required]
 		public string RequestorId { get; set; } //ApplicationUser id's type is nvarchar
 		public virtual ApplicationUser Requestor { get; set; }
