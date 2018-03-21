@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Fault_handling_system.Data;
 using Fault_handling_system.Models;
+using System.Security.Claims;
 
 namespace Fault_handling_system.Controllers
 {
@@ -22,8 +23,17 @@ namespace Fault_handling_system.Controllers
         // GET: Reports
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Report.Include(r => r.EtrStatus).Include(r => r.EtrType).Include(r => r.NsnCoordinator).Include(r => r.Requestor).Include(r => r.Subcontractor).Include(r => r.Zone);
-            return View(await applicationDbContext.ToListAsync());
+			if (User.IsInRole("Admin")) //if user is admin they can view all reports
+			{
+				var applicationDbContext = _context.Report.Include(r => r.EtrStatus).Include(r => r.EtrType).Include(r => r.NsnCoordinator).Include(r => r.Requestor).Include(r => r.Subcontractor).Include(r => r.Zone);
+				return View(await applicationDbContext.ToListAsync());
+			}
+			else //otherwise they can view only those thery are enrolled in in any way
+			{
+				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+				var applicationDbContext = _context.Report.Include(r => r.EtrStatus).Include(r => r.EtrType).Include(r => r.NsnCoordinator).Include(r => r.Requestor).Include(r => r.Subcontractor).Include(r => r.Zone).Where(r => r.NsnCoordinatorId == userId || r.SubcontractorId == userId || r.RequestorId == userId);//added where
+				return View(await applicationDbContext.ToListAsync());
+			}
         }
 
         // GET: Reports/Details/5
@@ -55,9 +65,9 @@ namespace Fault_handling_system.Controllers
         {
             ViewData["EtrStatusId"] = new SelectList(_context.EtrStatus, "Id", "Status");
             ViewData["EtrTypeId"] = new SelectList(_context.EtrType, "Id", "Type");
-            ViewData["NsnCoordinatorId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["RequestorId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["SubcontractorId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["NsnCoordinatorId"] = new SelectList(_context.Users, "Id", "UserName");
+            ViewData["RequestorId"] = new SelectList(_context.Users, "Id", "UserName");
+            ViewData["SubcontractorId"] = new SelectList(_context.Users, "Id", "UserName");
             ViewData["ZoneId"] = new SelectList(_context.Zone, "Id", "ZoneName");
             return View();
         }
@@ -77,9 +87,9 @@ namespace Fault_handling_system.Controllers
             }
             ViewData["EtrStatusId"] = new SelectList(_context.EtrStatus, "Id", "Status", report.EtrStatusId);
             ViewData["EtrTypeId"] = new SelectList(_context.EtrType, "Id", "Type", report.EtrTypeId);
-            ViewData["NsnCoordinatorId"] = new SelectList(_context.Users, "Id", "Id", report.NsnCoordinatorId);
-            ViewData["RequestorId"] = new SelectList(_context.Users, "Id", "Id", report.RequestorId);
-            ViewData["SubcontractorId"] = new SelectList(_context.Users, "Id", "Id", report.SubcontractorId);
+            ViewData["NsnCoordinatorId"] = new SelectList(_context.Users, "Id", "UserName", report.NsnCoordinatorId);
+            ViewData["RequestorId"] = new SelectList(_context.Users, "Id", "UserName", report.RequestorId);
+            ViewData["SubcontractorId"] = new SelectList(_context.Users, "Id", "UserName", report.SubcontractorId);
             ViewData["ZoneId"] = new SelectList(_context.Zone, "Id", "ZoneName", report.ZoneId);
             return View(report);
         }
@@ -99,9 +109,9 @@ namespace Fault_handling_system.Controllers
             }
             ViewData["EtrStatusId"] = new SelectList(_context.EtrStatus, "Id", "Status", report.EtrStatusId);
             ViewData["EtrTypeId"] = new SelectList(_context.EtrType, "Id", "Type", report.EtrTypeId);
-            ViewData["NsnCoordinatorId"] = new SelectList(_context.Users, "Id", "Id", report.NsnCoordinatorId);
-            ViewData["RequestorId"] = new SelectList(_context.Users, "Id", "Id", report.RequestorId);
-            ViewData["SubcontractorId"] = new SelectList(_context.Users, "Id", "Id", report.SubcontractorId);
+            ViewData["NsnCoordinatorId"] = new SelectList(_context.Users, "Id", "UserName", report.NsnCoordinatorId);
+            ViewData["RequestorId"] = new SelectList(_context.Users, "Id", "UserName", report.RequestorId);
+            ViewData["SubcontractorId"] = new SelectList(_context.Users, "Id", "UserName", report.SubcontractorId);
             ViewData["ZoneId"] = new SelectList(_context.Zone, "Id", "ZoneName", report.ZoneId);
             return View(report);
         }
@@ -140,9 +150,9 @@ namespace Fault_handling_system.Controllers
             }
             ViewData["EtrStatusId"] = new SelectList(_context.EtrStatus, "Id", "Status", report.EtrStatusId);
             ViewData["EtrTypeId"] = new SelectList(_context.EtrType, "Id", "Type", report.EtrTypeId);
-            ViewData["NsnCoordinatorId"] = new SelectList(_context.Users, "Id", "Id", report.NsnCoordinatorId);
-            ViewData["RequestorId"] = new SelectList(_context.Users, "Id", "Id", report.RequestorId);
-            ViewData["SubcontractorId"] = new SelectList(_context.Users, "Id", "Id", report.SubcontractorId);
+            ViewData["NsnCoordinatorId"] = new SelectList(_context.Users, "Id", "UserName", report.NsnCoordinatorId);
+            ViewData["RequestorId"] = new SelectList(_context.Users, "Id", "UserName", report.RequestorId);
+            ViewData["SubcontractorId"] = new SelectList(_context.Users, "Id", "UserName", report.SubcontractorId);
             ViewData["ZoneId"] = new SelectList(_context.Zone, "Id", "ZoneName", report.ZoneId);
             return View(report);
         }

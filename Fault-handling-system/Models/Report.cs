@@ -32,6 +32,7 @@ namespace Fault_handling_system.Models
 		public virtual ApplicationUser NsnCoordinator { get; set; }
 		public string SubcontractorId { get; set; }
 		public virtual ApplicationUser Subcontractor { get; set; }
+		[Range(1, 5)]
 		public int? Grade { get; set; }
 		public string TroubleType { get; set; }
 		public DateTime DateIssued { get; set; }

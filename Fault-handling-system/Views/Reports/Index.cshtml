@@ -12,48 +12,48 @@
 <table class="table">
     <thead>
         <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.EtrNumber)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.NokiaCaseId)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.RfaId)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.RfaName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.AssignedTo)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Priority)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Grade)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.TroubleType)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DateIssued)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DateSent)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.EtrToDes)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ClosingDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.EtrDescription)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Comment)
-                </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EtrNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NokiaCaseId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RfaId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RfaName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AssignedTo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Priority)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Grade)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TroubleType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateIssued)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateSent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EtrToDes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClosingDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EtrDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Comment)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.EtrStatus)
             </th>
@@ -127,14 +127,14 @@
                 @Html.DisplayFor(modelItem => item.EtrType.Type)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.NsnCoordinator.Id)
+                @Html.DisplayFor(modelItem => item.NsnCoordinator.UserName)<!--Id by default-->
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Requestor.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Subcontractor.Id)
-            </td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Requestor.UserName)<!--Id by default-->
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Subcontractor.UserName)<!--Id by default-->
+			</td>
             <td>
                 @Html.DisplayFor(modelItem => item.Zone.ZoneName)
             </td>
