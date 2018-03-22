@@ -67,15 +67,19 @@ namespace Fault_handling_system.Services
                     return false;
                 } else {
                     _logger.LogInformation("Successfully found 'parsed' and 'failed' folders");
+                    parsed.Open(FolderAccess.ReadWrite);
+                    failed.Open(FolderAccess.ReadWrite);
                 }
 
                 var inbox = client.Inbox;
-                inbox.Open(FolderAccess.ReadOnly);
+                inbox.Open(FolderAccess.ReadWrite);
 
                 _logger.LogInformation("Total messages: {0}", inbox.Count);
                 _logger.LogInformation("Recent messages: {0}", inbox.Recent);
 
-                for (int i = 0; i < inbox.Count; ++i) {
+                // Not sure if we can iterate forwards and move the messages at the same time.
+                // Thus iterating backwards.
+                for (int i = inbox.Count - 1; i >= 0; --i) {
                     var message = inbox.GetMessage(i);
 
                     string sender;
@@ -98,9 +102,11 @@ namespace Fault_handling_system.Services
                     Report report = _reportParser.ParseReport(sender, subject, body);
 
                     if (report != null) {
-
+                        _logger.LogInformation("Successfully parsed report {0}", subject);
+                        inbox.MoveTo(i, parsed);
                     } else {
-
+                        _logger.LogWarning("Failed to parse report {0}", subject);
+                        inbox.MoveTo(i, failed);
                     }
                 }
 
