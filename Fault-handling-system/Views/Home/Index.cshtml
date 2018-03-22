@@ -1,4 +1,11 @@
-﻿@{
+﻿@using System.Collections.Generic
+@using System.Linq
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Http.Authentication
+@model LoginViewModel
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
     ViewData["Title"] = "Nokia FHS";
 }
 
@@ -10,7 +17,7 @@
                     <h2 class="panel-title">Login</h2>
                 </div>
                 <div class="panel-body">
-                    <form role="form" action="" method="POST">
+                    <form asp-controller="Account" asp-action="Login" method="post">
                         <fieldset>
                             <div class="row">
 								<div class="col-sm-12 col-md-10  col-md-offset-1 ">
@@ -19,8 +26,8 @@
 											<span class="input-group-addon">
 												<i class="glyphicon glyphicon-envelope"></i>
 											</span> 
-											<input class="form-control" placeholder="Email" autofocus>
-											
+											<input asp-for="Email" class="form-control" placeholder="Email" autofocus>
+											<span asp-validation-for="Email" class="text-danger"></span>
 										</div>
 									</div>
 									<div class="form-group">
@@ -28,8 +35,8 @@
 											<span class="input-group-addon">
 												<i class="glyphicon glyphicon-lock"></i>
 											</span>
-											<input class="form-control" placeholder="Password" >
-										
+											<input asp-for="Password" class="form-control" placeholder="Password" >
+											<span asp-validation-for="Password" class="text-danger"></span>
 										</div>
 									</div>
 									<div class="form-group">
