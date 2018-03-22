@@ -103,9 +103,11 @@ namespace Fault_handling_system.Services
 
                     if (report != null) {
                         _logger.LogInformation("Successfully parsed report {0}", subject);
+                        inbox.AddFlags(i, MessageFlags.Seen, true);
                         inbox.MoveTo(i, parsed);
                     } else {
                         _logger.LogWarning("Failed to parse report {0}", subject);
+                        inbox.AddFlags(i, MessageFlags.Seen, true);
                         inbox.MoveTo(i, failed);
                     }
                 }
