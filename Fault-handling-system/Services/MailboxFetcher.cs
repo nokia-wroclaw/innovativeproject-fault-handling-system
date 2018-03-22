@@ -50,6 +50,25 @@ namespace Fault_handling_system.Services
 
                 client.Authenticate(_username, _password);
 
+                // Find folders: parsed, failed
+                var folders = client.GetFolders(client.PersonalNamespaces[0]);
+                MailKit.IMailFolder parsed = null;
+                MailKit.IMailFolder failed = null;
+                foreach (var folder in folders) {
+                    if (folder.Name == "parsed")
+                        parsed = folder;
+                    else if (folder.Name == "failed")
+                        failed = folder;
+                }
+
+                if (parsed == null || failed == null) {
+                    _logger.LogError("Couldn't find 'parsed' or 'failed' folder in the mailbox");
+                    client.Disconnect(true);
+                    return Task.CompletedTask;
+                } else {
+                    _logger.LogInformation("Successfully found 'parsed' and 'failed' folders");
+                }
+
                 var inbox = client.Inbox;
                 inbox.Open(FolderAccess.ReadOnly);
 
