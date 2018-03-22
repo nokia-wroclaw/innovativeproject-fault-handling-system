@@ -37,16 +37,31 @@ namespace Fault_handling_system.Services
                     report.EtrNumber = value;
                     break;
                 case "Nokia case id":
-                    report.NokiaCaseId = Int32.Parse(value);
+                    try {
+                        report.NokiaCaseId = Int32.Parse(value);
+                    } catch (FormatException) {
+                        _logger.LogError("Couldn't parse number: {0}: '{1}'", key, value);
+                    }
                     break;
                 case "Assigned To":
                     report.AssignedTo = value;
                     break;
                 case "RFA ID":
-                    report.RfaId = Int32.Parse(value);
+                    try {
+                        report.RfaId = Int32.Parse(value);
+                    } catch (FormatException) {
+                        _logger.LogError("Couldn't parse number: {0}: '{1}'", key, value);
+                    } catch (OverflowException) {
+                        // TODO Change the type in the model
+                        _logger.LogError("Overflow error: {0}: '{1}'", key, value);
+                    }
                     break;
                 case "Ocena":
-                    report.Grade = Int32.Parse(value);
+                    try {
+                        report.Grade = Int32.Parse(value);
+                    } catch (FormatException) {
+                        _logger.LogError("Couldn't parse number: {0}: '{1}'", key, value);
+                    }
                     break;
                 case "Trouble Type/Case Title":
                     // TODO parse it
