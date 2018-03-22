@@ -12,8 +12,8 @@ namespace Fault_handling_system.Models
 		public int Id { get; set; }
 		[Required]
 		public string EtrNumber { get; set; } //eg. ETR-000089629 cut ETR-00... and make it an integer?
-		public int? NokiaCaseId { get; set; } //PO Number
-		public int RfaId { get; set; } //CSC/Link ID
+		public long? NokiaCaseId { get; set; } //PO Number
+		public long RfaId { get; set; } //CSC/Link ID
 		public string RfaName { get; set; } //CSC/Link Name
 		public int ZoneId { get; set; }
 		public virtual Zone Zone { get; set; }
