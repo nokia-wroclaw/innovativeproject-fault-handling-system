@@ -476,6 +476,12 @@ namespace Fault_handling_system.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult UserPage()
+        {
+            return View();
+        }
+
         #region Helpers
 
         private void AddErrors(IdentityResult result)
@@ -494,7 +500,7 @@ namespace Fault_handling_system.Controllers
             }
             else
             {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
+                return RedirectToAction(nameof(AccountController.UserPage), "Account");
             }
         }
 
