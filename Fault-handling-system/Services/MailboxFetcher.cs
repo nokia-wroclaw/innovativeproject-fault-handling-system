@@ -38,7 +38,7 @@ namespace Fault_handling_system.Services
             _password = password;
         }
 
-        public Task FetchMailbox()
+        public bool FetchMailbox()
         {
             _logger.LogInformation("Checking mailbox...");
 
@@ -64,7 +64,7 @@ namespace Fault_handling_system.Services
                 if (parsed == null || failed == null) {
                     _logger.LogError("Couldn't find 'parsed' or 'failed' folder in the mailbox");
                     client.Disconnect(true);
-                    return Task.CompletedTask;
+                    return false;
                 } else {
                     _logger.LogInformation("Successfully found 'parsed' and 'failed' folders");
                 }
@@ -108,7 +108,7 @@ namespace Fault_handling_system.Services
             }
 
             _logger.LogInformation("Finished checking.");
-            return Task.CompletedTask;
+            return true;
         }
     }
 }

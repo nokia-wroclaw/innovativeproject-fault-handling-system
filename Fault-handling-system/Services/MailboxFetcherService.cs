@@ -34,7 +34,7 @@ namespace Fault_handling_system.Services
                      "pwr.fhs@onet.pl", "FaultHandlingSystem1");
 
             while (!stoppingToken.IsCancellationRequested) {
-                await _fetcher.FetchMailbox();
+                bool result = _fetcher.FetchMailbox();
                 int checkInterval = _settings.CheckInterval;
                 _logger.LogInformation("Next check after {0} s...", checkInterval);
                 await Task.Delay(checkInterval * 1000, stoppingToken);
