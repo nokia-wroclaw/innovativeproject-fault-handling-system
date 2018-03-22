@@ -19,7 +19,8 @@
 											<span class="input-group-addon">
 												<i class="glyphicon glyphicon-envelope"></i>
 											</span> 
-											<input class="form-control" placeholder="Email" name="loginname" type="text" autofocus>
+											<input class="form-control" placeholder="Email" autofocus>
+											
 										</div>
 									</div>
 									<div class="form-group">
@@ -27,7 +28,8 @@
 											<span class="input-group-addon">
 												<i class="glyphicon glyphicon-lock"></i>
 											</span>
-											<input class="form-control" placeholder="Password" name="password" type="password" value="">
+											<input class="form-control" placeholder="Password" >
+										
 										</div>
 									</div>
 									<div class="form-group">
@@ -39,7 +41,7 @@
                     </form>
                 </div>
                 <div class="panel-footer ">
-					<a href="" onClick=""> Forgot your password? </a>
+					<a asp-controller="Account" asp-action="ForgotPassword">Forgot your password?</a>
             	</div>
         	</div>
     	</div>
