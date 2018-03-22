@@ -11,9 +11,10 @@ using System;
 namespace Fault_handling_system.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180321172209_FixForeignKeys")]
+    partial class FixForeignKeys
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -126,7 +127,7 @@ namespace Fault_handling_system.Data.Migrations
 
                     b.Property<int?>("Grade");
 
-                    b.Property<long?>("NokiaCaseId");
+                    b.Property<int?>("NokiaCaseId");
 
                     b.Property<string>("NsnCoordinatorId");
 
@@ -135,7 +136,7 @@ namespace Fault_handling_system.Data.Migrations
                     b.Property<string>("RequestorId")
                         .IsRequired();
 
-                    b.Property<long>("RfaId");
+                    b.Property<int>("RfaId");
 
                     b.Property<string>("RfaName");
 

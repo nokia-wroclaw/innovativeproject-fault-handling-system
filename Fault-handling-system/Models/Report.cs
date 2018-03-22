@@ -12,17 +12,19 @@ namespace Fault_handling_system.Models
 		public int Id { get; set; }
 		[Required]
 		public string EtrNumber { get; set; } //eg. ETR-000089629 cut ETR-00... and make it an integer?
-		public int? NokiaCaseId { get; set; } //PO Number
-		public int RfaId { get; set; } //CSC/Link ID
+		public long? NokiaCaseId { get; set; } //PO Number
+		public long RfaId { get; set; } //CSC/Link ID
 		public string RfaName { get; set; } //CSC/Link Name
 		public int ZoneId { get; set; }
 		public virtual Zone Zone { get; set; }
 		public string AssignedTo { get; set; } //change to enum or make a model for it?
 		public string Priority { get; set; }
 		[Required]
-		public EtrType EtrType { get; set; }
+		public int EtrTypeId { get; set; }
+		public virtual EtrType EtrType { get; set; }
 		[Required]
-		public EtrStatus EtrStatus { get; set; }
+		public int EtrStatusId { get; set; }
+		public virtual EtrStatus EtrStatus { get; set; }
 		[Required]
 		public string RequestorId { get; set; } //ApplicationUser id's type is nvarchar
 		public virtual ApplicationUser Requestor { get; set; }
@@ -30,11 +32,16 @@ namespace Fault_handling_system.Models
 		public virtual ApplicationUser NsnCoordinator { get; set; }
 		public string SubcontractorId { get; set; }
 		public virtual ApplicationUser Subcontractor { get; set; }
+		[Range(1, 5)]
 		public int? Grade { get; set; }
 		public string TroubleType { get; set; }
+		[DisplayFormat(DataFormatString ="{0:dd/MM/yyyy}")]
 		public DateTime DateIssued { get; set; }
+		[DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
 		public DateTime? DateSent { get; set; }
+		[DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
 		public DateTime? EtrToDes { get; set; }
+		[DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
 		public DateTime? ClosingDate { get; set; }
 		[Required]
 		public string EtrDescription { get; set; }

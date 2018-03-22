@@ -11,9 +11,10 @@ using System;
 namespace Fault_handling_system.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180321171859_AdjustColumnNullability")]
+    partial class AdjustColumnNullability
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -118,15 +119,21 @@ namespace Fault_handling_system.Data.Migrations
                     b.Property<string>("EtrNumber")
                         .IsRequired();
 
-                    b.Property<int>("EtrStatusId");
+                    b.Property<string>("EtrStatusId")
+                        .IsRequired();
+
+                    b.Property<int?>("EtrStatusId1");
 
                     b.Property<DateTime?>("EtrToDes");
 
-                    b.Property<int>("EtrTypeId");
+                    b.Property<string>("EtrTypeId")
+                        .IsRequired();
+
+                    b.Property<int?>("EtrTypeId1");
 
                     b.Property<int?>("Grade");
 
-                    b.Property<long?>("NokiaCaseId");
+                    b.Property<int?>("NokiaCaseId");
 
                     b.Property<string>("NsnCoordinatorId");
 
@@ -135,7 +142,7 @@ namespace Fault_handling_system.Data.Migrations
                     b.Property<string>("RequestorId")
                         .IsRequired();
 
-                    b.Property<long>("RfaId");
+                    b.Property<int>("RfaId");
 
                     b.Property<string>("RfaName");
 
@@ -147,9 +154,9 @@ namespace Fault_handling_system.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EtrStatusId");
+                    b.HasIndex("EtrStatusId1");
 
-                    b.HasIndex("EtrTypeId");
+                    b.HasIndex("EtrTypeId1");
 
                     b.HasIndex("NsnCoordinatorId");
 
@@ -287,13 +294,11 @@ namespace Fault_handling_system.Data.Migrations
                 {
                     b.HasOne("Fault_handling_system.Models.EtrStatus", "EtrStatus")
                         .WithMany()
-                        .HasForeignKey("EtrStatusId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("EtrStatusId1");
 
                     b.HasOne("Fault_handling_system.Models.EtrType", "EtrType")
                         .WithMany()
-                        .HasForeignKey("EtrTypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("EtrTypeId1");
 
                     b.HasOne("Fault_handling_system.Models.ApplicationUser", "NsnCoordinator")
                         .WithMany()

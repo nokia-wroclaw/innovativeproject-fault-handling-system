@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -8,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Fault_handling_system.Data;
 using Fault_handling_system.Models;
 using Fault_handling_system.Services;
@@ -16,8 +19,11 @@ namespace Fault_handling_system
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly ILogger<Startup> _logger;
+
+        public Startup(ILogger<Startup> logger, IConfiguration configuration)
         {
+            _logger = logger;
             Configuration = configuration;
         }
 
@@ -35,6 +41,9 @@ namespace Fault_handling_system
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddSingleton<IHostedService, MailboxFetcherService>();
+            services.AddSingleton<IMailboxFetcher, MailboxFetcher>();
+            services.AddSingleton<IReportParser, ReportParser>();
 
             services.AddMvc();
         }

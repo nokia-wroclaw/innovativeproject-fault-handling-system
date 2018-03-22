@@ -11,9 +11,10 @@ using System;
 namespace Fault_handling_system.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180321170358_DebugReportModel")]
+    partial class DebugReportModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -73,26 +74,20 @@ namespace Fault_handling_system.Data.Migrations
 
             modelBuilder.Entity("Fault_handling_system.Models.EtrStatus", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Status")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Status")
-                        .IsRequired();
-
-                    b.HasKey("Id");
+                    b.HasKey("Status");
 
                     b.ToTable("EtrStatus");
                 });
 
             modelBuilder.Entity("Fault_handling_system.Models.EtrType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Type")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Type")
-                        .IsRequired();
-
-                    b.HasKey("Id");
+                    b.HasKey("Type");
 
                     b.ToTable("EtrType");
                 });
@@ -118,15 +113,21 @@ namespace Fault_handling_system.Data.Migrations
                     b.Property<string>("EtrNumber")
                         .IsRequired();
 
-                    b.Property<int>("EtrStatusId");
+                    b.Property<string>("EtrStatusName")
+                        .IsRequired();
+
+                    b.Property<string>("EtrStatusStatus");
 
                     b.Property<DateTime?>("EtrToDes");
 
-                    b.Property<int>("EtrTypeId");
+                    b.Property<string>("EtrTypeName")
+                        .IsRequired();
+
+                    b.Property<string>("EtrTypeType");
 
                     b.Property<int?>("Grade");
 
-                    b.Property<long?>("NokiaCaseId");
+                    b.Property<int?>("NokiaCaseId");
 
                     b.Property<string>("NsnCoordinatorId");
 
@@ -135,7 +136,7 @@ namespace Fault_handling_system.Data.Migrations
                     b.Property<string>("RequestorId")
                         .IsRequired();
 
-                    b.Property<long>("RfaId");
+                    b.Property<int>("RfaId");
 
                     b.Property<string>("RfaName");
 
@@ -147,9 +148,9 @@ namespace Fault_handling_system.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EtrStatusId");
+                    b.HasIndex("EtrStatusStatus");
 
-                    b.HasIndex("EtrTypeId");
+                    b.HasIndex("EtrTypeType");
 
                     b.HasIndex("NsnCoordinatorId");
 
@@ -167,8 +168,7 @@ namespace Fault_handling_system.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ZoneName")
-                        .IsRequired();
+                    b.Property<string>("ZoneName");
 
                     b.HasKey("Id");
 
@@ -287,13 +287,11 @@ namespace Fault_handling_system.Data.Migrations
                 {
                     b.HasOne("Fault_handling_system.Models.EtrStatus", "EtrStatus")
                         .WithMany()
-                        .HasForeignKey("EtrStatusId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("EtrStatusStatus");
 
                     b.HasOne("Fault_handling_system.Models.EtrType", "EtrType")
                         .WithMany()
-                        .HasForeignKey("EtrTypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("EtrTypeType");
 
                     b.HasOne("Fault_handling_system.Models.ApplicationUser", "NsnCoordinator")
                         .WithMany()

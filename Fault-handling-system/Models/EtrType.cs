@@ -9,7 +9,8 @@ namespace Fault_handling_system.Models
     public class EtrType
     {
 		[Key]
-		//public int Id { get; set; }
+		public int Id { get; set; }
+		[Required]
 		public string Type { get; set; }
     }
 }
