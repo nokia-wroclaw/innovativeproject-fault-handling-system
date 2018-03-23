@@ -9,141 +9,156 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+@using (Html.BeginForm("Index", "Reports", FormMethod.Get))
+{
+<p>
+    EtrNumber: @Html.TextBox("etrnumberS", ViewBag.etrnumberC as string)
+    NokiaCaseId: @Html.TextBox("nokiacaseidS", ViewBag.nokiacaseidC as string)
+    RfaId: @Html.TextBox("rfaidS", ViewBag.rfaidC as string)
+    RfaName: @Html.TextBox("rfanameS", ViewBag.rfanameC as string)
+    AssignedTo: @Html.TextBox("assignedtoS", ViewBag.assignedtoC as string)
+    Priority: @Html.TextBox("priorityS", ViewBag.priorityC as string)
+    Grade: @Html.TextBox("gradeS", ViewBag.gradeC as string)
+    TroubleType: @Html.TextBox("troubletypeS", ViewBag.troubletypeC as string)
+    DateIssued: @Html.TextBox("dateissuedS", ViewBag.dateissuedC as string)
+    DateSent: @Html.TextBox("datesentS", ViewBag.datesentC as string)
+    EtrToDes: @Html.TextBox("etrtodesS", ViewBag.etrtodesC as string)
+    ClosingDate: @Html.TextBox("closingdateS", ViewBag.closingdateC as string)
+    EtrStatus: @Html.TextBox("etrstatusS", ViewBag.etrstatusC as string)
+    EtrType: @Html.TextBox("etrtypeS", ViewBag.etrtypeC as string)
+    NsnCoord: @Html.TextBox("nsncoordS", ViewBag.nsncoordC as string)
+    Requestor: @Html.TextBox("requestorS", ViewBag.requestorC as string)
+    Subcontractor: @Html.TextBox("subconS", ViewBag.subconC as string)
+    Zone: @Html.TextBox("zoneS", ViewBag.zoneC as string)
+    <input type="submit" value="Search" />
+</p>
+}
+
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.EtrNumber)
+                @Html.ActionLink("EtrNumber", "Index", new { sortOrder = ViewBag.EtrNumSortParam, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NokiaCaseId)
+                @Html.ActionLink("NokiaCaseId", "Index", new { sortOrder = ViewBag.NokiaCaseIdSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RfaId)
+                @Html.ActionLink("RfaId", "Index", new { sortOrder = ViewBag.RfaIdSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RfaName)
+                @Html.ActionLink("RfaName", "Index", new { sortOrder = ViewBag.RfaNameSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AssignedTo)
+                @Html.ActionLink("AssignedTo", "Index", new { sortOrder = ViewBag.AssignedToSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Priority)
+                @Html.ActionLink("Priority", "Index", new { sortOrder = ViewBag.PrioritySortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Grade)
+                @Html.ActionLink("Grade", "Index", new { sortOrder = ViewBag.GradeSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TroubleType)
+                @Html.ActionLink("TroubleType", "Index", new { sortOrder = ViewBag.TroubleTypeSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DateIssued)
+                @Html.ActionLink("DateIssued", "Index", new { sortOrder = ViewBag.DateIssuedSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DateSent)
+                @Html.ActionLink("DateSent", "Index", new { sortOrder = ViewBag.DateSentSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EtrToDes)
+                @Html.ActionLink("EtrToDes", "Index", new { sortOrder = ViewBag.EtrToDesSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ClosingDate)
+                @Html.ActionLink("ClosingDate", "Index", new { sortOrder = ViewBag.ClosingDateSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EtrDescription)
+                @Html.ActionLink("EtrStatus", "Index", new { sortOrder = ViewBag.EtrStatusSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Comment)
+                @Html.ActionLink("EtrType", "Index", new { sortOrder = ViewBag.EtrTypeSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EtrStatus)
+                @Html.ActionLink("NsnCoordinator", "Index", new { sortOrder = ViewBag.NsnCoordSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EtrType)
+                @Html.ActionLink("Requestor", "Index", new { sortOrder = ViewBag.RequestorSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NsnCoordinator)
+                @Html.ActionLink("Subcontractor", "Index", new { sortOrder = ViewBag.SubconSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Requestor)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Subcontractor)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Zone)
+                @Html.ActionLink("Zone", "Index", new { sortOrder = ViewBag.ZoneSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.EtrNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NokiaCaseId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RfaId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RfaName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AssignedTo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Priority)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Grade)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TroubleType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateIssued)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateSent)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EtrToDes)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ClosingDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EtrDescription)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Comment)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EtrStatus.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EtrType.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NsnCoordinator.UserName)<!--Id by default-->
-            </td>
-			<td>
-				@Html.DisplayFor(modelItem => item.Requestor.UserName)<!--Id by default-->
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => item.Subcontractor.UserName)<!--Id by default-->
-			</td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Zone.ZoneName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EtrNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NokiaCaseId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RfaId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RfaName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AssignedTo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Priority)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Grade)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TroubleType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateIssued)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateSent)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EtrToDes)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClosingDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EtrStatus.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EtrType.Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NsnCoordinator.UserName)<!--Id by default-->
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Requestor.UserName)<!--Id by default-->
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subcontractor.UserName)<!--Id by default-->
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Zone.ZoneName)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
