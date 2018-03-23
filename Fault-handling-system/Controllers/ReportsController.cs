@@ -9,7 +9,6 @@ using Fault_handling_system.Data;
 using Fault_handling_system.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using PagedList;
 
 namespace Fault_handling_system.Controllers
 {
