@@ -27,7 +27,7 @@ namespace Fault_handling_system.Services
                                    subject);
 
             Report report = new Report();
-            MatchCollection mc = Regex.Matches(message, "([^:\n]+): ([^:\n]+)\n");
+            MatchCollection mc = Regex.Matches(message, "^([^:\n]+): ([^:\n]+)$");
 
             foreach (Match match in mc) {
                 string key = match.Groups[1].Value;
@@ -92,6 +92,12 @@ namespace Fault_handling_system.Services
                     break;
                 case "Trouble Coordinator":
                     // TODO map it to the coordinator entity
+                    break;
+                case "Content-Type":
+                case "Content-Disposition":
+                case "Content-Transfer-Encoding":
+                case "Content-Id":
+                    // Ignore
                     break;
                 default:
                     _logger.LogDebug("Unknown key-value pair: {0}: {1}", key, value);
