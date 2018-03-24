@@ -40,6 +40,7 @@
                     @if(Context.User.Identity.IsAuthenticated) 
                     {
                         <li><a asp-area="" asp-controller="Reports" asp-action="Index">Reports</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="UserGuide">User guide</a></li>
                     }
                     else
                     {
