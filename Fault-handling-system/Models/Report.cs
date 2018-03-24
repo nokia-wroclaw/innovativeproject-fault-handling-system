@@ -35,9 +35,13 @@ namespace Fault_handling_system.Models
 		[Range(1, 5)]
 		public int? Grade { get; set; }
 		public string TroubleType { get; set; }
+		[DisplayFormat(DataFormatString ="{0:dd/MM/yyyy}")]
 		public DateTime DateIssued { get; set; }
+		[DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
 		public DateTime? DateSent { get; set; }
+		[DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
 		public DateTime? EtrToDes { get; set; }
+		[DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
 		public DateTime? ClosingDate { get; set; }
 		[Required]
 		public string EtrDescription { get; set; }

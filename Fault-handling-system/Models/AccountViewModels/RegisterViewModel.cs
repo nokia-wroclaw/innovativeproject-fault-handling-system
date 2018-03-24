@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -6,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Fault_handling_system.Models.AccountViewModels
 {
+    [Authorize(Roles = "Admin")]
     public class RegisterViewModel
     {
         [Required]
@@ -23,5 +26,11 @@ namespace Fault_handling_system.Models.AccountViewModels
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required] 
+        [Display(Name = "Role")]
+        public string Role { get; set; }
+        public IEnumerable<SelectListItem> Roles { get; set; }
+
     }
 }
