@@ -48,71 +48,75 @@ namespace Fault_handling_system.Services
 
                 client.Connect(_host, _port, _useSSL);
 
-                client.Authenticate(_username, _password);
+                try {
+                    client.Authenticate(_username, _password);
 
-                // Find folders: parsed, failed
-                var folders = client.GetFolders(client.PersonalNamespaces[0]);
-                MailKit.IMailFolder parsed = null;
-                MailKit.IMailFolder failed = null;
-                foreach (var folder in folders) {
-                    if (folder.Name == "parsed")
-                        parsed = folder;
-                    else if (folder.Name == "failed")
-                        failed = folder;
-                }
-
-                if (parsed == null || failed == null) {
-                    _logger.LogError("Couldn't find 'parsed' or 'failed' folder in the mailbox");
-                    client.Disconnect(true);
-                    return false;
-                } else {
-                    _logger.LogInformation("Successfully found 'parsed' and 'failed' folders");
-                    parsed.Open(FolderAccess.ReadWrite);
-                    failed.Open(FolderAccess.ReadWrite);
-                }
-
-                var inbox = client.Inbox;
-                inbox.Open(FolderAccess.ReadWrite);
-
-                _logger.LogInformation("Total messages: {0}", inbox.Count);
-                _logger.LogInformation("Recent messages: {0}", inbox.Recent);
-
-                // Not sure if we can iterate forwards and move the messages at the same time.
-                // Thus iterating backwards.
-                for (int i = inbox.Count - 1; i >= 0; --i) {
-                    var message = inbox.GetMessage(i);
-
-                    string sender;
-                    string subject;
-                    string body;
-
-                    if (message.Sender != null)
-                        sender = message.Sender.Address;
-                    else
-                        sender = "<null>";
-                    if (message.Subject != null)
-                        subject = message.Subject;
-                    else
-                        subject = "<null>";
-                    if (message.Body != null)
-                        body  = message.Body.ToString();
-                    else
-                        body = "<null>";
-
-                    Report report = _reportParser.ParseReport(sender, subject, body);
-
-                    if (report != null) {
-                        _logger.LogInformation("Successfully parsed report {0}", subject);
-                        inbox.AddFlags(i, MessageFlags.Seen, true);
-                        inbox.MoveTo(i, parsed);
-                    } else {
-                        _logger.LogWarning("Failed to parse report {0}", subject);
-                        inbox.AddFlags(i, MessageFlags.Seen, true);
-                        inbox.MoveTo(i, failed);
+                    // Find folders: parsed, failed
+                    var folders = client.GetFolders(client.PersonalNamespaces[0]);
+                    MailKit.IMailFolder parsed = null;
+                    MailKit.IMailFolder failed = null;
+                    foreach (var folder in folders) {
+                        if (folder.Name == "parsed")
+                            parsed = folder;
+                        else if (folder.Name == "failed")
+                            failed = folder;
                     }
-                }
 
-                client.Disconnect(true);
+                    if (parsed == null || failed == null) {
+                        _logger.LogError("Couldn't find 'parsed' or 'failed' folder in the mailbox");
+                        client.Disconnect(true);
+                        return false;
+                    } else {
+                        _logger.LogInformation("Successfully found 'parsed' and 'failed' folders");
+                        parsed.Open(FolderAccess.ReadWrite);
+                        failed.Open(FolderAccess.ReadWrite);
+                    }
+
+                    var inbox = client.Inbox;
+                    inbox.Open(FolderAccess.ReadWrite);
+
+                    _logger.LogInformation("Total messages: {0}", inbox.Count);
+                    _logger.LogInformation("Recent messages: {0}", inbox.Recent);
+
+                    // Not sure if we can iterate forwards and move the messages at the same time.
+                    // Thus iterating backwards.
+                    for (int i = inbox.Count - 1; i >= 0; --i) {
+                        var message = inbox.GetMessage(i);
+
+                        string sender;
+                        string subject;
+                        string body;
+
+                        if (message.Sender != null)
+                            sender = message.Sender.Address;
+                        else
+                            sender = "<null>";
+                        if (message.Subject != null)
+                            subject = message.Subject;
+                        else
+                            subject = "<null>";
+                        if (message.Body != null)
+                            body  = message.Body.ToString();
+                        else
+                            body = "<null>";
+
+                        Report report = _reportParser.ParseReport(sender, subject, body);
+
+                        if (report != null) {
+                            _logger.LogInformation("Successfully parsed report {0}", subject);
+                            inbox.AddFlags(i, MessageFlags.Seen, true);
+                            inbox.MoveTo(i, parsed);
+                        } else {
+                            _logger.LogWarning("Failed to parse report {0}", subject);
+                            inbox.AddFlags(i, MessageFlags.Seen, true);
+                            inbox.MoveTo(i, failed);
+                        }
+                    }
+
+                    client.Disconnect(true);
+                } catch (ImapProtocolException e) {
+                    _logger.LogError("An exception occured while trying to fetch mailbox: {0}", e);
+                }
             }
 
             _logger.LogInformation("Finished checking.");
