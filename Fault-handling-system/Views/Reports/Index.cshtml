@@ -11,27 +11,27 @@
 </p>
 @using (Html.BeginForm("Index", "Reports", FormMethod.Get))
 {
-<p>
-    EtrNumber: @Html.TextBox("etrnumberS", ViewBag.etrnumberC as string)
-    NokiaCaseId: @Html.TextBox("nokiacaseidS", ViewBag.nokiacaseidC as string)
-    RfaId: @Html.TextBox("rfaidS", ViewBag.rfaidC as string)
-    RfaName: @Html.TextBox("rfanameS", ViewBag.rfanameC as string)
-    AssignedTo: @Html.TextBox("assignedtoS", ViewBag.assignedtoC as string)
-    Priority: @Html.TextBox("priorityS", ViewBag.priorityC as string)
-    Grade: @Html.TextBox("gradeS", ViewBag.gradeC as string)
-    TroubleType: @Html.TextBox("troubletypeS", ViewBag.troubletypeC as string)
-    DateIssued: @Html.TextBox("dateissuedS", ViewBag.dateissuedC as string)
-    DateSent: @Html.TextBox("datesentS", ViewBag.datesentC as string)
-    EtrToDes: @Html.TextBox("etrtodesS", ViewBag.etrtodesC as string)
-    ClosingDate: @Html.TextBox("closingdateS", ViewBag.closingdateC as string)
-    EtrStatus: @Html.TextBox("etrstatusS", ViewBag.etrstatusC as string)
-    EtrType: @Html.TextBox("etrtypeS", ViewBag.etrtypeC as string)
-    NsnCoord: @Html.TextBox("nsncoordS", ViewBag.nsncoordC as string)
-    Requestor: @Html.TextBox("requestorS", ViewBag.requestorC as string)
-    Subcontractor: @Html.TextBox("subconS", ViewBag.subconC as string)
-    Zone: @Html.TextBox("zoneS", ViewBag.zoneC as string)
-    <input type="submit" value="Search" />
-</p>
+    <p>
+        EtrNumber: @Html.TextBox("etrnumberS", ViewBag.etrnumberC as string)
+        NokiaCaseId: @Html.TextBox("nokiacaseidS", ViewBag.nokiacaseidC as string)
+        RfaId: @Html.TextBox("rfaidS", ViewBag.rfaidC as string)
+        RfaName: @Html.TextBox("rfanameS", ViewBag.rfanameC as string)
+        AssignedTo: @Html.TextBox("assignedtoS", ViewBag.assignedtoC as string)
+        Priority: @Html.TextBox("priorityS", ViewBag.priorityC as string)
+        Grade: @Html.TextBox("gradeS", ViewBag.gradeC as string)
+        TroubleType: @Html.TextBox("troubletypeS", ViewBag.troubletypeC as string)
+        DateIssued: @Html.TextBox("dateissuedS", ViewBag.dateissuedC as string)
+        DateSent: @Html.TextBox("datesentS", ViewBag.datesentC as string)
+        EtrToDes: @Html.TextBox("etrtodesS", ViewBag.etrtodesC as string)
+        ClosingDate: @Html.TextBox("closingdateS", ViewBag.closingdateC as string)
+        EtrStatus: @Html.TextBox("etrstatusS", ViewBag.etrstatusC as string)
+        EtrType: @Html.TextBox("etrtypeS", ViewBag.etrtypeC as string)
+        NsnCoord: @Html.TextBox("nsncoordS", ViewBag.nsncoordC as string)
+        Requestor: @Html.TextBox("requestorS", ViewBag.requestorC as string)
+        Subcontractor: @Html.TextBox("subconS", ViewBag.subconC as string)
+        Zone: @Html.TextBox("zoneS", ViewBag.zoneC as string)
+        <input type="submit" value="Search" />
+    </p>
 }
 
 
@@ -162,3 +162,22 @@
         }
     </tbody>
 </table>
+
+@using (Html.BeginForm("Export", "Reports", FormMethod.Post))
+{
+<p>
+    @foreach (var item in Model)
+    {
+        @Html.Display("ID: ")
+        @Html.TextBox("test", item.Id.ToString() as String)
+        <br />
+
+    }
+    @Html.Hidden("lista", Model as IEnumerable<Report>)
+    <br />
+
+    <input type="text" value="@Model.Count()" id="Count" />
+    <input type="submit" value="Export" />
+</p>
+}
+
