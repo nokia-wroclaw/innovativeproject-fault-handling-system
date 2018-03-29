@@ -6,14 +6,17 @@ using MailKit.Net.Imap;
 using MailKit.Search;
 using MailKit;
 using MimeKit;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Fault_handling_system.Models;
+using Fault_handling_system.Data;
 
 namespace Fault_handling_system.Services
 {
     public class MailboxFetcher : IMailboxFetcher
     {
         private readonly ILogger<MailboxFetcher> _logger;
+        private readonly IServiceProvider _serviceProvider;
         private readonly IReportParser _reportParser;
         private string _host;
         private int _port;
@@ -22,10 +25,12 @@ namespace Fault_handling_system.Services
         private string _password;
 
         public MailboxFetcher(ILogger<MailboxFetcher> logger,
+                              IServiceProvider serviceProvider,
                               IReportParser reportParser)
         {
             _logger = logger;
             _logger.LogInformation("Constructed MailboxFetcher");
+            _serviceProvider = serviceProvider;
             _reportParser = reportParser;
         }
 
@@ -106,6 +111,12 @@ namespace Fault_handling_system.Services
                             _logger.LogInformation("Successfully parsed report {0}", subject);
                             inbox.AddFlags(i, MessageFlags.Seen, true);
                             inbox.MoveTo(i, parsed);
+
+                            using (IServiceScope scope = _serviceProvider.CreateScope()) {
+                                var context = scope.ServiceProvider
+                                                        .GetRequiredService<ApplicationDbContext>();
+                                context.Report.Add(report);
+                            }
                         } else {
                             _logger.LogWarning("Failed to parse report {0}", subject);
                             inbox.AddFlags(i, MessageFlags.Seen, true);
