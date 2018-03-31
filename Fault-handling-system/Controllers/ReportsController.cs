@@ -21,11 +21,13 @@ namespace Fault_handling_system.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IHostingEnvironment _hostingEnvironment;
+		private readonly Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> _userManager;
 
-        public ReportsController(IHostingEnvironment hostingEnvironment, ApplicationDbContext context)
+        public ReportsController(IHostingEnvironment hostingEnvironment, ApplicationDbContext context, Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment;
+			_userManager = userManager;
         }
 
         // GET: Reports
@@ -304,13 +306,18 @@ namespace Fault_handling_system.Controllers
         }
 
         // GET: Reports/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["EtrStatusId"] = new SelectList(_context.EtrStatus, "Id", "Status");
+			//lets us see only users of given roles in our dropdowns
+			var requestors = await _userManager.GetUsersInRoleAsync("Requestor");
+			var nsnCoordinators = await _userManager.GetUsersInRoleAsync("Nokia Coordinator");
+			var subcontractors = await _userManager.GetUsersInRoleAsync("Subcontractor");
+
+			ViewData["EtrStatusId"] = new SelectList(_context.EtrStatus, "Id", "Status");
             ViewData["EtrTypeId"] = new SelectList(_context.EtrType, "Id", "Type");
-            ViewData["NsnCoordinatorId"] = new SelectList(_context.Users, "Id", "UserName");
-            ViewData["RequestorId"] = new SelectList(_context.Users, "Id", "UserName");
-            ViewData["SubcontractorId"] = new SelectList(_context.Users, "Id", "UserName");
+            ViewData["NsnCoordinatorId"] = new SelectList(nsnCoordinators, "Id", "UserName");
+            ViewData["RequestorId"] = new SelectList(requestors, "Id", "UserName");
+            ViewData["SubcontractorId"] = new SelectList(subcontractors, "Id", "UserName");
             ViewData["ZoneId"] = new SelectList(_context.Zone, "Id", "ZoneName");
             return View();
         }
@@ -350,7 +357,13 @@ namespace Fault_handling_system.Controllers
             {
                 return NotFound();
             }
-            ViewData["EtrStatusId"] = new SelectList(_context.EtrStatus, "Id", "Status", report.EtrStatusId);
+
+			//lets us see only users of given roles in our dropdowns
+			var requestors = await _userManager.GetUsersInRoleAsync("Requestor");
+			var nsnCoordinators = await _userManager.GetUsersInRoleAsync("Nokia Coordinator");
+			var subcontractors = await _userManager.GetUsersInRoleAsync("Subcontractor");
+
+			ViewData["EtrStatusId"] = new SelectList(_context.EtrStatus, "Id", "Status", report.EtrStatusId);
             ViewData["EtrTypeId"] = new SelectList(_context.EtrType, "Id", "Type", report.EtrTypeId);
             ViewData["NsnCoordinatorId"] = new SelectList(_context.Users, "Id", "UserName", report.NsnCoordinatorId);
             ViewData["RequestorId"] = new SelectList(_context.Users, "Id", "UserName", report.RequestorId);

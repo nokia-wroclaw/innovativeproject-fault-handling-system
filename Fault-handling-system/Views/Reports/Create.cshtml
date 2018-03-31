@@ -54,17 +54,18 @@
                 <label asp-for="EtrStatusId" class="control-label"></label>
                 <select asp-for="EtrStatusId" class ="form-control" asp-items="ViewBag.EtrStatusId"></select>
             </div>
+			<!--Dropdowns for users allow null values-->
             <div class="form-group">
                 <label asp-for="RequestorId" class="control-label"></label>
-                <select asp-for="RequestorId" class ="form-control" asp-items="ViewBag.RequestorId"></select>
+                <select asp-for="RequestorId" class ="form-control" asp-items="ViewBag.RequestorId"><option value=""></option></select>
             </div>
             <div class="form-group">
                 <label asp-for="NsnCoordinatorId" class="control-label"></label>
-                <select asp-for="NsnCoordinatorId" class ="form-control" asp-items="ViewBag.NsnCoordinatorId"></select>
+                <select asp-for="NsnCoordinatorId" class ="form-control" asp-items="ViewBag.NsnCoordinatorId"><option value=""></option></select>
             </div>
             <div class="form-group">
                 <label asp-for="SubcontractorId" class="control-label"></label>
-                <select asp-for="SubcontractorId" class ="form-control" asp-items="ViewBag.SubcontractorId"></select>
+                <select asp-for="SubcontractorId" class ="form-control" asp-items="ViewBag.SubcontractorId"><option value=""></option></select>
             </div>
             <div class="form-group">
                 <label asp-for="Grade" class="control-label"></label>
