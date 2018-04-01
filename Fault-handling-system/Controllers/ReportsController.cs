@@ -31,38 +31,29 @@ namespace Fault_handling_system.Controllers
         }
 
         // GET: Reports
-        public async Task<IActionResult> Index(string sortOrder, string etrnumberS, string nokiacaseidS, string priorityS, string requestorS, string etrnumberC, string nokiacaseidC, string priorityC, string requestorC, string rfaidS, string rfaidC, string rfanameS, string rfanameC, string assignedtoS, string assignedtoC, string gradeS, string gradeC, string troubletypeS, string troubletypeC, string dateissuedS, string dateissuedC, string datesentS, string datesentC, string etrtodesS, string etrtodesC, string closingdateS, string closingdateC, string etrstatusS, string etrstatusC, string etrtypeS, string etrtypeC, string nsncoordS, string nsncoordC, string subconS, string subconC, string zoneS, string zoneC)
+        public async Task<IActionResult> Index(string sortOrder, string etrnumberS, string priorityS, string etrnumberC, string priorityC, string rfaidS, string rfaidC, string rfanameS, string rfanameC, string gradeS, string gradeC, string troubletypeS, string troubletypeC, string dateissuedS, string dateissuedC, string datesentS, string datesentC, string etrstatusS, string etrstatusC, string etrtypeS, string etrtypeC, string nsncoordS, string nsncoordC, string subconS, string subconC, string zoneS, string zoneC)
         {
 			ViewBag.EtrNumSortParm = sortOrder == "etrnumber_desc" ? "etrnumber" : "etrnumber_desc";
-            ViewBag.NokiaCaseIdSortParm = sortOrder == "nokiacaseid_desc" ? "nokiacaseid" : "nokiacaseid_desc";
             ViewBag.RfaIdSortParm = sortOrder == "rfaid_desc" ? "rfaid" : "rfaid_desc";
             ViewBag.RfaNameSortParm = sortOrder == "rfaname_desc" ? "rfaname" : "rfaname_desc";
-            ViewBag.AssignedToSortParm = sortOrder == "assignedto_desc" ? "assignedto" : "assignedto_desc";
             ViewBag.PrioritySortParm = sortOrder == "priority_desc" ? "priority" : "priority_desc";
             ViewBag.GradeSortParm = sortOrder == "grade_desc" ? "grade" : "grade_desc";
             ViewBag.TroubleTypeSortParm = sortOrder == "troubletype_desc" ? "troubletype" : "troubletype_desc";
             ViewBag.DateIssuedSortParm = sortOrder == "dateissued_desc" ? "dateissued" : "dateissued_desc";
             ViewBag.DateSentSortParm = sortOrder == "datesent_desc" ? "datesent" : "datesent_desc";
-            ViewBag.EtrToDesSortParm = sortOrder == "etrtodes_desc" ? "etrtodes" : "etrtodes_desc";
-            ViewBag.ClosingDateSortParm = sortOrder == "closingdate_desc" ? "closingdate" : "closingdate_desc";
             ViewBag.EtrStatusSortParm = sortOrder == "etrstatus_desc" ? "etrstatus" : "etrstatus_desc";
             ViewBag.EtrTypeSortParm = sortOrder == "etrtype_desc" ? "etrtype" : "etrtype_desc";
             ViewBag.NsnCoordSortParm = sortOrder == "nsncoord_desc" ? "nsncoord" : "nsncoord_desc";
-            ViewBag.RequestorSortParm = sortOrder == "requestor_desc" ? "requestor" : "requestor_desc";
             ViewBag.SubconSortParm = sortOrder == "subcon_desc" ? "subcon" : "subcon_desc";
             ViewBag.ZoneSortParm = sortOrder == "zone_desc" ? "zone" : "zone_desc";
 
             //restore current filters
             if (String.IsNullOrEmpty(etrnumberS))
                 etrnumberS = etrnumberC;
-            if (String.IsNullOrEmpty(nokiacaseidS))
-                nokiacaseidS = nokiacaseidC;
             if (String.IsNullOrEmpty(rfaidS))
                     rfaidS = rfaidC;
             if (String.IsNullOrEmpty(rfanameS))
                 rfanameS = rfanameC;
-            if (String.IsNullOrEmpty(assignedtoS))
-                assignedtoS = assignedtoC;
             if (String.IsNullOrEmpty(priorityS))
                 priorityS = priorityC;
             if (String.IsNullOrEmpty(gradeS))
@@ -73,18 +64,12 @@ namespace Fault_handling_system.Controllers
                 dateissuedS = dateissuedC;
             if (String.IsNullOrEmpty(datesentS))
                 datesentS = datesentC;
-            if (String.IsNullOrEmpty(etrtodesS))
-                etrtodesS = etrtodesC;
-            if (String.IsNullOrEmpty(closingdateS))
-                closingdateS = closingdateC;
             if (String.IsNullOrEmpty(etrstatusS))
                 etrstatusS = etrstatusC;
             if (String.IsNullOrEmpty(etrtypeS))
                 etrtypeS = etrtypeC;
             if (String.IsNullOrEmpty(nsncoordS))
                 nsncoordS = nsncoordC;
-            if (String.IsNullOrEmpty(requestorS))
-                requestorS = requestorC;
             if (String.IsNullOrEmpty(subconS))
                 subconS = subconC;
             if (String.IsNullOrEmpty(zoneS))
@@ -92,21 +77,16 @@ namespace Fault_handling_system.Controllers
 
             //restore current filters
             ViewBag.etrnumberC = etrnumberS;
-            ViewBag.nokiacaseidC = nokiacaseidS;
             ViewBag.rfaidC = rfaidS;
             ViewBag.rfanameC = rfanameS;
-            ViewBag.assignedtoC = assignedtoS;
             ViewBag.priorityC = priorityS;
             ViewBag.gradeC = gradeS;
             ViewBag.troubletypeC = troubletypeS;
             ViewBag.dateissuedC = dateissuedS;
             ViewBag.datesentC = datesentS;
-            ViewBag.etrtodesC = etrtodesS;
-            ViewBag.closingdateC = closingdateS;
             ViewBag.etrstatusC = etrstatusS;
             ViewBag.etrtypeC = etrtypeS;
             ViewBag.nsncoordC = nsncoordS;
-            ViewBag.requestorC = requestorS;
             ViewBag.subconC = subconS;
             ViewBag.zoneC = zoneS;
 
@@ -122,8 +102,12 @@ namespace Fault_handling_system.Controllers
 				applicationDbContext = _context.Report.Include(r => r.EtrStatus).Include(r => r.EtrType).Include(r => r.NsnCoordinator).Include(r => r.Requestor).Include(r => r.Subcontractor).Include(r => r.Zone).Where(r => r.NsnCoordinatorId == userId || r.SubcontractorId == userId || r.RequestorId == userId);//added where
 			}
 
+			Repositories.ReportRepository reportRepository = new Repositories.ReportRepository();
+
+			applicationDbContext = reportRepository.GetFilteredReports(applicationDbContext, etrnumberS, priorityS, rfaidS, rfanameS, gradeS, troubletypeS, dateissuedS, datesentS, etrstatusS, etrtypeS, nsncoordS, subconS, zoneS);
+
 			//filters
-			if (!String.IsNullOrEmpty(etrnumberS))
+			/*if (!String.IsNullOrEmpty(etrnumberS))
                 applicationDbContext = applicationDbContext.Where(r => r.EtrNumber.Contains(etrnumberS));
             if (!String.IsNullOrEmpty(nokiacaseidS))
                 applicationDbContext = applicationDbContext.Where(r => r.NokiaCaseId.ToString().Contains(nokiacaseidS));
@@ -158,7 +142,7 @@ namespace Fault_handling_system.Controllers
             if (!String.IsNullOrEmpty(subconS))
                 applicationDbContext = applicationDbContext.Where(r => r.Subcontractor.UserName.Contains(subconS));
             if (!String.IsNullOrEmpty(zoneS))
-                applicationDbContext = applicationDbContext.Where(r => r.Zone.ZoneName.Contains(zoneS));
+                applicationDbContext = applicationDbContext.Where(r => r.Zone.ZoneName.Contains(zoneS));*/
 
             //sorting order
             switch (sortOrder)
@@ -168,14 +152,6 @@ namespace Fault_handling_system.Controllers
                     break;
                 case "etrnumber_desc":
                     applicationDbContext = applicationDbContext.OrderByDescending(r => r.EtrNumber);
-                    break;
-                case "nokiacaseid":
-                    applicationDbContext = applicationDbContext.OrderBy(r => r.NokiaCaseId);
-                    //applicationDbContext = _context.Report.OrderBy(r => r.NokiaCaseId).Include(r => r.EtrStatus).Include(r => r.EtrType).Include(r => r.NsnCoordinator).Include(r => r.Requestor).Include(r => r.Subcontractor).Include(r => r.Zone);
-                    break;
-                case "nokiacaseid_desc":
-                    applicationDbContext = applicationDbContext.OrderByDescending(r => r.NokiaCaseId);
-                    //applicationDbContext = _context.Report.OrderByDescending(r => r.NokiaCaseId).Include(r => r.EtrStatus).Include(r => r.EtrType).Include(r => r.NsnCoordinator).Include(r => r.Requestor).Include(r => r.Subcontractor).Include(r => r.Zone);
                     break;
                 case "rfaid":
                     applicationDbContext = applicationDbContext.OrderBy(r => r.RfaId);
@@ -188,12 +164,6 @@ namespace Fault_handling_system.Controllers
                     break;
                 case "rfaname_desc":
                     applicationDbContext = applicationDbContext.OrderByDescending(r => r.RfaName);
-                    break;
-                case "assignedto":
-                    applicationDbContext = applicationDbContext.OrderBy(r => r.AssignedTo);
-                    break;
-                case "assignedto_desc":
-                    applicationDbContext = applicationDbContext.OrderByDescending(r => r.AssignedTo);
                     break;
                 case "priority":
                     applicationDbContext = applicationDbContext.OrderBy(r => r.Priority);
@@ -225,18 +195,6 @@ namespace Fault_handling_system.Controllers
                 case "datesent_desc":
                     applicationDbContext = applicationDbContext.OrderByDescending(r => r.DateSent);
                     break;
-                case "etrtodes":
-                    applicationDbContext = applicationDbContext.OrderBy(r => r.EtrToDes);
-                    break;
-                case "etrtodes_desc":
-                    applicationDbContext = applicationDbContext.OrderByDescending(r => r.EtrToDes);
-                    break;
-                case "closingdate":
-                    applicationDbContext = applicationDbContext.OrderBy(r => r.ClosingDate);
-                    break;
-                case "closingdate_desc":
-                    applicationDbContext = applicationDbContext.OrderByDescending(r => r.ClosingDate);
-                    break;
                 case "etrstatus":
                     applicationDbContext = applicationDbContext.OrderBy(r => r.EtrStatus);
                     break;
@@ -255,12 +213,6 @@ namespace Fault_handling_system.Controllers
                 case "nsncoord_desc":
                     applicationDbContext = applicationDbContext.OrderByDescending(r => r.NsnCoordinator);
                     break;
-                case "requestor":
-                    applicationDbContext = applicationDbContext.OrderBy(r => r.Requestor);
-                    break;
-                case "requestor_desc":
-                    applicationDbContext = applicationDbContext.OrderByDescending(r => r.Requestor);
-                    break;
                 case "subcon":
                     applicationDbContext = applicationDbContext.OrderBy(r => r.Subcontractor);
                     break;
@@ -275,8 +227,8 @@ namespace Fault_handling_system.Controllers
                     break;
             }
 
-			var filteredReportsJson = JsonConvert.SerializeObject(applicationDbContext.ToList()); //serialize list of filtered reports to json so TempData can handle it
-			TempData["FilteredReports"] = filteredReportsJson;
+			//var filteredReportsJson = JsonConvert.SerializeObject(applicationDbContext.ToList()); //serialize list of filtered reports to json so TempData can handle it
+			//TempData["FilteredReports"] = filteredReportsJson;
 			
             return View(await applicationDbContext.ToListAsync());
         }
@@ -455,7 +407,7 @@ namespace Fault_handling_system.Controllers
 
         [HttpPost]
         [Route("Export")]
-        public FileContentResult Export(string test)
+        public FileContentResult Export(string etrnumberS, string priorityS, string rfaidS, string rfanameS, string gradeS, string troubletypeS, string dateissuedS, string datesentS, string etrstatusS, string etrtypeS, string nsncoordS, string subconS, string zoneS)
         {
             byte[] bytes;
             string sWebRootFolder = _hostingEnvironment.WebRootPath;
@@ -496,14 +448,34 @@ namespace Fault_handling_system.Controllers
                 bytes = package.GetAsByteArray();
             }
 			//check if TempData solution works
-			string reportsString = (string)TempData["FilteredReports"]; //get json string of filtered reports
+			/*string reportsString = (string)TempData["FilteredReports"]; //get json string of filtered reports
 			List<Report> reports = JsonConvert.DeserializeObject<List<Report>>(reportsString); //deserialize json back to list of reports 
 			if (reports != null)
 			{
 				System.Diagnostics.Debug.WriteLine("!!!Załadowano zgłoszenia!!!");
+			}*/
+			//Check alternative option
+			IQueryable<Report> applicationDbContext;
+
+			if (User.IsInRole("Admin"))
+			{
+				applicationDbContext = _context.Report.Include(r => r.EtrStatus).Include(r => r.EtrType).Include(r => r.NsnCoordinator).Include(r => r.Requestor).Include(r => r.Subcontractor).Include(r => r.Zone).AsQueryable();
+			}
+			else
+			{
+				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+				applicationDbContext = _context.Report.Include(r => r.EtrStatus).Include(r => r.EtrType).Include(r => r.NsnCoordinator).Include(r => r.Requestor).Include(r => r.Subcontractor).Include(r => r.Zone).Where(r => r.NsnCoordinatorId == userId || r.SubcontractorId == userId || r.RequestorId == userId);//added where
+			}
+
+			Repositories.ReportRepository reportRepository = new Repositories.ReportRepository();
+
+			applicationDbContext = reportRepository.GetFilteredReports(applicationDbContext, etrnumberS, priorityS, rfaidS, rfanameS, gradeS, troubletypeS, dateissuedS, datesentS, etrstatusS, etrtypeS, nsncoordS, subconS, zoneS);
+			if (applicationDbContext != null)
+			{
+				System.Diagnostics.Debug.WriteLine("!!!Załadowano zgłoszenia!!!");
 			}
 			//-------------------------------
-            return File(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", sFileName);
+			return File(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", sFileName);
         }
     }
 }
