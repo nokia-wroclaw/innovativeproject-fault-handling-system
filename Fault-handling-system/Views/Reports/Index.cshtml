@@ -4,31 +4,108 @@
 	ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<!--<h2>Index</h2>-->
+<button asp-action="Create" class="btn btn-info" style="margin-top: 5px">Create</button>
+<button id="openFilterMenu" class="btn btn-info" onclick="openNav()" style="margin-top: 5px">Open filter menu</button>
+@*using (Html.BeginForm("Index", "Reports", FormMethod.Get))
+	{
+		<p>
+			EtrNumber: @Html.TextBox("etrnumberS", ViewBag.etrnumberC as string)
+			RfaId: @Html.TextBox("rfaidS", ViewBag.rfaidC as string)
+			RfaName: @Html.TextBox("rfanameS", ViewBag.rfanameC as string)
+			Priority: @Html.TextBox("priorityS", ViewBag.priorityC as string)
+			Grade: @Html.TextBox("gradeS", ViewBag.gradeC as string)
+			TroubleType: @Html.TextBox("troubletypeS", ViewBag.troubletypeC as string)
+			DateIssued: @Html.TextBox("dateissuedS", ViewBag.dateissuedC as string)
+			DateSent: @Html.TextBox("datesentS", ViewBag.datesentC as string)
+			EtrStatus: @Html.TextBox("etrstatusS", ViewBag.etrstatusC as string)
+			EtrType: @Html.TextBox("etrtypeS", ViewBag.etrtypeC as string)
+			NsnCoord: @Html.TextBox("nsncoordS", ViewBag.nsncoordC as string)
+			Subcontractor: @Html.TextBox("subconS", ViewBag.subconC as string)
+			Zone: @Html.TextBox("zoneS", ViewBag.zoneC as string)
+			<input type="submit" value="Search" />
+		</p>
+	}*@
 
-<p>
-	<a asp-action="Create">Create New</a>
-</p>
-@using (Html.BeginForm("Index", "Reports", FormMethod.Get))
-{
-	<p>
-		EtrNumber: @Html.TextBox("etrnumberS", ViewBag.etrnumberC as string)
-		RfaId: @Html.TextBox("rfaidS", ViewBag.rfaidC as string)
-		RfaName: @Html.TextBox("rfanameS", ViewBag.rfanameC as string)
-		Priority: @Html.TextBox("priorityS", ViewBag.priorityC as string)
-		Grade: @Html.TextBox("gradeS", ViewBag.gradeC as string)
-		TroubleType: @Html.TextBox("troubletypeS", ViewBag.troubletypeC as string)
-		DateIssued: @Html.TextBox("dateissuedS", ViewBag.dateissuedC as string)
-		DateSent: @Html.TextBox("datesentS", ViewBag.datesentC as string)
-		EtrStatus: @Html.TextBox("etrstatusS", ViewBag.etrstatusC as string)
-		EtrType: @Html.TextBox("etrtypeS", ViewBag.etrtypeC as string)
-		NsnCoord: @Html.TextBox("nsncoordS", ViewBag.nsncoordC as string)
-		Subcontractor: @Html.TextBox("subconS", ViewBag.subconC as string)
-		Zone: @Html.TextBox("zoneS", ViewBag.zoneC as string)
-		<input type="submit" value="Search" />
-	</p>
-}
+<div id="filterMenu" class="sidenav">
+	<label class="label-header">Filters</label>
+	<button id="closeFilterMenu" class="btn btn-info btn-lg" style="float:right; margin-right: 5px" onclick="closeNav()">
+		<i class="glyphicon glyphicon-arrow-left"></i>
+	</button>
+	<form asp-action="Index" asp-controller="Reports" method="get">
+		<ul class="list-unstyled" style="width: 340px; margin-top: 51px; margin-left: 5px">
+			<li style="margin-bottom: 3px">
+				<label class="label-white">Etr number:</label>
+				<input type="text" id="etrnumberS" name="etrnumberS" value="@(ViewBag.etrnumberC)" placeholder="Etr number" style="float:right" />
+			</li>
+			<li style="margin-bottom: 3px">
+				<label class="label-white">Rfa id:</label>
+				<input type="text" id="rfaidS" name="rfaidS" value="@(ViewBag.rfaidC)" placeholder="Rfa id" style="float:right" />
+			</li>
+			<li style="margin-bottom: 3px">
+				<label class="label-white">Rfa name:</label>
+				<input type="text" id="rfanameS" name="rfanameS" value="@(ViewBag.rfanameC)" placeholder="Rfa name" style="float:right" />
+			</li>
+			<li style="margin-bottom: 3px">
+				<label class="label-white">Priority:</label>
+				<input type="text" id="priorityS" name="priorityS" value="@(ViewBag.priorityC)" placeholder="Priority" style="float:right" />
+			</li>
+			<li style="margin-bottom: 3px">
+				<label class="label-white">Grade:</label>
+				<input type="text" id="gradeS" name="gradeS" value="@(ViewBag.gradeC)" placeholder="Grade" style="float:right" />
+			</li>
+			<li style="margin-bottom: 3px">
+				<label class="label-white">Trouble type:</label>
+				<input type="text" id="troubletypeS" name="troubletypeS" value="@(ViewBag.troubletypeC)" placeholder="Trouble type" style="float:right" />
+			</li>
+			<li style="margin-bottom: 3px">
+				<label class="label-white">Date Issued:</label>
+				<input type="date" id="dateissuedS" name="dateissuedS" value="@(ViewBag.dateissuedC)" style="float:right" />
+			</li>
+			<li style="margin-bottom: 3px">
+				<label class="label-white">Date sent:</label>
+				<input type="date" id="datesentS" name="datesentS" value="@(ViewBag.datesentC)" style="float:right" />
+			</li>
+			<li style="margin-bottom: 3px">
+				<label class="label-white">Etr status:</label>
+				@Html.DropDownList("etrstatusS", ViewData["EtrStatusFilter"] as IEnumerable<SelectListItem>, "", new { id = "etrstatusS", value = ViewBag.etrstatusC, style = "float:right; height:26px" })
+			</li>
+			<li style="margin-bottom: 3px">
+				<label class="label-white">Etr type:</label>
+				@Html.DropDownList("etrtypeS", ViewData["EtrTypeFilter"] as IEnumerable<SelectListItem>, "", new { id = "etrtypeS", value = ViewBag.etrtypeC, style = "float:right; height:26px" })
+			</li>
+			<li style="margin-bottom: 3px">
+				<label class="label-white">Nokia coordinator:</label>
+				@Html.DropDownList("nsncoordS", ViewData["NsnCoordinatorFilter"] as IEnumerable<SelectListItem>, "", new { id = "nsncoordS", value = ViewBag.nsncoordC, style = "float:right; height:26px" })
+			</li>
+			<li style="margin-bottom: 3px">
+				<label class="label-white">Subcontractor:</label>
+				@Html.DropDownList("subconS", ViewData["SubcontractorFilter"] as IEnumerable<SelectListItem>, "", new { id = "subconS", value = ViewBag.subconC, style = "float:right; height:26px" })
+			</li>
+			<li style="margin-bottom: 3px">
+				<label class="label-white">Zone:</label>
+				@Html.DropDownList("zoneS", ViewData["ZoneFilter"] as IEnumerable<SelectListItem>, "", new { id = "zoneS", value = ViewBag.zoneC, style = "float:right; height:26px" })
+			</li>
+			<li>
+				<button class="btn btn-info" type="submit" style="float:right">Search</button>
+			</li>
+		</ul>
+	</form>
+</div>
 
+<script>
+	function openNav()
+	{
+		document.getElementById("filterMenu").style.width = "350px";
+		document.getElementById("openFilterMenu").style.visibility = 'hidden';
+	}
+
+	function closeNav()
+	{
+		document.getElementById("filterMenu").style.width = "0";
+		document.getElementById("openFilterMenu").style.visibility = 'visible';
+	}
+</script>
 
 <table class="table">
 	<thead>

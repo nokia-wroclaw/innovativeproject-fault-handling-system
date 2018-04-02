@@ -33,6 +33,18 @@ namespace Fault_handling_system.Controllers
         // GET: Reports
         public async Task<IActionResult> Index(string sortOrder, string etrnumberS, string priorityS, string etrnumberC, string priorityC, string rfaidS, string rfaidC, string rfanameS, string rfanameC, string gradeS, string gradeC, string troubletypeS, string troubletypeC, string dateissuedS, string dateissuedC, string datesentS, string datesentC, string etrstatusS, string etrstatusC, string etrtypeS, string etrtypeC, string nsncoordS, string nsncoordC, string subconS, string subconC, string zoneS, string zoneC)
         {
+			//lets us see only users of given roles in our dropdowns
+			//this is for dropdowns in filter sidebar
+			var requestors = await _userManager.GetUsersInRoleAsync("Requestor");
+			var nsnCoordinators = await _userManager.GetUsersInRoleAsync("Nokia Coordinator");
+			var subcontractors = await _userManager.GetUsersInRoleAsync("Subcontractor");
+
+			ViewData["EtrStatusFilter"] = new SelectList(_context.EtrStatus, "Status", "Status", null);
+			ViewData["EtrTypeFilter"] = new SelectList(_context.EtrType, "Type", "Type", null);
+			ViewData["NsnCoordinatorFilter"] = new SelectList(nsnCoordinators, "UserName", "UserName", null);
+			ViewData["SubcontractorFilter"] = new SelectList(subcontractors, "UserName", "UserName", null);
+			ViewData["ZoneFilter"] = new SelectList(_context.Zone, "ZoneName", "ZoneName", null);
+			//---
 			ViewBag.EtrNumSortParm = sortOrder == "etrnumber_desc" ? "etrnumber" : "etrnumber_desc";
             ViewBag.RfaIdSortParm = sortOrder == "rfaid_desc" ? "rfaid" : "rfaid_desc";
             ViewBag.RfaNameSortParm = sortOrder == "rfaname_desc" ? "rfaname" : "rfaname_desc";
@@ -317,9 +329,9 @@ namespace Fault_handling_system.Controllers
 
 			ViewData["EtrStatusId"] = new SelectList(_context.EtrStatus, "Id", "Status", report.EtrStatusId);
             ViewData["EtrTypeId"] = new SelectList(_context.EtrType, "Id", "Type", report.EtrTypeId);
-            ViewData["NsnCoordinatorId"] = new SelectList(_context.Users, "Id", "UserName", report.NsnCoordinatorId);
-            ViewData["RequestorId"] = new SelectList(_context.Users, "Id", "UserName", report.RequestorId);
-            ViewData["SubcontractorId"] = new SelectList(_context.Users, "Id", "UserName", report.SubcontractorId);
+            ViewData["NsnCoordinatorId"] = new SelectList(nsnCoordinators, "Id", "UserName", report.NsnCoordinatorId);
+            ViewData["RequestorId"] = new SelectList(requestors, "Id", "UserName", report.RequestorId);
+            ViewData["SubcontractorId"] = new SelectList(subcontractors, "Id", "UserName", report.SubcontractorId);
             ViewData["ZoneId"] = new SelectList(_context.Zone, "Id", "ZoneName", report.ZoneId);
             return View(report);
         }
