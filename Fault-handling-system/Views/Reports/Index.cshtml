@@ -235,7 +235,7 @@
 	</tbody>
 </table>
 
-@using (Html.BeginForm("Export", "Reports", new { etrnumberS = ViewBag.etrnumberS as string, priorityS = ViewBag.priorityS as string, rfaidS = ViewBag.rfaidS as string, rfanameS = ViewBag.rfanameS as string, gradeS = ViewBag.gradeS as string, troubletypeS = ViewBag.troubletypeS as string, dateissuedS = ViewBag.dateissuedS as string, datesentS = ViewBag.datesentS as string, etrstatusS = ViewBag.etrstatusS as string, etrtypeS = ViewBag.etrtypeS as string, nsncoordS = ViewBag.nsncoordS as string, subconS = ViewBag.subconS as string, zoneS = ViewBag.zoneS as string }, FormMethod.Post))
+@using (Html.BeginForm("Export", "Reports", FormMethod.Post))
 {
 	<input class="btn btn-info" type="submit" value="Export" />
 }

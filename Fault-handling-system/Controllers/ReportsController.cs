@@ -242,8 +242,22 @@ namespace Fault_handling_system.Controllers
 
 			//var filteredReportsJson = JsonConvert.SerializeObject(applicationDbContext.ToList()); //serialize list of filtered reports to json so TempData can handle it
 			//TempData["FilteredReports"] = filteredReportsJson;
-			
-            return View(await applicationDbContext.ToListAsync());
+
+			TempData["etrnumberS"] = etrnumberS;
+			TempData["rfaidS"] = rfaidS;
+			TempData["rfanameS"] = rfanameS;
+			TempData["priorityS"] = priorityS;
+			TempData["gradeS"] = gradeS;
+			TempData["troubletypeS"] = troubletypeS;
+			TempData["dateissuedS"] = dateissuedS;
+			TempData["datesentS"] = datesentS;
+			TempData["etrstatusS"] = etrstatusS;
+			TempData["etrtypeS"] = etrtypeS;
+			TempData["nsncoordS"] = nsncoordS;
+			TempData["subconS"] = subconS;
+			TempData["zoneS"] = zoneS;
+
+			return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Reports/Details/5
@@ -420,7 +434,7 @@ namespace Fault_handling_system.Controllers
 
         [HttpPost]
         [Route("Export")]
-        public FileContentResult Export(string etrnumberS, string priorityS, string rfaidS, string rfanameS, string gradeS, string troubletypeS, string dateissuedS, string datesentS, string etrstatusS, string etrtypeS, string nsncoordS, string subconS, string zoneS)
+        public FileContentResult Export()
         {
             const string DateFormat = "dd/MM/yyyy";
             byte[] bytes;
@@ -433,7 +447,6 @@ namespace Fault_handling_system.Controllers
                 file.Delete();
                 file = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
             }
-            
 
 			IQueryable<Report> applicationDbContext;
 
@@ -449,7 +462,7 @@ namespace Fault_handling_system.Controllers
 
 			Repositories.ReportRepository reportRepository = new Repositories.ReportRepository();
 
-			applicationDbContext = reportRepository.GetFilteredReports(applicationDbContext, etrnumberS, priorityS, rfaidS, rfanameS, gradeS, troubletypeS, dateissuedS, datesentS, etrstatusS, etrtypeS, nsncoordS, subconS, zoneS);
+			applicationDbContext = reportRepository.GetFilteredReports(applicationDbContext, TempData["etrnumberS"] as string, TempData["priorityS"] as string, TempData["rfaidS"] as string, TempData["rfanameS"] as string, TempData["gradeS"] as string, TempData["troubletypeS"] as string, TempData["dateissuedS"] as string, TempData["datesentS"] as string, TempData["etrstatusS"] as string, TempData["etrtypeS"] as string, TempData["nsncoordS"] as string, TempData["subconS"] as string, TempData["zoneS"] as string);
 			if (applicationDbContext != null)
 			{
 				System.Diagnostics.Debug.WriteLine("!!!Załadowano zgłoszenia!!!");
