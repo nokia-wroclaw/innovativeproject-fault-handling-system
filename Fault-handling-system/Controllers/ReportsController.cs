@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using OfficeOpenXml;
 using Newtonsoft.Json;
+using OfficeOpenXml.Style;
 
 namespace Fault_handling_system.Controllers
 {
@@ -421,6 +422,7 @@ namespace Fault_handling_system.Controllers
         [Route("Export")]
         public FileContentResult Export(string etrnumberS, string priorityS, string rfaidS, string rfanameS, string gradeS, string troubletypeS, string dateissuedS, string datesentS, string etrstatusS, string etrtypeS, string nsncoordS, string subconS, string zoneS)
         {
+            const string DateFormat = "dd/MM/yyyy";
             byte[] bytes;
             string sWebRootFolder = _hostingEnvironment.WebRootPath;
             string sFileName = @"Report.xlsx";
@@ -431,42 +433,8 @@ namespace Fault_handling_system.Controllers
                 file.Delete();
                 file = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
             }
-            using (ExcelPackage package = new ExcelPackage(file))
-            {
-                // add a new worksheet to the empty workbook
-                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Employee");
-                //First add the headers
-                worksheet.Cells[1, 1].Value = "ID";
-                worksheet.Cells[1, 2].Value = "Name";
-                worksheet.Cells[1, 3].Value = "Gender";
-                worksheet.Cells[1, 4].Value = "Salary (in $)";
+            
 
-                //Add values
-                worksheet.Cells["A2"].Value = 1000;
-                worksheet.Cells["B2"].Value = "Jon";
-                worksheet.Cells["C2"].Value = "M";
-                worksheet.Cells["D2"].Value = 5000;
-
-                worksheet.Cells["A3"].Value = 1001;
-                worksheet.Cells["B3"].Value = "Graham";
-                worksheet.Cells["C3"].Value = "M";
-                worksheet.Cells["D3"].Value = 10000;
-
-                worksheet.Cells["A4"].Value = 1002;
-                worksheet.Cells["B4"].Value = "Jenny";
-                worksheet.Cells["C4"].Value = "F";
-                worksheet.Cells["D4"].Value = 5000;
-
-                bytes = package.GetAsByteArray();
-            }
-			//check if TempData solution works
-			/*string reportsString = (string)TempData["FilteredReports"]; //get json string of filtered reports
-			List<Report> reports = JsonConvert.DeserializeObject<List<Report>>(reportsString); //deserialize json back to list of reports 
-			if (reports != null)
-			{
-				System.Diagnostics.Debug.WriteLine("!!!Załadowano zgłoszenia!!!");
-			}*/
-			//Check alternative option
 			IQueryable<Report> applicationDbContext;
 
 			if (User.IsInRole("Admin"))
@@ -486,8 +454,70 @@ namespace Fault_handling_system.Controllers
 			{
 				System.Diagnostics.Debug.WriteLine("!!!Załadowano zgłoszenia!!!");
 			}
-			//-------------------------------
-			return File(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", sFileName);
+            //-------------------------------
+
+            using (ExcelPackage package = new ExcelPackage(file))
+            {
+                // add a new worksheet to the empty workbook
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Report");
+                int line = 1;
+                //Add headers
+                worksheet.Cells[line, 1].Value = "EtrNumber";
+                worksheet.Cells[line, 2].Value = "NokiaCaseId";
+                worksheet.Cells[line, 3].Value = "RfaId";
+                worksheet.Cells[line, 4].Value = "RfaName";
+                worksheet.Cells[line, 5].Value = "AssignedTo";
+                worksheet.Cells[line, 6].Value = "Priority";
+                worksheet.Cells[line, 7].Value = "Grade";
+                worksheet.Cells[line, 8].Value = "TroubleType";
+                worksheet.Cells[line, 9].Value = "DateIssued";                               
+                worksheet.Cells[line, 10].Value = "DateSent";               
+                worksheet.Cells[line, 11].Value = "EtrToDes";
+                worksheet.Cells[line, 12].Value = "ClosingDate";            
+                worksheet.Cells[line, 13].Value = "EtrDescription";
+                worksheet.Cells[line, 14].Value = "Comment";
+                worksheet.Cells[line, 15].Value = "EtrStatus";
+                worksheet.Cells[line, 16].Value = "EtrType";
+                worksheet.Cells[line, 17].Value = "NsnCoordinator";
+                worksheet.Cells[line, 18].Value = "Requestor";
+                worksheet.Cells[line, 19].Value = "Subcontractor";
+                worksheet.Cells[line, 20].Value = "Zone";
+                line++;
+                //Add lines
+                foreach (Report report in applicationDbContext)
+                {
+                    worksheet.Cells[line, 1].Value = report.EtrNumber;
+                    worksheet.Cells[line, 2].Value = report.NokiaCaseId;
+                    worksheet.Cells[line, 3].Value = report.RfaId;
+                    worksheet.Cells[line, 4].Value = report.RfaName;
+                    worksheet.Cells[line, 5].Value = report.AssignedTo;
+                    worksheet.Cells[line, 6].Value = report.Priority;
+                    worksheet.Cells[line, 7].Value = report.Grade;
+                    worksheet.Cells[line, 8].Value = report.TroubleType;
+                    worksheet.Cells[line, 9].Value = report.DateIssued;
+                    worksheet.Cells[line, 9].Style.Numberformat.Format = DateFormat;
+
+                    worksheet.Cells[line, 10].Value = report.DateSent;
+                    worksheet.Cells[line, 10].Style.Numberformat.Format = DateFormat;
+
+                    worksheet.Cells[line, 11].Value = report.EtrToDes;
+                    worksheet.Cells[line, 12].Value = report.ClosingDate;
+                    worksheet.Cells[line, 12].Style.Numberformat.Format = DateFormat;
+
+                    worksheet.Cells[line, 13].Value = report.EtrDescription;
+                    worksheet.Cells[line, 14].Value = report.Comment;
+                    worksheet.Cells[line, 15].Value = report.EtrStatus.Status;
+                    worksheet.Cells[line, 16].Value = report.EtrType.Type;
+                    worksheet.Cells[line, 17].Value = report.NsnCoordinator;
+                    worksheet.Cells[line, 18].Value = report.Requestor;
+                    worksheet.Cells[line, 19].Value = report.Subcontractor;
+                    worksheet.Cells[line, 20].Value = report.Zone.ZoneName;
+                    line++;
+                }
+                
+                bytes = package.GetAsByteArray();
+            }
+            return File(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", sFileName);
         }
     }
 }
