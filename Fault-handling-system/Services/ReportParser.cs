@@ -27,7 +27,8 @@ namespace Fault_handling_system.Services
                                    subject);
 
             Report report = new Report();
-            MatchCollection mc = Regex.Matches(message, "^([^:\n]+): ([^:\n]+)$");
+            MatchCollection mc = Regex.Matches(message, "^([^:\n]+): ([^:\n]+)$",
+                                               RegexOptions.Multiline);
 
             foreach (Match match in mc) {
                 string key = match.Groups[1].Value;
