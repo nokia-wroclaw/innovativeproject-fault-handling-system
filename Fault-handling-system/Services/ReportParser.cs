@@ -39,7 +39,7 @@ namespace Fault_handling_system.Services
                     break;
                 case "Nokia case id":
                     try {
-                        report.NokiaCaseId = Int32.Parse(value);
+                        report.NokiaCaseId = Convert.ToInt64(value);
                     } catch (FormatException) {
                         _logger.LogError("Couldn't parse number: {0}: '{1}'", key, value);
                     }
@@ -49,7 +49,7 @@ namespace Fault_handling_system.Services
                     break;
                 case "RFA ID":
                     try {
-                        report.RfaId = Int32.Parse(value);
+                        report.RfaId = Convert.ToInt64(value);
                     } catch (FormatException) {
                         _logger.LogError("Couldn't parse number: {0}: '{1}'", key, value);
                     } catch (OverflowException) {
@@ -59,7 +59,7 @@ namespace Fault_handling_system.Services
                     break;
                 case "Ocena":
                     try {
-                        report.Grade = Int32.Parse(value);
+                        report.Grade = Convert.ToInt32(value);
                     } catch (FormatException) {
                         _logger.LogError("Couldn't parse number: {0}: '{1}'", key, value);
                     }
