@@ -26,6 +26,36 @@
     margin: 15px;
 }
 
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 56px;
+}
+
+.sidenav .label-header {
+    color: whitesmoke;
+    font-weight: bold;
+    font-size: 32px;
+    height: 46px;
+    margin-left: 5px;
+    float: left;
+}
+
+.sidenav .label-white {
+    color: whitesmoke;
+    font-weight: bold;
+    font-size: 14px;
+    height: 26px;
+    margin-bottom: 5px;
+}
+
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
     /* Hide captions */
