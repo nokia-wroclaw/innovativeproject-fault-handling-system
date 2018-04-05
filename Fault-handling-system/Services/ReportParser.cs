@@ -26,7 +26,17 @@ namespace Fault_handling_system.Services
                                    sender,
                                    subject);
 
+            bool hasRfaId = false;
+            bool hasZoneId = false;
+            bool hasEtrTypeId = false;
+            bool hasEtrStatusId = false;
+
             Report report = new Report();
+
+            // Trickier to parse
+            report.EtrStatusId = 0;
+            hasEtrStatusId = true;
+
             MatchCollection mc = Regex.Matches(message, "^([^:\n]+): ([^:\n]+)$",
                                                RegexOptions.Multiline);
 
@@ -52,6 +62,7 @@ namespace Fault_handling_system.Services
                 case "RFA ID":
                     try {
                         report.RfaId = Convert.ToInt64(value);
+                        hasRfaId = true;
                     } catch (FormatException) {
                         _logger.LogError("Couldn't parse number: {0}: '{1}'", key, value);
                     } catch (OverflowException) {
@@ -68,6 +79,7 @@ namespace Fault_handling_system.Services
                     break;
                 case "Trouble Type/Case Title":
                     // TODO parse it
+                    hasEtrTypeId = true; // I believe this is this field; TODO check it
                     break;
                 case "Subsystem":
                     // TODO which field is it?
@@ -87,6 +99,7 @@ namespace Fault_handling_system.Services
                 case "Zone":
                     try {
                         report.ZoneId = Convert.ToInt32(value);
+                        hasZoneId = true;
                     } catch (FormatException) {
                         _logger.LogError("Couldn't parse number: {0}: '{1}'", key, value);
                     }
@@ -112,7 +125,20 @@ namespace Fault_handling_system.Services
                 }
             }
 
-            return null;
+            // Check if the report has all required fields. If yes, return it; otherwise
+            // return null to indicate that parsing failed.
+            if (report.EtrNumber != null
+             && report.EtrDescription != null
+             && report.DateIssued != null
+             && report.RequestorId != null
+             && hasRfaId
+             && hasZoneId
+             && hasEtrTypeId
+             && hasEtrStatusId) {
+                return report;
+            } else {
+                return null;
+            }
         }
     }
 }
