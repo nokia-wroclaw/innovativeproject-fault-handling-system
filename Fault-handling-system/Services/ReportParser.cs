@@ -83,7 +83,11 @@ namespace Fault_handling_system.Services
                     // TODO which field is it?
                     break;
                 case "Zone":
-                    // TODO parse it
+                    try {
+                        report.ZoneId = Convert.ToInt32(value);
+                    } catch (FormatException) {
+                        _logger.LogError("Couldn't parse number: {0}: '{1}'", key, value);
+                    }
                     break;
                 case "Software Version":
                     // TODO which field is it?
