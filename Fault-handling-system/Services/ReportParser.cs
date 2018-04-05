@@ -38,10 +38,12 @@ namespace Fault_handling_system.Services
                     report.EtrNumber = value;
                     break;
                 case "Nokia case id":
-                    try {
-                        report.NokiaCaseId = Convert.ToInt64(value);
-                    } catch (FormatException) {
-                        _logger.LogError("Couldn't parse number: {0}: '{1}'", key, value);
+                    if (value != "NULL") {
+                        try {
+                            report.NokiaCaseId = Convert.ToInt64(value);
+                        } catch (FormatException) {
+                            _logger.LogError("Couldn't parse number: {0}: '{1}'", key, value);
+                        }
                     }
                     break;
                 case "Assigned To":
