@@ -32,7 +32,7 @@ namespace Fault_handling_system.Controllers
         }
 
         // GET: Reports
-        public async Task<IActionResult> Index(string sortOrder, string etrnumberS, string priorityS, string etrnumberC, string priorityC, string rfaidS, string rfaidC, string rfanameS, string rfanameC, string gradeS, string gradeC, string troubletypeS, string troubletypeC, string dateissuedS, string dateissuedC, string datesentS, string datesentC, string etrstatusS, string etrstatusC, string etrtypeS, string etrtypeC, string nsncoordS, string nsncoordC, string subconS, string subconC, string zoneS, string zoneC)
+        public async Task<IActionResult> Index(string sortOrder, string etrnumberS, string priorityS, string etrnumberC, string priorityC, string rfaidS, string rfaidC, string rfanameS, string rfanameC, string gradeS, string gradeC, string troubletypeS, string troubletypeC, string dateissuedfromS, string dateissuedtoS, string dateissuedfromC, string dateissuedtoC, string datesentfromS, string datesenttoS, string datesentfromC, string datesenttoC, string etrstatusS, string etrstatusC, string etrtypeS, string etrtypeC, string nsncoordS, string nsncoordC, string subconS, string subconC, string zoneS, string zoneC)
         {
 			//lets us see only users of given roles in our dropdowns
 			//this is for dropdowns in filter sidebar
@@ -73,11 +73,15 @@ namespace Fault_handling_system.Controllers
                 gradeS = gradeC;
             if (String.IsNullOrEmpty(troubletypeS))
                 troubletypeS = troubletypeC;
-            if (String.IsNullOrEmpty(dateissuedS))
-                dateissuedS = dateissuedC;
-            if (String.IsNullOrEmpty(datesentS))
-                datesentS = datesentC;
-            if (String.IsNullOrEmpty(etrstatusS))
+            if (String.IsNullOrEmpty(dateissuedfromS))
+                dateissuedfromS = dateissuedfromC;
+			if (String.IsNullOrEmpty(dateissuedtoS))
+				dateissuedtoS = dateissuedtoC;
+			if (String.IsNullOrEmpty(datesentfromS))
+                datesentfromS = datesentfromC;
+			if (String.IsNullOrEmpty(datesenttoS))
+				datesenttoS = datesenttoC;
+			if (String.IsNullOrEmpty(etrstatusS))
                 etrstatusS = etrstatusC;
             if (String.IsNullOrEmpty(etrtypeS))
                 etrtypeS = etrtypeC;
@@ -95,9 +99,11 @@ namespace Fault_handling_system.Controllers
             ViewBag.priorityC = priorityS;
             ViewBag.gradeC = gradeS;
             ViewBag.troubletypeC = troubletypeS;
-            ViewBag.dateissuedC = dateissuedS;
-            ViewBag.datesentC = datesentS;
-            ViewBag.etrstatusC = etrstatusS;
+            ViewBag.dateissuedfromC = dateissuedfromS;
+			ViewBag.dateissuedtoC = dateissuedtoS;
+			ViewBag.datesentfromC = datesentfromS;
+			ViewBag.datesenttoC = datesenttoS;
+			ViewBag.etrstatusC = etrstatusS;
             ViewBag.etrtypeC = etrtypeS;
             ViewBag.nsncoordC = nsncoordS;
             ViewBag.subconC = subconS;
@@ -117,7 +123,7 @@ namespace Fault_handling_system.Controllers
 
 			Repositories.ReportRepository reportRepository = new Repositories.ReportRepository();
 
-			applicationDbContext = reportRepository.GetFilteredReports(applicationDbContext, etrnumberS, priorityS, rfaidS, rfanameS, gradeS, troubletypeS, dateissuedS, datesentS, etrstatusS, etrtypeS, nsncoordS, subconS, zoneS);
+			applicationDbContext = reportRepository.GetFilteredReports(applicationDbContext, etrnumberS, priorityS, rfaidS, rfanameS, gradeS, troubletypeS, dateissuedfromS, dateissuedtoS, datesentfromS, datesenttoS, etrstatusS, etrtypeS, nsncoordS, subconS, zoneS);
 
 			//filters
 			/*if (!String.IsNullOrEmpty(etrnumberS))
@@ -249,8 +255,10 @@ namespace Fault_handling_system.Controllers
 			TempData["priorityS"] = priorityS;
 			TempData["gradeS"] = gradeS;
 			TempData["troubletypeS"] = troubletypeS;
-			TempData["dateissuedS"] = dateissuedS;
-			TempData["datesentS"] = datesentS;
+			TempData["dateissuedfromS"] = dateissuedfromS;
+			TempData["dateissuedtoS"] = dateissuedtoS;
+			TempData["datesentfromS"] = datesentfromS;
+			TempData["datesenttoS"] = datesentfromS;
 			TempData["etrstatusS"] = etrstatusS;
 			TempData["etrtypeS"] = etrtypeS;
 			TempData["nsncoordS"] = nsncoordS;
@@ -462,7 +470,7 @@ namespace Fault_handling_system.Controllers
 
 			Repositories.ReportRepository reportRepository = new Repositories.ReportRepository();
 
-			applicationDbContext = reportRepository.GetFilteredReports(applicationDbContext, TempData["etrnumberS"] as string, TempData["priorityS"] as string, TempData["rfaidS"] as string, TempData["rfanameS"] as string, TempData["gradeS"] as string, TempData["troubletypeS"] as string, TempData["dateissuedS"] as string, TempData["datesentS"] as string, TempData["etrstatusS"] as string, TempData["etrtypeS"] as string, TempData["nsncoordS"] as string, TempData["subconS"] as string, TempData["zoneS"] as string);
+			applicationDbContext = reportRepository.GetFilteredReports(applicationDbContext, TempData["etrnumberS"] as string, TempData["priorityS"] as string, TempData["rfaidS"] as string, TempData["rfanameS"] as string, TempData["gradeS"] as string, TempData["troubletypeS"] as string, TempData["dateissuedfromS"] as string, TempData["dateissuedtoS"] as string, TempData["datesentfromS"] as string, TempData["datesenttoS"] as string, TempData["etrstatusS"] as string, TempData["etrtypeS"] as string, TempData["nsncoordS"] as string, TempData["subconS"] as string, TempData["zoneS"] as string);
 			if (applicationDbContext != null)
 			{
 				System.Diagnostics.Debug.WriteLine("!!!Załadowano zgłoszenia!!!");

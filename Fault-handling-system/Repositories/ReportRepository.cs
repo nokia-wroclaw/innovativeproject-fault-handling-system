@@ -17,7 +17,7 @@ namespace Fault_handling_system.Repositories
 			//dbContext = applicationDbContext;
 		}
 
-		public IQueryable<Report> GetFilteredReports (IQueryable<Report> applicationDbContext, string etrnumberS, string priorityS, string rfaidS, string rfanameS, string gradeS, string troubletypeS, string dateissuedS, string datesentS, string etrstatusS, string etrtypeS, string nsncoordS, string subconS, string zoneS)
+		public IQueryable<Report> GetFilteredReports (IQueryable<Report> applicationDbContext, string etrnumberS, string priorityS, string rfaidS, string rfanameS, string gradeS, string troubletypeS, string dateissuedfromS, string dateissuedtoS, string datesentfromS, string datesenttoS, string etrstatusS, string etrtypeS, string nsncoordS, string subconS, string zoneS)
 		{
 			if (!String.IsNullOrEmpty(etrnumberS))
 				applicationDbContext = applicationDbContext.Where(r => r.EtrNumber.Contains(etrnumberS));
@@ -31,10 +31,26 @@ namespace Fault_handling_system.Repositories
 				applicationDbContext = applicationDbContext.Where(r => r.Grade.ToString().Contains(gradeS));
 			if (!String.IsNullOrEmpty(troubletypeS))
 				applicationDbContext = applicationDbContext.Where(r => r.TroubleType.Contains(troubletypeS));
-			if (!String.IsNullOrEmpty(dateissuedS))
-				applicationDbContext = applicationDbContext.Where(r => r.DateIssued.ToString().Contains(dateissuedS));
-			if (!String.IsNullOrEmpty(datesentS))
-				applicationDbContext = applicationDbContext.Where(r => r.DateSent.ToString().Contains(datesentS));
+			if (!String.IsNullOrEmpty(dateissuedfromS))
+			{
+				DateTime dateIssuedFrom = DateTime.ParseExact(dateissuedfromS, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+				applicationDbContext = applicationDbContext.Where(r => r.DateIssued >= dateIssuedFrom);
+			}
+			if (!String.IsNullOrEmpty(dateissuedtoS))
+			{
+				DateTime dateIssuedTo = DateTime.ParseExact(dateissuedtoS, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+				applicationDbContext = applicationDbContext.Where(r => r.DateIssued <= dateIssuedTo);
+			}
+			if (!String.IsNullOrEmpty(datesentfromS))
+			{
+				DateTime dateSentFrom = DateTime.ParseExact(dateissuedtoS, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+				applicationDbContext = applicationDbContext.Where(r => r.DateSent >= dateSentFrom);
+			}
+			if (!String.IsNullOrEmpty(datesenttoS))
+			{
+				DateTime dateSentTo = DateTime.ParseExact(dateissuedtoS, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+				applicationDbContext = applicationDbContext.Where(r => r.DateSent <= dateSentTo);
+			}
 			if (!String.IsNullOrEmpty(etrstatusS))
 				applicationDbContext = applicationDbContext.Where(r => r.EtrStatus.Status.Contains(etrstatusS));
 			if (!String.IsNullOrEmpty(etrtypeS))

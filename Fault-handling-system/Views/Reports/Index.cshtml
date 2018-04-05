@@ -59,12 +59,20 @@
 				<input type="text" id="troubletypeS" name="troubletypeS" value="@(ViewBag.troubletypeC)" placeholder="Trouble type" style="float:right" />
 			</li>
 			<li style="margin-bottom: 3px">
-				<label class="label-white">Date Issued:</label>
-				<input type="date" id="dateissuedS" name="dateissuedS" value="@(ViewBag.dateissuedC)" style="float:right" />
+				<label class="label-white">Date Issued from:</label>
+				<input type="date" id="dateissuedfromS" name="dateissuedfromS" onchange="setIssuedMinDate()" value="@(ViewBag.dateissuedfromC)" style="float:right" />
 			</li>
 			<li style="margin-bottom: 3px">
-				<label class="label-white">Date sent:</label>
-				<input type="date" id="datesentS" name="datesentS" value="@(ViewBag.datesentC)" style="float:right" />
+				<label class="label-white">To:</label>
+				<input type="date" id="dateissuedtoS" name="dateissuedtoS" onchange="setIssuedMaxDate()" value="@(ViewBag.dateissuedtoC)" style="float:right" />
+			</li>
+			<li style="margin-bottom: 3px">
+				<label class="label-white">Date sent from:</label>
+				<input type="date" id="datesentfromS" name="datesentfromS" onchange="setSentMinDate()" value="@(ViewBag.datesentfromC)" style="float:right" />
+			</li>
+			<li style="margin-bottom: 3px">
+				<label class="label-white">To:</label>
+				<input type="date" id="datesenttoS" name="datesenttoS" onchange="setSentMaxDate()" value="@(ViewBag.datesenttoC)" style="float:right" />
 			</li>
 			<li style="margin-bottom: 3px">
 				<label class="label-white">Etr status:</label>
@@ -104,6 +112,38 @@
 	{
 		document.getElementById("filterMenu").style.width = "0";
 		document.getElementById("openFilterMenu").style.visibility = 'visible';
+	}
+	//not very elegant, could change to something reusable
+	function setIssuedMinDate()
+	{
+		var fromPicker = document.getElementById("dateissuedfromS");
+		var toPicker = document.getElementById("dateissuedtoS");
+
+		toPicker.setAttribute("min", fromPicker.value);
+	}
+
+	function setIssuedMaxDate()
+	{
+		var fromPicker = document.getElementById("dateissuedfromS");
+		var toPicker = document.getElementById("dateissuedtoS");
+
+		fromPicker.setAttribute("max", toPicker.value);
+	}
+
+	function setSentMinDate()
+	{
+		var fromPicker = document.getElementById("datesentfromS");
+		var toPicker = document.getElementById("datesenttoS");
+
+		toPicker.setAttribute("min", fromPicker.value);
+	}
+
+	function setSentMaxDate()
+	{
+		var fromPicker = document.getElementById("datesentfromS");
+		var toPicker = document.getElementById("datesenttoS");
+
+		fromPicker.setAttribute("max", toPicker.value);
 	}
 </script>
 
