@@ -5,7 +5,7 @@
 }
 
 <!--<h2>Index</h2>-->
-<button asp-action="Create" class="btn btn-info" style="margin-top: 5px">Create</button>
+<input type="button" value="Create" onclick="location.href='@Url.Action("Create", "Reports")'" class="btn btn-info" style="margin-top: 5px"/>
 <button id="openFilterMenu" class="btn btn-info" onclick="openNav()" style="margin-top: 5px">Open filter menu</button>
 @*using (Html.BeginForm("Index", "Reports", FormMethod.Get))
 	{
