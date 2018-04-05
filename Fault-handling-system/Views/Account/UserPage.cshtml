@@ -1,3 +1,5 @@
+@model IEnumerable<Fault_handling_system.Models.Report>
+
 @{
     ViewData["Title"] = "User page";
 }
@@ -13,4 +15,80 @@
             </div>
         </div>
     </div>
+    @if (User.IsInRole("Admin"))
+    {
+        <div class=row>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h2 class="panel-title">Unassigned reports</h2>
+                </div>
+                <div class="panel-body">
+                <table class="table">
+                    <thead>
+		                <tr>
+			                <th>EtrNumber</th>
+			                <th>RfaId</th>
+				            <th>RfaName</th>
+                            <th>Priority</th>
+			                <th>Grade</th>
+				            <th>TroubleType</th>  
+			                <th>DateIssued</th>
+			                <th>DateSent</th>
+                            <th>EtrStatus</th>
+                            <th>EtrType</th>
+                            <th>Subcontractor</th>
+			                <th>Zone</th>
+		                </tr>
+	                </thead>
+                    <tbody>
+		                @foreach (var item in Model)
+		                {
+			                <tr>
+				                <td>
+					                @Html.DisplayFor(modelItem => item.EtrNumber)
+				                </td>
+                                <td>
+					                @Html.DisplayFor(modelItem => item.RfaId)
+				                </td>
+				                <td>
+					                @Html.DisplayFor(modelItem => item.RfaName)
+				                </td>
+				                <td>
+					                @Html.DisplayFor(modelItem => item.Priority)
+				                </td>
+				                <td>
+					                @Html.DisplayFor(modelItem => item.Grade)
+				                </td>
+				                <td>
+					                @Html.DisplayFor(modelItem => item.TroubleType)
+				                </td>
+				                <td>
+					                @Html.DisplayFor(modelItem => item.DateIssued)
+				                </td>
+				                <td>
+					                @Html.DisplayFor(modelItem => item.DateSent)
+				                </td>
+				                <td>
+					                @Html.DisplayFor(modelItem => item.EtrStatus.Status)
+				                </td>
+				                <td>
+					                @Html.DisplayFor(modelItem => item.EtrType.Type)
+				                </td>
+				                <td>
+					                @Html.DisplayFor(modelItem => item.Subcontractor.UserName)<!--Id by default-->
+				                </td>
+				                <td>
+					                @Html.DisplayFor(modelItem => item.Zone.ZoneName)
+				                </td>
+                                <td>
+                                    <a asp-action="Edit" asp-controller="Reports" asp-route-id="@item.Id">Assign</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    }    
 </div>
