@@ -40,9 +40,5 @@ namespace Fault_handling_system.Services
                 await Task.Delay(checkInterval * 1000, stoppingToken);
             }
         }
-
-        public override async Task StopAsync (CancellationToken stoppingToken)
-        {
-        }
     }
 }
