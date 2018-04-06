@@ -33,6 +33,7 @@ namespace Fault_handling_system
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<MailboxFetcherSettings>(Configuration);
+            services.Configure<EmailSenderSettings>(Configuration);
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("AzureConnection"))); //DefaultConnection
