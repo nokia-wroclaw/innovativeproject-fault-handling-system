@@ -26,18 +26,18 @@
                 <table class="table">
                     <thead>
 		                <tr>
-			                <th>EtrNumber</th>
-			                <th>RfaId</th>
-				            <th>RfaName</th>
-                            <th>Priority</th>
-			                <th>Grade</th>
-				            <th>TroubleType</th>  
-			                <th>DateIssued</th>
-			                <th>DateSent</th>
-                            <th>EtrStatus</th>
-                            <th>EtrType</th>
-                            <th>Subcontractor</th>
-			                <th>Zone</th>
+			                <th>@Html.DisplayNameFor(item => item.EtrNumber)</th>
+			                <th>@Html.DisplayNameFor(item => item.RfaId)</th>
+				            <th>@Html.DisplayNameFor(item => item.RfaName)</th>
+                            <th>@Html.DisplayNameFor(item => item.Priority)</th>
+			                <th>@Html.DisplayNameFor(item => item.Grade)</th>
+				            <th>@Html.DisplayNameFor(item => item.TroubleType)</th>  
+			                <th>@Html.DisplayNameFor(item => item.DateIssued)</th>
+			                <th>@Html.DisplayNameFor(item => item.DateSent)</th>
+                            <th>@Html.DisplayNameFor(item => item.EtrStatus)</th>
+                            <th>@Html.DisplayNameFor(item => item.EtrType)</th>
+                            <th>@Html.DisplayNameFor(item => item.Subcontractor)</th>
+			                <th>@Html.DisplayNameFor(item => item.Zone)</th>
 		                </tr>
 	                </thead>
                     <tbody>
@@ -75,13 +75,13 @@
 					                @Html.DisplayFor(modelItem => item.EtrType.Type)
 				                </td>
 				                <td>
-					                @Html.DisplayFor(modelItem => item.Subcontractor.UserName)<!--Id by default-->
+					                @Html.DisplayFor(modelItem => item.Subcontractor.UserName)
 				                </td>
 				                <td>
 					                @Html.DisplayFor(modelItem => item.Zone.ZoneName)
 				                </td>
                                 <td>
-                                    <a asp-action="Edit" asp-controller="Reports" asp-route-id="@item.Id">Assign</a>
+                                    <a asp-action="Assign" asp-controller="Reports" asp-route-id="@item.Id">Assign</a>
                                 </td>
                             </tr>
                         }
