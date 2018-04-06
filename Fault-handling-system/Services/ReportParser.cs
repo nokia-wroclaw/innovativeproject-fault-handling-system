@@ -165,7 +165,14 @@ namespace Fault_handling_system.Services
                     missingFields += "EtrType ";
                 if (!hasEtrStatusId)
                     missingFields += "EtrStatus ";
-                _logger.LogDebug("Parsing failed because of missing fields: {0}", missingFields);
+
+                if (report.EtrNumber != null)
+                    _logger.LogDebug("Parsing of {0} failed because of missing fields: {1}",
+                                     report.EtrNumber, missingFields);
+                else
+                    _logger.LogDebug("Parsing of '{0}' failed because of missing fields: {1}",
+                                     subject, missingFields);
+
                 return null;
             }
         }
