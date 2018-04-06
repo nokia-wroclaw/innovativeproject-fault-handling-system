@@ -116,6 +116,7 @@ namespace Fault_handling_system.Services
                                 var context = scope.ServiceProvider
                                                         .GetRequiredService<ApplicationDbContext>();
                                 context.Report.Add(report);
+                                context.SaveChanges();
                             }
                         } else {
                             _logger.LogWarning("Failed to parse report {0}", subject);
