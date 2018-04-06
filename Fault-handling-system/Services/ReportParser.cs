@@ -125,6 +125,10 @@ namespace Fault_handling_system.Services
                 }
             }
 
+            Match m = Regex.Match(message, @"^Description:\s(.*)", RegexOptions.Multiline);
+            if (m.Success)
+                report.EtrDescription = m.Groups[1].Value;
+
             // Check if the report has all required fields. If yes, return it; otherwise
             // return null to indicate that parsing failed.
             if (report.EtrNumber != null
