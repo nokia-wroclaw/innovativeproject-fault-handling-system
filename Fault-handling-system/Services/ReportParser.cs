@@ -120,7 +120,7 @@ namespace Fault_handling_system.Services
                     // Ignore
                     break;
                 default:
-                    _logger.LogDebug("Unknown key-value pair: {0}: {1}", key, value);
+                    // Ignore unknown key-value pairs
                     break;
                 }
             }
@@ -137,6 +137,24 @@ namespace Fault_handling_system.Services
              && hasEtrStatusId) {
                 return report;
             } else {
+                string missingFields = "";
+                if (report.EtrNumber == null)
+                    missingFields += "EtrNumber ";
+                if (report.EtrDescription == null)
+                    missingFields += "EtrDescription ";
+                if (report.DateIssued == null)
+                    missingFields += "DateIssued ";
+                if (report.RequestorId == null)
+                    missingFields += "Requestor ";
+                if (!hasRfaId)
+                    missingFields += "RfaId ";
+                if (!hasZoneId)
+                    missingFields += "Zone ";
+                if (!hasEtrTypeId)
+                    missingFields += "EtrType ";
+                if (!hasEtrStatusId)
+                    missingFields += "EtrStatus ";
+                _logger.LogDebug("Parsing failed because of missing fields: {0}", missingFields);
                 return null;
             }
         }
