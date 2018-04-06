@@ -75,7 +75,9 @@ namespace Fault_handling_system.Services
                     report.TroubleType = value;
                     break;
                 case "Subsystem":
-                    // TODO which field is it?
+                    // TODO map it to EtrType entity
+                    report.EtrTypeId = 1;
+                    hasEtrTypeId = true; // I believe this is this field; TODO check it
                     break;
                 case "Vendor Priority/Severity":
                     report.Priority = value;
