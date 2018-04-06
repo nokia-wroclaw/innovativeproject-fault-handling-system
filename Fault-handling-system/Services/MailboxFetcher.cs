@@ -108,16 +108,29 @@ namespace Fault_handling_system.Services
                         Report report = _reportParser.ParseReport(sender, subject, body);
 
                         if (report != null) {
-                            _logger.LogInformation("Successfully parsed report '{0}' from {1}",
-                                                   subject, sender);
                             inbox.AddFlags(i, MessageFlags.Seen, true);
                             inbox.MoveTo(i, parsed);
 
                             using (IServiceScope scope = _serviceProvider.CreateScope()) {
                                 var context = scope.ServiceProvider
                                                         .GetRequiredService<ApplicationDbContext>();
-                                context.Report.Add(report);
-                                context.SaveChanges();
+
+                                // If there is an existing report in the database that matches
+                                // ETR Number of this report, ignore this report (don't put
+                                // duplicates)
+                                Report alreadyExisting = context.Report.SingleOrDefault(existing
+                                                        => existing.EtrNumber == report.EtrNumber);
+
+                                if (alreadyExisting == null) {
+                                    _logger.LogInformation("Successfully parsed report '{0}'" +
+                                                           " from {1} - inserting to database",
+                                                           subject, sender);
+                                    context.Report.Add(report);
+                                    context.SaveChanges();
+                                } else {
+                                    _logger.LogInformation("Not inserting duplicate report {0}",
+                                                           report.EtrNumber);
+                                }
                             }
                         } else {
                             _logger.LogWarning("Failed to parse report '{0}' from {1}",
