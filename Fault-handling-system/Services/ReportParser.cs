@@ -20,12 +20,6 @@ namespace Fault_handling_system.Services
 
         public Report ParseReport(string sender, string subject, string message)
         {
-            _logger.LogInformation("Handling report:\n" +
-                                   "  Sender: {0}\n" +
-                                   "  Subject: {1}",
-                                   sender,
-                                   subject);
-
             bool hasRfaId = false;
             bool hasZoneId = false;
             bool hasEtrTypeId = false;

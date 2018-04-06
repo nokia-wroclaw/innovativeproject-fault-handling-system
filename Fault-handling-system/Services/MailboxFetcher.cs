@@ -108,7 +108,8 @@ namespace Fault_handling_system.Services
                         Report report = _reportParser.ParseReport(sender, subject, body);
 
                         if (report != null) {
-                            _logger.LogInformation("Successfully parsed report {0}", subject);
+                            _logger.LogInformation("Successfully parsed report '{0}' from {1}",
+                                                   subject, sender);
                             inbox.AddFlags(i, MessageFlags.Seen, true);
                             inbox.MoveTo(i, parsed);
 
@@ -119,7 +120,8 @@ namespace Fault_handling_system.Services
                                 context.SaveChanges();
                             }
                         } else {
-                            _logger.LogWarning("Failed to parse report {0}", subject);
+                            _logger.LogWarning("Failed to parse report '{0}' from {1}",
+                                               subject, sender);
                             inbox.AddFlags(i, MessageFlags.Seen, true);
                             inbox.MoveTo(i, failed);
                         }
