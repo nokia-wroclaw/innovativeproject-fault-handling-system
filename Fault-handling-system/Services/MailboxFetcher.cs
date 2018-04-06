@@ -108,8 +108,13 @@ namespace Fault_handling_system.Services
                         Report report = _reportParser.ParseReport(sender, subject, body);
 
                         if (report != null) {
-                            inbox.AddFlags(i, MessageFlags.Seen, true);
-                            inbox.MoveTo(i, parsed);
+                            try {
+                                inbox.AddFlags(i, MessageFlags.Seen, true);
+                                inbox.MoveTo(i, parsed);
+                            } catch (MailKit.Net.Imap.ImapCommandException e) {
+                                _logger.LogError("Exception occured while trying to mark mail " +
+                                                 "as read or move it: {0}", e);
+                            }
 
                             using (IServiceScope scope = _serviceProvider.CreateScope()) {
                                 var context = scope.ServiceProvider
