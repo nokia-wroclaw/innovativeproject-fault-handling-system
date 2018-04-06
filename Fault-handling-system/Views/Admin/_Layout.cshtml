@@ -1,0 +1,22 @@
+﻿@{
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Admin panel</h2>
+
+<div>
+    <h4>Manage users</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-3">
+            @await Html.PartialAsync("_ManageAdminNav")
+        </div>
+        <div class="col-md-9">
+            @RenderBody()
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @RenderSection("Scripts", required: false)
+}

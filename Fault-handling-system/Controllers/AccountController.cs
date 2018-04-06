@@ -206,6 +206,23 @@ namespace Fault_handling_system.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ManageUsers(string returnUrl = null)
+        {
+            var model = new ManageUsersViewModel();
+            model.Users = _userManager.Users.ToList();
+            model.Roles = new IList<string>[model.Users.Count];
+            int counter = 0;
+            foreach (var user in model.Users)
+            {
+                model.Roles[counter] = await _userManager.GetRolesAsync(user);
+                counter++;
+            }
+            ViewData["ReturnUrl"] = returnUrl;
+            return View(model);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IActionResult Register(string returnUrl = null)
         {
             var roles = GetAllRoles();
