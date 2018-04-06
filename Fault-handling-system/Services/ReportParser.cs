@@ -27,8 +27,8 @@ namespace Fault_handling_system.Services
 
             Report report = new Report();
 
-            // Trickier to parse
-            report.EtrStatusId = 0;
+            // For "New ETR" mails, it is always "In Realization" - hardcode
+            report.EtrStatusId = 2;
             hasEtrStatusId = true;
 
             MatchCollection mc = Regex.Matches(message, "^([^:\n]+): ([^:\n]+)$",
@@ -128,6 +128,12 @@ namespace Fault_handling_system.Services
             Match m = Regex.Match(message, @"^Description:\s(.*)", RegexOptions.Multiline);
             if (m.Success)
                 report.EtrDescription = m.Groups[1].Value;
+
+            if (report.RequestorId == null) {
+                // If we didn't find the requestor, assign hardcoded unknown.requestor@example.com
+                // TODO: This is just for demo. Do it better.
+                report.RequestorId = "6963f5c6-c245-4369-8077-af688a6b639b";
+            }
 
             // Check if the report has all required fields. If yes, return it; otherwise
             // return null to indicate that parsing failed.
