@@ -72,8 +72,7 @@ namespace Fault_handling_system.Services
                     }
                     break;
                 case "Trouble Type/Case Title":
-                    // TODO parse it
-                    hasEtrTypeId = true; // I believe this is this field; TODO check it
+                    report.TroubleType = value;
                     break;
                 case "Subsystem":
                     // TODO which field is it?
