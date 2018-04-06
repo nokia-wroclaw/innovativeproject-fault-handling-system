@@ -108,6 +108,12 @@ namespace Fault_handling_system.Services
                     // TODO map it to the coordinator entity
                     break;
                 case "Content-Type":
+                    // Antispam filter :) For now let's assume all reports are text/plain
+                    if (value.StartsWith("text/html")) {
+                        _logger.LogDebug("Antispam filter denies parsing of '{0}'", subject);
+                        return null;
+                    }
+                    break;
                 case "Content-Disposition":
                 case "Content-Transfer-Encoding":
                 case "Content-Id":
