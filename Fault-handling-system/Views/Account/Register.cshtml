@@ -1,14 +1,17 @@
-﻿@model RegisterViewModel
-@{
-    ViewData["Title"] = "Register";
+﻿@{
+    Layout = "/Views/Shared/_MyAdminLayout.cshtml";
 }
-
-<h2>@ViewData["Title"]</h2>
-
+@using Fault_handling_system.Views.Account
+@model RegisterViewModel
+@{
+    Layout = "/Views/Admin/_Layout.cshtml";
+    ViewData["Title"] = "Create a new account";
+    ViewData.AddActivePage(ManageAdminNavPages.Register);
+}
+<h4>@ViewData["Title"]</h4>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
-            <h4>Create a new account.</h4>
             <hr />
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
