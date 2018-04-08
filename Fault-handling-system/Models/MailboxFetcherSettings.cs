@@ -6,6 +6,7 @@ namespace Fault_handling_system.Models
         {
         }
 
+        public bool DoMailboxFetching { get; set; } = true;
         public int CheckInterval { get; set; } = 15;
         public string ImapServer { get; set; }
         public int ImapPort { get; set; } = 993;
