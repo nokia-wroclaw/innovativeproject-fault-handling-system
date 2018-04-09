@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Fault_handling_system.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Fault_handling_system.Controllers
 {
@@ -33,6 +34,7 @@ namespace Fault_handling_system.Controllers
         {
             return View();
         }
+
 
         public IActionResult Error()
         {
