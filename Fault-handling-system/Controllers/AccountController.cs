@@ -24,6 +24,7 @@ namespace Fault_handling_system.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
+        private ApplicationUser editableUser;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -204,13 +205,110 @@ namespace Fault_handling_system.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Admin")]
+        public IActionResult AdminGuide()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> EditRoles(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var model = new EditableUser();
+            var user = await _userManager.FindByIdAsync(id);
+            model.UserName = user.UserName;
+            model.Email = user.Email;
+            model.Roles = await _userManager.GetRolesAsync(user);
+            var roles = GetAllRoles();
+            model.ERoles = GetSelectListItems(roles);
+            if (model == null)
+            {
+                return NotFound();
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Assign(EditableUser model, string returnUrl = null)
+        {
+            var roles = GetAllRoles();
+            model.ERoles = GetSelectListItems(roles);
+            ViewData["ReturnUrl"] = returnUrl;
+           
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            await _userManager.AddToRoleAsync(user, model.Role);
+            model.Roles = await _userManager.GetRolesAsync(user);
+
+            await EditRoles(user.Id);
+            return View("~/Views/Account/EditRoles.cshtml");
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Unassign(EditableUser model, string returnUrl = null)
+        {
+            var roles = GetAllRoles();
+            model.ERoles = GetSelectListItems(roles);
+            ViewData["ReturnUrl"] = returnUrl;
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            await _userManager.RemoveFromRoleAsync(user, model.Role);
+            model.Roles = await _userManager.GetRolesAsync(user);
+
+            await EditRoles(user.Id);
+            return View("~/Views/Account/EditRoles.cshtml");
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var model = new EditableUser();
+            var user = await _userManager.FindByIdAsync(id);
+            model.UserName = user.UserName;
+            model.Email = user.Email;
+            model.Roles = await _userManager.GetRolesAsync(user);
+            if (model == null)
+            {
+                return NotFound();
+            }
+
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            await _userManager.DeleteAsync(user);
+            return RedirectToAction(nameof(ManageUsers));
+        }
+
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ManageUsers(string returnUrl = null)
         {
             var model = new ManageUsersViewModel();
+            var roles = GetAllRoles();
             model.Users = _userManager.Users.ToList();
             model.Roles = new IList<string>[model.Users.Count];
+            model.ERoles = GetSelectListItems(roles);
             int counter = 0;
             foreach (var user in model.Users)
             {
@@ -220,6 +318,7 @@ namespace Fault_handling_system.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             return View(model);
         }
+
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
@@ -242,7 +341,7 @@ namespace Fault_handling_system.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Login, Email = model.Email };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

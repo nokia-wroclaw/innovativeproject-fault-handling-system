@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -8,15 +8,11 @@ using System.Threading.Tasks;
 
 namespace Fault_handling_system.Models.AccountViewModels
 {
-    [Authorize(Roles = "Admin")]
-    public class ManageUsersViewModel
+    public class EditableUser : IdentityUser
     {
-        [Display(Name = "Lista użytkowników")]
-        public List<ApplicationUser> Users { get; set; }
-
-        public IList<string>[] Roles { get; set; }
-
+        [Required]
         public string Role { get; set; }
+        public IList<string> Roles { get; set; }
         public IEnumerable<SelectListItem> ERoles { get; set; }
     }
 }
