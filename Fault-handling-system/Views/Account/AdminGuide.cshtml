@@ -1,0 +1,15 @@
+﻿@{
+    Layout = "/Views/Shared/_MyAdminLayout.cshtml";
+}
+@using Fault_handling_system.Views.Account
+@{
+    Layout = "/Views/Admin/_Layout.cshtml";
+    ViewData["Title"] = "Admin guide";
+    ViewData.AddActivePage(ManageAdminNavPages.AdminGuide);
+}
+
+<h4>@ViewData["Title"]</h4>
+
+<p>
+    Welcome to Fault Handling System!
+</p>

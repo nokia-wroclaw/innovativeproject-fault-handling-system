@@ -8,6 +8,7 @@
     ViewData["Title"] = "List of users";
     ViewData.AddActivePage(ManageAdminNavPages.ManageUsers);
 }
+
 <h4>@ViewData["Title"]</h4>
 <table class="table">
     <thead>
@@ -19,23 +20,58 @@
     </thead>
     <tbody>
         @{int counter = 0;}
-            @foreach (var user in Model.Users)
-            {
-                <tr>
-                    <td>
-                        @user.UserName
-                    </td>
-                    <td>
-                        @user.Email
-                    </td>
-                    <td>
-                        @foreach (string role in Model.Roles[counter])
-                        {
-                            @(role + " ")
-                        }
-                    </td>
-                </tr>
-                counter++;
-            }
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>
+                    @user.UserName
+                </td>
+                <td>
+                    @user.Email
+                </td>
+                <td>
+                    @foreach (string role in Model.Roles[counter])
+                    {
+                        @(role + " ")
+                    }
+                </td>
+                <td>
+                    <a asp-action="Delete" asp-route-id="@user.Id">Delete</a> |
+                    <a asp-action="EditRoles" asp-route-id="@user.Id">Edit</a>
+                </td>
+            </tr>
+            counter++;
+        }
     </tbody>
 </table>
+
+@*<div id="rolesMenu" class="sidenav">
+    <label class="label-header">Roles</label>
+    <button id="closeRolesMenu" class="btn btn-info btn-lg" style="float:right; margin-right: 5px" onclick="closeNav()">
+        <i class="glyphicon glyphicon-arrow-left"></i>
+    </button>
+    <form asp-action="ManageUsers" asp-controller="Account" method="get">
+        <ul class="list-unstyled" style="width: 340px; margin-top: 51px; margin-left: 5px">
+            <li style="margin-bottom: 3px">
+                <label class="label-white">Role:</label>
+                @Html.DropDownListFor(m => m.Role, Model.ERoles, "- Please select a role -", new { @class = "form-control" })
+            </li>
+            <li>
+                <button class="btn btn-info" type="submit" style="float:left" asp- asp-action="AssignRole" asp-route-id="">Assign</button>
+                <button class="btn btn-info" type="submit" style="float:right">Unassign</button>
+            </li>
+        </ul>
+    </form>
+</div>
+
+<script>
+    function openNav() {
+        document.getElementById("rolesMenu").style.width = "350px";
+        document.getElementById("openRolesMenu").style.visibility = 'hidden';
+    }
+
+    function closeNav() {
+        document.getElementById("rolesMenu").style.width = "0";
+        document.getElementById("openRolesMenu").style.visibility = 'visible';
+    }
+</script>*@

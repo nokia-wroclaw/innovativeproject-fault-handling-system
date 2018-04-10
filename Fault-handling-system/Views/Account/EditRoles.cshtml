@@ -1,0 +1,55 @@
+﻿
+@using Fault_handling_system.Views.Account
+@model EditableUser
+
+@{
+    ViewData["Title"] = "EditRoles";
+}
+<h2>Edit roles</h2>
+
+<div>
+    <h4>User</h4>
+    <hr />
+    <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.UserName)
+            </dt>
+            <dd>
+                <input asp-for="UserName" readonly="readonly" class="form-control" />
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+            <dd>
+                <input asp-for="Email" readonly="readonly" class="form-control" />
+            </dd>
+
+            @{ int counter = 1; }
+            @foreach (var role in Model.Roles)
+            {
+                <dt>
+                    Role @counter:
+                </dt>
+                <dd>
+                    @role
+                </dd>
+                counter++;
+            }
+            <dt class="form-group">
+                @Html.DropDownListFor(m => m.Role, Model.ERoles, "- Please select a role -", new { @class = "form-control" })
+            </dt>
+            <dd>
+                <button type="submit" class="btn btn-default" asp-controller="Account" asp-action="Assign">Assign</button>
+                <button type="submit" class="btn btn-default" asp-controller="Account" asp-action="Unassign">Unassign</button>
+                <a asp-action="ManageUsers" class="btn btn-default">Back to list</a>
+
+            </dd>
+        </dl>
+    </form>
+
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
