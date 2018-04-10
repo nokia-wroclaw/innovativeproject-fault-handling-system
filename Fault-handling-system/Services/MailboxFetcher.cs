@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Web;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -108,7 +110,52 @@ namespace Fault_handling_system.Services
                         Report report = _reportParser.ParseReport(sender, subject, body);
 
                         if (report != null) {
-                            try {
+
+                            //download attachments and save to chosen folder
+                            string etr = string.Join("", report.EtrNumber.Replace("\r",""));
+                            foreach (var attachment in message.Attachments)
+                            {
+
+                                string fileName = string.Join("_", attachment.ContentDisposition.FileName.Split(Path.GetInvalidFileNameChars()));
+                                char[] separators = { (char)47, (char)92 };
+                                fileName = string.Join("-", fileName.Split(separators));
+                                string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\attachments\" + etr);
+                                try
+                                {
+                                    if (!Directory.Exists(path))
+                                    {
+                                        DirectoryInfo di = Directory.CreateDirectory(path);
+                                    }
+
+                                    path = path + @"\" + fileName;
+
+                                    using (var stream = File.Create(path))
+                                    {
+                                        if (attachment is MessagePart)
+                                        {
+                                            var part = (MessagePart)attachment;
+
+                                            part.Message.WriteTo(stream);
+                                        }
+                                        else
+                                        {
+                                            var part = (MimePart)attachment;
+
+                                            part.ContentObject.DecodeTo(stream);
+                                            _logger.LogInformation("Attachment " + fileName + " stored for report: " + etr);
+                                        }
+                                    }
+
+                                }
+                                catch (IOException e) {_logger.LogError("Could not create directory:  ", e);
+                                };
+                                
+                            }
+                            //end of attachments storage part
+
+
+                            try
+                            {
                                 inbox.AddFlags(i, MessageFlags.Seen, true);
                                 inbox.MoveTo(i, parsed);
                             } catch (MailKit.Net.Imap.ImapCommandException e) {
