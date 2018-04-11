@@ -8,8 +8,11 @@ namespace Fault_handling_system.Models
 {
     public class ReportFilter
     {
+		[Key]
+		public int Id { get; set; }
 		[Required]
 		public string UserId { get; set; }
+		public virtual ApplicationUser User { get; set; }
 		public string Name { get; set; }
 		public string EtrNumber { get; set; }
 		public string RfaId { get; set; }
