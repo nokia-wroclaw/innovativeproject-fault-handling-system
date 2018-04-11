@@ -112,13 +112,15 @@ namespace Fault_handling_system.Services
                         if (report != null) {
 
                             //download attachments and save to chosen folder
-                            string etr = string.Join("", report.EtrNumber.Replace("\r",""));
+                            char[] separators = { (char)47, (char)92 };
+                            string etr = report.EtrNumber.Replace("\r","");
+                            etr = string.Join("", etr.Split(separators));
+
                             foreach (var attachment in message.Attachments)
                             {
 
                                 string fileName = string.Join("_", attachment.ContentDisposition.FileName.Split(Path.GetInvalidFileNameChars()));
-                                char[] separators = { (char)47, (char)92 };
-                                fileName = string.Join("-", fileName.Split(separators));
+                                fileName = string.Join("_", fileName.Split(separators));
                                 string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\attachments\" + etr);
                                 try
                                 {
@@ -147,7 +149,7 @@ namespace Fault_handling_system.Services
                                     }
 
                                 }
-                                catch (IOException e) {_logger.LogError("Could not create directory:  ", e);
+                                catch (IOException e) {_logger.LogError("Could not create directory or file:  ", e);
                                 };
                                 
                             }
