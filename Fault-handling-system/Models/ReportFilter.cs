@@ -8,6 +8,7 @@ namespace Fault_handling_system.Models
 {
     public class ReportFilter
     {
+		[Required]
 		public string UserId { get; set; }
 		public string Name { get; set; }
 		public string EtrNumber { get; set; }
@@ -25,65 +26,133 @@ namespace Fault_handling_system.Models
 		{
 			get
 			{
-				if (DateIssuedFromDaysAgo == 0 && DateIssuedFromWeeksAgo == 0)
+				if (DateIssuedFromDaysAgo == null && DateIssuedFromWeeksAgo == null)
 					return DateIssuedFrom;
+				int days, weeks;
+				if (DateIssuedFromDaysAgo == null && DateIssuedFromWeeksAgo != null)
+				{
+					weeks = (int)DateIssuedFromWeeksAgo;
+					days = 0;
+				}
+				else if (DateIssuedFromDaysAgo != null && DateIssuedFromWeeksAgo == null)
+				{
+					days = (int)DateIssuedFromDaysAgo;
+					weeks = 0;
+				}
+				else
+				{
+					days = (int)DateIssuedFromDaysAgo;
+					weeks = (int)DateIssuedFromWeeksAgo;
+				}
+
 				DateTime returnDate = DateTime.Today;
-				returnDate.AddDays(-(DateIssuedFromWeeksAgo * 7 + DateIssuedFromDaysAgo));
+				returnDate.AddDays(-(weeks * 7 + days));
 				string returnString = returnDate.ToString("yyyy-MM-dd");
 				return returnString;
 			}
 			set => DateIssuedFrom = value;
 		}
 		[Range(1, 6)]
-		public int DateIssuedFromDaysAgo { get; set; }
-		public int DateIssuedFromWeeksAgo { get; set; }
+		public int? DateIssuedFromDaysAgo { get; set; }
+		public int? DateIssuedFromWeeksAgo { get; set; }
 		public string DateIssuedTo
 		{
 			get
 			{
-				if (DateIssuedToDaysAgo == 0 && DateIssuedToWeeksAgo == 0)
+				if (DateIssuedToDaysAgo == null && DateIssuedToWeeksAgo == null)
 					return DateIssuedTo;
+				int days, weeks;
+				if (DateIssuedToDaysAgo == null && DateIssuedToWeeksAgo != null)
+				{
+					weeks = (int)DateIssuedToWeeksAgo;
+					days = 0;
+				}
+				else if (DateIssuedToDaysAgo != null && DateIssuedToWeeksAgo == null)
+				{
+					days = (int)DateIssuedToDaysAgo;
+					weeks = 0;
+				}
+				else
+				{
+					days = (int)DateIssuedToDaysAgo;
+					weeks = (int)DateIssuedToWeeksAgo;
+				}
+
 				DateTime returnDate = DateTime.Today;
-				returnDate.AddDays(-(DateIssuedToWeeksAgo * 7 + DateIssuedToDaysAgo));
+				returnDate.AddDays(-(weeks * 7 + days));
 				string returnString = returnDate.ToString("yyyy-MM-dd");
 				return returnString;
 			}
 			set => DateIssuedTo = value;
 		}
 		[Range(1, 6)]
-		public int DateIssuedToDaysAgo { get; set; }
-		public int DateIssuedToWeeksAgo { get; set; }
+		public int? DateIssuedToDaysAgo { get; set; }
+		public int? DateIssuedToWeeksAgo { get; set; }
 		public string DateSentFrom
 		{
 			get
 			{
-				if (DateSentFromDaysAgo == 0 && DateSentFromWeeksAgo == 0)
+				if (DateSentFromDaysAgo == null && DateSentFromWeeksAgo == null)
 					return DateSentFrom;
+				int days, weeks;
+				if (DateSentFromDaysAgo == null && DateSentFromWeeksAgo != null)
+				{
+					weeks = (int)DateSentFromWeeksAgo;
+					days = 0;
+				}
+				else if (DateSentFromDaysAgo != null && DateSentFromWeeksAgo == null)
+				{
+					days = (int)DateSentFromDaysAgo;
+					weeks = 0;
+				}
+				else
+				{
+					days = (int)DateSentFromDaysAgo;
+					weeks = (int)DateSentFromWeeksAgo;
+				}
+
 				DateTime returnDate = DateTime.Today;
-				returnDate.AddDays(-(DateSentFromWeeksAgo * 7 + DateSentFromDaysAgo));
+				returnDate.AddDays(-(weeks * 7 + days));
 				string returnString = returnDate.ToString("yyyy-MM-dd");
 				return returnString;
 			}
 			set => DateSentFrom = value;
 		}
 		[Range(1, 6)]
-		public int DateSentFromDaysAgo { get; set; }
-		public int DateSentFromWeeksAgo { get; set; }
+		public int? DateSentFromDaysAgo { get; set; }
+		public int? DateSentFromWeeksAgo { get; set; }
 		public string DateSentTo
 		{
 			get
 			{
-				if (DateSentToDaysAgo == 0 && DateSentToWeeksAgo == 0)
+				if (DateSentToDaysAgo == null && DateSentToWeeksAgo == null)
 					return DateSentTo;
+				int days, weeks;
+				if (DateSentToDaysAgo == null && DateSentToWeeksAgo != null)
+				{
+					weeks = (int)DateSentToWeeksAgo;
+					days = 0;
+				}
+				else if (DateSentToDaysAgo != null && DateSentToWeeksAgo == null)
+				{
+					days = (int)DateSentToDaysAgo;
+					weeks = 0;
+				}
+				else
+				{
+					days = (int)DateSentToDaysAgo;
+					weeks = (int)DateSentToWeeksAgo;
+				}
+
 				DateTime returnDate = DateTime.Today;
-				returnDate.AddDays(-(DateSentToWeeksAgo * 7 + DateSentToDaysAgo));
+				returnDate.AddDays(-(weeks * 7 + days));
 				string returnString = returnDate.ToString("yyyy-MM-dd");
 				return returnString;
 			}
 			set => DateSentTo = value;
 		}
 		[Range(1, 6)]
-		public int DateSentToDaysAgo { get; set; }
-		public int DateSentToWeeksAgo { get; set; }
+		public int? DateSentToDaysAgo { get; set; }
+		public int? DateSentToWeeksAgo { get; set; }
 	}
 }
