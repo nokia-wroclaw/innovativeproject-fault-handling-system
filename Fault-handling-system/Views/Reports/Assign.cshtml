@@ -1,0 +1,167 @@
+    @model Fault_handling_system.Models.Report
+
+@{
+    ViewData["Title"] = "Assign";
+}
+
+    <div class="container" style="margin-top:40px">
+        <div class="row">
+            <div class="col-md-7">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">Details</h2>
+                    </div>
+                    <div class="panel-body">
+                        <dl class="dl-horizontal">
+                            <dt>
+                                @Html.DisplayNameFor(model => model.EtrNumber)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.EtrNumber)
+                            </dd>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.NokiaCaseId)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.NokiaCaseId)
+                            </dd>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.RfaId)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.RfaId)
+                            </dd>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.RfaName)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.RfaName)
+                            </dd>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.AssignedTo)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.AssignedTo)
+                            </dd>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Priority)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.Priority)
+                            </dd>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Grade)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.Grade)
+                            </dd>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.TroubleType)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.TroubleType)
+                            </dd>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.DateIssued)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.DateIssued)
+                            </dd>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.DateSent)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.DateSent)
+                            </dd>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.EtrToDes)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.EtrToDes)
+                            </dd>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.ClosingDate)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.ClosingDate)
+                            </dd>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.EtrDescription)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.EtrDescription)
+                            </dd>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Comment)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.Comment)
+                            </dd>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.EtrStatus)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.EtrStatus.Status)
+                            </dd>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.EtrType)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.EtrType.Type)
+                            </dd>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.NsnCoordinator)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.NsnCoordinator.UserName)
+                            </dd>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Requestor)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.Requestor.UserName)
+                            </dd>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Subcontractor)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.Subcontractor.UserName)
+                            </dd>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Zone)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.Zone.ZoneName)
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">Assign</h2>
+                    </div>
+                    <div class="panel-body">
+                        <form asp-action="Assign">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-7">
+                                        <label class="control-label">Nokia coordinator:</label>
+					                    <select asp-for="NsnCoordinatorId" class="form-control" asp-items="ViewBag.NsnCoordinatorId"><option value="" disabled selected>- Please select coordinator -</option></select>
+                                    </div> 
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="text-center">
+	                                <input type="submit" value="Assign" class="btn btn-info"/>
+                                    <input type="button" value="Cancel" onclick="location.href='@Url.Action("UserPage", "Account")'" class="btn btn-info"/>
+                                </div>   
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    

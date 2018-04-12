@@ -13,6 +13,8 @@ using Microsoft.Extensions.Options;
 using Fault_handling_system.Models;
 using Fault_handling_system.Models.AccountViewModels;
 using Fault_handling_system.Services;
+using Fault_handling_system.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Fault_handling_system.Controllers
 {
@@ -24,18 +26,21 @@ namespace Fault_handling_system.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
+        private readonly ApplicationDbContext _context;
         private ApplicationUser editableUser;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger,
+            ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
+            _context = context;
         }
 
         [TempData]
@@ -593,8 +598,16 @@ namespace Fault_handling_system.Controllers
         }
 
         [HttpGet]
-        public IActionResult UserPage()
+        public async Task<IActionResult> UserPage()
         {
+            IQueryable<Report> applicationDbContext;
+
+            if(User.IsInRole("Admin")) 
+            {
+                applicationDbContext = _context.Report.Include(r => r.EtrStatus).Include(r => r.EtrType).Include(r => r.NsnCoordinator).Include(r => r.Requestor).Include(r => r.Subcontractor).Include(r => r.Zone).Where(r => r.NsnCoordinatorId == null).OrderByDescending(r => r.DateIssued);
+                return View(await applicationDbContext.ToListAsync());
+            }
+
             return View();
         }
 
