@@ -428,6 +428,25 @@ namespace Fault_handling_system.Controllers
             return View(report);
         }
 
+        [HttpPost]
+        [Authorize(Roles="Admin")]
+        public RedirectToActionResult Assign(int id)
+        {
+            string nsnCoordinator = Request.Form["NsnCoordinatorId"];
+            
+            if(nsnCoordinator != null)
+            {
+                var report = new Report();
+                report.Id = id;
+                report.NsnCoordinatorId = nsnCoordinator;
+                _context.Entry(report).Property("NsnCoordinatorId").IsModified = true;
+                _context.SaveChanges();
+            }
+            
+            return RedirectToAction("UserPage", "Account"); 
+        }
+
+
         // GET: Reports/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
