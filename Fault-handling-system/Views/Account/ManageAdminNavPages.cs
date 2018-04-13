@@ -15,9 +15,13 @@ namespace Fault_handling_system.Views.Account
 
         public static string ManageUsers = "ManageUsers";
 
+        public static string AdminGuide = "IAdminGuide";
+
         public static string RegisterNavClass(ViewContext viewContext) => PageNavClass(viewContext, Register);
 
         public static string ManageUsersNavClass(ViewContext viewContext) => PageNavClass(viewContext, ManageUsers);
+
+        public static string InstructionNavClass(ViewContext viewContext) => PageNavClass(viewContext, AdminGuide);
 
         public static string PageNavClass(ViewContext viewContext, string page)
         {
