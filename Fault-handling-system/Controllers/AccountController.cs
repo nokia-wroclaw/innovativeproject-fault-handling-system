@@ -18,6 +18,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Fault_handling_system.Controllers
 {
+    /// <summary>
+    /// The AccountController class.
+    /// Containts all methods for controlling actions on an account.
+    /// </summary>
     [Authorize]
     [Route("[controller]/[action]")]
     public class AccountController : Controller
@@ -29,6 +33,15 @@ namespace Fault_handling_system.Controllers
         private readonly ApplicationDbContext _context;
         private ApplicationUser editableUser;
 
+        /// <summary>
+        /// AccountController constructor.
+        /// Initializes the necessary managers.
+        /// </summary>
+        /// <param name="userManager">UsermManager</param>
+        /// <param name="signInManager">SignInManager</param>
+        /// <param name="emailSender">IEmailSender</param>
+        /// <param name="logger">ILogger</param>
+        /// <param name="context">ApplicationDbContext</param>
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
@@ -43,9 +56,15 @@ namespace Fault_handling_system.Controllers
             _context = context;
         }
 
+        /// <value>Gets and sets the ErrorMessage</value>
         [TempData]
         public string ErrorMessage { get; set; }
 
+        /// <summary>
+        /// Initializes login process.
+        /// </summary>
+        /// <param name="returnUrl"></param>
+        /// <returns>Login view</returns>
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl = null)
@@ -57,6 +76,13 @@ namespace Fault_handling_system.Controllers
             return View();
         }
 
+        /// <summary>
+        /// The Login method.
+        /// Logs user in.
+        /// </summary>
+        /// <param name="model">LoginViewModel</param>
+        /// <param name="returnUrl"></param>
+        /// <returns>View after login</returns>
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -210,12 +236,21 @@ namespace Fault_handling_system.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Admin guide.
+        /// </summary>
+        /// <returns>Admin guide view</returns>
         [Authorize(Roles = "Admin")]
         public IActionResult AdminGuide()
         {
             return View();
         }
 
+        /// <summary>
+        /// Edit roles method.
+        /// </summary>
+        /// <param name="id">User id</param>
+        /// <returns>View with user info and interface to edit it's roles</returns>
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditRoles(string id)
@@ -239,6 +274,12 @@ namespace Fault_handling_system.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Assigns role to user.
+        /// </summary>
+        /// <param name="model">User model</param>
+        /// <param name="returnUrl"></param>
+        /// <returns>View with updated user info and interface to edit it's roles</returns>
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
@@ -256,6 +297,12 @@ namespace Fault_handling_system.Controllers
             return View("~/Views/Account/EditRoles.cshtml");
         }
 
+        /// <summary>
+        /// Unassigns role from user.
+        /// </summary>
+        /// <param name="model">User model</param>
+        /// <param name="returnUrl"></param>
+        /// <returns>View with updated user info and interface to edit it's roles</returns>
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
@@ -273,6 +320,11 @@ namespace Fault_handling_system.Controllers
             return View("~/Views/Account/EditRoles.cshtml");
         }
 
+        /// <summary>
+        /// Delete user method.
+        /// </summary>
+        /// <param name="id>User id</param>
+        /// <returns>View with user info and a button to confirm deletion</returns>
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(string id)
@@ -295,6 +347,11 @@ namespace Fault_handling_system.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Deletes user.
+        /// </summary>
+        /// <param name="id">User id</param>
+        /// <returns>View to manage users</returns>
         [HttpPost, ActionName("Delete")]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
@@ -305,6 +362,11 @@ namespace Fault_handling_system.Controllers
             return RedirectToAction(nameof(ManageUsers));
         }
 
+        /// <summary>
+        /// Manages users
+        /// </summary>
+        /// <param name="returnUrl"></param>
+        /// <returns>View with listed users with buttons to edit them</returns>
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ManageUsers(string returnUrl = null)
@@ -324,7 +386,11 @@ namespace Fault_handling_system.Controllers
             return View(model);
         }
 
-
+        /// <summary>
+        /// Register method
+        /// </summary>
+        /// <param name="returnUrl"></param>
+        /// <returns>View with register form</returns>
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public IActionResult Register(string returnUrl = null)
@@ -336,6 +402,12 @@ namespace Fault_handling_system.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Registers new user
+        /// </summary>
+        /// <param name="model">RegisterViewModel</param>
+        /// <param name="returnUrl"></param>
+        /// <returns>View after user is registered</returns>
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
@@ -368,6 +440,10 @@ namespace Fault_handling_system.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Gets available roles.
+        /// </summary>
+        /// <returns>List of avaiable roles</returns>
         private IEnumerable<string> GetAllRoles()
         {
             return new List<string>
@@ -379,6 +455,11 @@ namespace Fault_handling_system.Controllers
             };
         }
 
+        /// <summary>
+        /// Creates a IEnumerable<SelectListItem> from List
+        /// </summary>
+        /// <param name="elements">List of some string elements</param>
+        /// <returns>IEnumerable<SelectListItem> object</returns>
         private IEnumerable<SelectListItem> GetSelectListItems(IEnumerable<string> elements)
         {
             // Create an empty list to hold result of the operation
@@ -400,7 +481,10 @@ namespace Fault_handling_system.Controllers
             return selectList;
         }
 
-
+        /// <summary>
+        /// Logs out a user
+        /// </summary>
+        /// <returns>Redirection to homepage</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
