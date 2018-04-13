@@ -59,20 +59,50 @@
 				<input type="text" id="troubletypeS" name="troubletypeS" value="@(ViewBag.troubletypeC)" placeholder="Trouble type" style="float:right" />
 			</li>
 			<li style="margin-bottom: 3px">
-				<label class="label-white">Date Issued from:</label>
-				<input type="date" id="dateissuedfromS" name="dateissuedfromS" onchange="setIssuedMinDate()" value="@(ViewBag.dateissuedfromC)" style="float:right" />
+				<ul class="nav nav-tabs">
+					<li class="active"><a data-toggle="tab" href="#dateIssuedCal">Calendar</a></li>
+					<li><a data-toggle="tab" href="#dateIssuedRel">Time from now</a></li>					
+				</ul>
+				<div class="tab-content">
+					<div id="dateIssuedCal" class="tab-pane fade in active">
+						<ul class="list-unstyled">
+							<li style="margin-bottom: 3px">
+								<label class="label-white">Date Issued from:</label>
+								<input type="date" id="dateissuedfromS" name="dateissuedfromS" onchange="setIssuedMinDate()" value="@(ViewBag.dateissuedfromC)" style="float:right" />
+							</li>
+							<li style="margin-bottom: 3px">
+								<label class="label-white">To:</label>
+								<input type="date" id="dateissuedtoS" name="dateissuedtoS" onchange="setIssuedMaxDate()" value="@(ViewBag.dateissuedtoC)" style="float:right" />
+							</li>
+						</ul>
+					</div>
+					<div id="dateIssuedRel" class="tab-pane fade">
+						<label class="label-white">Work In Progress</label>
+					</div>
+				</div>
 			</li>
 			<li style="margin-bottom: 3px">
-				<label class="label-white">To:</label>
-				<input type="date" id="dateissuedtoS" name="dateissuedtoS" onchange="setIssuedMaxDate()" value="@(ViewBag.dateissuedtoC)" style="float:right" />
-			</li>
-			<li style="margin-bottom: 3px">
-				<label class="label-white">Date sent from:</label>
-				<input type="date" id="datesentfromS" name="datesentfromS" onchange="setSentMinDate()" value="@(ViewBag.datesentfromC)" style="float:right" />
-			</li>
-			<li style="margin-bottom: 3px">
-				<label class="label-white">To:</label>
-				<input type="date" id="datesenttoS" name="datesenttoS" onchange="setSentMaxDate()" value="@(ViewBag.datesenttoC)" style="float:right" />
+				<ul class="nav nav-tabs">
+					<li class="active"><a data-toggle="tab" href="#dateSentCal">Calendar</a></li>
+					<li><a data-toggle="tab" href="#dateSentRel">Time from now</a></li>
+				</ul>
+				<div class="tab-content">
+					<div id="dateSentCal" class="tab-pane fade in active">
+						<ul class="list-unstyled">
+							<li style="margin-bottom: 3px">
+								<label class="label-white">Date sent from:</label>
+								<input type="date" id="datesentfromS" name="datesentfromS" onchange="setSentMinDate()" value="@(ViewBag.datesentfromC)" style="float:right" />
+							</li>
+							<li style="margin-bottom: 3px">
+								<label class="label-white">To:</label>
+								<input type="date" id="datesenttoS" name="datesenttoS" onchange="setSentMaxDate()" value="@(ViewBag.datesenttoC)" style="float:right" />
+							</li>
+						</ul>
+					</div>
+					<div id="dateSentRel" class="tab-pane fade">
+						<label class="label-white">Work In Progress</label>
+					</div>
+				</div>
 			</li>
 			<li style="margin-bottom: 3px">
 				<label class="label-white">Etr status:</label>
