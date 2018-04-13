@@ -46,55 +46,42 @@ namespace Fault_handling_system.Controllers
         /// Action <c>Index</c> can render a view with list of reports from database.
         /// </summary>
         /// <remarks>
-        /// This action operates on <c>Report</c> class fields such as:
-        /// <list type="bullet">
-        /// <item>
-        /// <term>EtrNumber</term>
-        /// </item>
-        /// <item>
-        /// <term>Priority</term>
-        /// </item>
-        /// <item>
-        /// <term>RfaId</term>
-        /// </item>
-        /// <item>
-        /// <term>RfaName</term>
-        /// </item>
-        /// <item>
-        /// <term>Grade</term>
-        /// </item>
-        /// <item>
-        /// <term>TroubleType</term>
-        /// </item>
-        /// <item>
-        /// <term>DateIssued</term>
-        /// </item>
-        /// <item>
-        /// <term>DateSent</term>
-        /// </item>
-        /// <item>
-        /// <term>EtrStatus</term>
-        /// </item>
-        /// <item>
-        /// <term>EtrType</term>
-        /// </item>
-        /// <item>
-        /// <term>NsnCoordinatorId</term>
-        /// </item>
-        /// <item>
-        /// <term>SubcontractorId</term>
-        /// </item>
-        /// <item>
-        /// <term>Zone</term>
-        /// </item>
-        /// </list>
+        /// This action operates on <c>Report</c> class fields.
         /// <para>If user is assigned to role "Admin" he can see a complete list of reports from database. 
         /// Otherwise, action will only show reports associated with that user.</para>
         /// <para>Reports are selected and sorted using LINQ operators.</para>
         /// </remarks>
         /// <param name="sortOrder">Contains sorting order string for view, e.g. sort by priority ascending.</param>
-        /// <param name="etrnumberS">Search string for sorting by EtrNumber value. Analogous parameters are passed for every item on list below e.g. for priority sorting it is priorityS param etc.</param>
-        /// <param name="etrnumberC">Current search value, used to restore previous results for next sorting. Analogous parameters are passed for every item on list below e.g. for priority sorting it will be priorityC param etc.</param>
+        /// <param name="etrnumberS">Search string for sorting by EtrNumber value.</param>
+        /// <param name="etrnumberC">Current search value for EtrNumber, used to restore previous results for next sorting.</param>
+        /// <param name="priorityS">Search string for sorting by Priority value.</param>
+        /// <param name="priorityC">Current search value for Priority to restore previous results for next sorting.</param>
+        /// <param name="rfaidS">Search string for sorting by RfaId value.</param>
+        /// <param name="rfaidC">Current search value for RfaId to restore previous results for next sorting.</param>
+        /// <param name="rfanameS">Search string for sorting by RfaName value.</param>
+        /// <param name="rfanameC">Current search value for RfaName to restore previous results for next sorting.</param>
+        /// <param name="gradeS">Search string for sorting by Grade value.</param>
+        /// <param name="gradeC">Current search value for Grade to restore previous results for next sorting.</param>
+        /// <param name="troubletypeS">Search string for sorting by TroubleType value.</param>
+        /// <param name="troubletypeC">Current search value for TroubleType to restore previous results for next sorting.</param>
+        /// <param name="dateissuedfromS">Search string for sorting by DateIssuedFrom value.</param>
+        /// <param name="dateissuedtoS">Search string for sorting by DateIssuedTo value.</param>
+        /// <param name="dateissuedfromC">Current search value for DateIssuedFrom to restore previous results for next sorting.</param>
+        /// <param name="dateissuedtoC">Current search value for DateIssuedTo to restore previous results for next sorting.</param>
+        /// <param name="datesentfromS">Search string for sorting by DateSentFrom value.</param>
+        /// <param name="datesenttoS">Search string for sorting by DateSentTo value.</param>
+        /// <param name="datesentfromC">Current search value for DateSentFrom to restore previous results for next sorting.</param>
+        /// <param name="datesenttoC">Current search value for DateSentTo to restore previous results for next sorting.</param>
+        /// <param name="etrstatusS">Search string for sorting by EtrStatus value.</param>
+        /// <param name="etrstatusC">Current search value for EtrStatus to restore previous results for next sorting.</param>
+        /// <param name="etrtypeS">Search string for sorting by EtrType value.</param>
+        /// <param name="etrtypeC">Current search value for EtrType to restore previous results for next sorting.</param>
+        /// <param name="nsncoordS">Search string for sorting by NsnCoordinator value.</param>
+        /// <param name="nsncoordC">Current search value for NsnCoordinator to restore previous results for next sorting.</param>
+        /// <param name="subconS">Search string for sorting by Subcontractor value.</param>
+        /// <param name="subconC">Current search value for Subcontractor to restore previous results for next sorting.</param>
+        /// <param name="zoneS">Search string for sorting by Zone value.</param>
+        /// <param name="zoneC">Current search value for Zone to restore previous results for next sorting.</param>
         /// <returns>
         /// ViewResult - list of selected reports
         /// </returns>
