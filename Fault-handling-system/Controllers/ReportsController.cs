@@ -17,13 +17,23 @@ using OfficeOpenXml.Style;
 
 namespace Fault_handling_system.Controllers
 {
+    /// <summary>
+    /// The main controller for reports.
+    /// Contains actions for report views that are used to show and manage reports - CRUD operations as well as
+    /// sorting and filtering methods.
+    /// </summary>
     [Authorize]
     public class ReportsController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly IHostingEnvironment _hostingEnvironment;
 		private readonly Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> _userManager;
-
+        /// <summary>
+        /// ReportsController constructor.
+        /// </summary>
+        /// <param name="hostingEnvironment">Provides application-management functions and application services.</param>
+        /// <param name="context">Instance of <c>ApplicationDbContext</c> is responsible for communication with SQL server</param>
+        /// <param name="userManager">Instance of <c>UserManager</c> class.</param>
         public ReportsController(IHostingEnvironment hostingEnvironment, ApplicationDbContext context, Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager)
         {
             _context = context;
@@ -32,6 +42,62 @@ namespace Fault_handling_system.Controllers
         }
 
         // GET: Reports
+        /// <summary>
+        /// Action <c>Index</c> can render a view with list of reports from database.
+        /// </summary>
+        /// <remarks>
+        /// This action operates on <c>Report</c> class fields such as:
+        /// <list type="bullet">
+        /// <item>
+        /// <term>EtrNumber</term>
+        /// </item>
+        /// <item>
+        /// <term>Priority</term>
+        /// </item>
+        /// <item>
+        /// <term>RfaId</term>
+        /// </item>
+        /// <item>
+        /// <term>RfaName</term>
+        /// </item>
+        /// <item>
+        /// <term>Grade</term>
+        /// </item>
+        /// <item>
+        /// <term>TroubleType</term>
+        /// </item>
+        /// <item>
+        /// <term>DateIssued</term>
+        /// </item>
+        /// <item>
+        /// <term>DateSent</term>
+        /// </item>
+        /// <item>
+        /// <term>EtrStatus</term>
+        /// </item>
+        /// <item>
+        /// <term>EtrType</term>
+        /// </item>
+        /// <item>
+        /// <term>NsnCoordinatorId</term>
+        /// </item>
+        /// <item>
+        /// <term>SubcontractorId</term>
+        /// </item>
+        /// <item>
+        /// <term>Zone</term>
+        /// </item>
+        /// </list>
+        /// <para>If user is assigned to role "Admin" he can see a complete list of reports from database. 
+        /// Otherwise, action will only show reports associated with that user.</para>
+        /// <para>Reports are selected and sorted using LINQ operators.</para>
+        /// </remarks>
+        /// <param name="sortOrder">Contains sorting order string for view, e.g. sort by priority ascending.</param>
+        /// <param name="etrnumberS">Search string for sorting by EtrNumber value. Analogous parameters are passed for every item on list below e.g. for priority sorting it is priorityS param etc.</param>
+        /// <param name="etrnumberC">Current search value, used to restore previous results for next sorting. Analogous parameters are passed for every item on list below e.g. for priority sorting it will be priorityC param etc.</param>
+        /// <returns>
+        /// ViewResult - list of selected reports
+        /// </returns>
         public async Task<IActionResult> Index(string sortOrder, string etrnumberS, string priorityS, string etrnumberC, string priorityC, string rfaidS, string rfaidC, string rfanameS, string rfanameC, string gradeS, string gradeC, string troubletypeS, string troubletypeC, string dateissuedfromS, string dateissuedtoS, string dateissuedfromC, string dateissuedtoC, string datesentfromS, string datesenttoS, string datesentfromC, string datesenttoC, string etrstatusS, string etrstatusC, string etrtypeS, string etrtypeC, string nsncoordS, string nsncoordC, string subconS, string subconC, string zoneS, string zoneC)
         {
 			//lets us see only users of given roles in our dropdowns
@@ -269,6 +335,14 @@ namespace Fault_handling_system.Controllers
         }
 
         // GET: Reports/Details/5
+        /// <summary>
+        /// Action <c>Details</c> render a view containing report details with description.
+        /// </summary>
+        /// <remarks>
+        /// <para>This action creates <c>Report</c> class instance with total description of report selected form database by ID.</para>
+        /// </remarks>
+        /// <returns>ViewResult - report details</returns>
+        /// <param name="id">Report ID in database</param>
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -293,6 +367,10 @@ namespace Fault_handling_system.Controllers
         }
 
         // GET: Reports/Create
+        /// <summary>
+        /// Contains form and dropdown lists for fields to fill. Used to create new report.
+        /// </summary>
+        /// <returns>ViewResult with create report form.</returns>
         public async Task<IActionResult> Create()
         {
 			//lets us see only users of given roles in our dropdowns
@@ -312,6 +390,11 @@ namespace Fault_handling_system.Controllers
         // POST: Reports/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// This action accepts user input and posts those input to the server to add new report to the database.
+        /// </summary>
+        /// <param name="report">Values of report fields</param>
+        /// <returns>ViewResult and created report</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,EtrNumber,NokiaCaseId,RfaId,RfaName,ZoneId,AssignedTo,Priority,EtrTypeId,EtrStatusId,RequestorId,NsnCoordinatorId,SubcontractorId,Grade,TroubleType,DateIssued,DateSent,EtrToDes,ClosingDate,EtrDescription,Comment")] Report report)
@@ -332,6 +415,11 @@ namespace Fault_handling_system.Controllers
         }
 
         // GET: Reports/Edit/5
+        /// <summary>
+        /// Has fields to fill by user for selected report used to edit existing report.
+        /// </summary>
+        /// <param name="id">Report ID</param>
+        /// <returns>ViewResult with report to edit</returns>
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -362,6 +450,12 @@ namespace Fault_handling_system.Controllers
         // POST: Reports/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// This action accepts user input and posts those input to the server to update report in database.
+        /// </summary>
+        /// <param name="id">ID of edited report </param>
+        /// <param name="report">Values of report fields</param>
+        /// <returns>View with updated report</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,EtrNumber,NokiaCaseId,RfaId,RfaName,ZoneId,AssignedTo,Priority,EtrTypeId,EtrStatusId,RequestorId,NsnCoordinatorId,SubcontractorId,Grade,TroubleType,DateIssued,DateSent,EtrToDes,ClosingDate,EtrDescription,Comment")] Report report)
@@ -400,6 +494,11 @@ namespace Fault_handling_system.Controllers
             return View(report);
         }
 
+        /// <summary>
+        /// This action allows user with "Admin" role to choose Nokia Coordinator for selected report
+        /// </summary>
+        /// <param name="id">Nokia Coordinator Id</param>
+        /// <returns>View with assign select list</returns>
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Assign(int? id)
@@ -427,7 +526,12 @@ namespace Fault_handling_system.Controllers
 
             return View(report);
         }
-
+        
+        /// <summary>
+        /// Assigns Nokia Coordinator to selected report and saves changes in database.
+        /// </summary>
+        /// <param name="id">Nokia Coordinator ID</param>
+        /// <returns>Redirects to <c>UserPage</c> action of <c>AccountController</c>.</returns>
         [HttpPost]
         [Authorize(Roles="Admin")]
         public RedirectToActionResult Assign(int id)
@@ -448,6 +552,11 @@ namespace Fault_handling_system.Controllers
 
 
         // GET: Reports/Delete/5
+        /// <summary>
+        /// Allows user to delete selected report.
+        /// </summary>
+        /// <param name="id">Report ID</param>
+        /// <returns>View with report to remove.</returns>
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -472,6 +581,11 @@ namespace Fault_handling_system.Controllers
         }
 
         // POST: Reports/Delete/5
+        /// <summary>
+        /// Removes report (selected by id) from database.
+        /// </summary>
+        /// <param name="id">Report ID</param>
+        /// <returns>Redirects to <c>Index</c> action.</returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -482,11 +596,24 @@ namespace Fault_handling_system.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        /// <summary>
+        /// Checks if report with selected <paramref name="id"/> and returns result.
+        /// </summary>
+        /// <param name="id">Report ID to find</param>
+        /// <returns>True or false</returns>
         private bool ReportExists(int id)
         {
             return _context.Report.Any(e => e.Id == id);
         }
-
+        
+        /// <summary>
+        /// This action can export reports to excel file.
+        /// </summary>
+        /// <remarks>
+        /// Method uses field names from <c>applicationDbContext</c> to name worksheet columns and iterate 
+        /// selected reports collection from context to save them to the excel file.
+        /// </remarks>
+        /// <returns>Report.xlsx file with reports summary.</returns>
         [HttpPost]
         [Route("Export")]
         public FileContentResult Export()
