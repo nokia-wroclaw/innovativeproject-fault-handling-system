@@ -10,12 +10,18 @@ using Fault_handling_system.Models;
 
 namespace Fault_handling_system.Services
 {
+    /// <summary>This is a service running in background that periodically
+    /// fetches the mailbox via IMAP protocol, using <c>MailboxFetcher</c>.</summary>
+    /// <remarks>This service relies on <c>MailboxFetcher</c> to fetch and parse
+    /// reports, and to insert valid reports to the database.</remarks>
     public class MailboxFetcherService : BackgroundService
     {
         private readonly ILogger<MailboxFetcherService> _logger;
         private readonly MailboxFetcherSettings _settings;
         private readonly IMailboxFetcher _fetcher;
 
+        /// <summary>The constructor; not called directly, but by Dependency Injection
+        /// mechanism.</summary>
         public MailboxFetcherService(IOptions<MailboxFetcherSettings> settings,
                                      ILogger<MailboxFetcherService> logger,
                                      IMailboxFetcher fetcher)
@@ -25,6 +31,9 @@ namespace Fault_handling_system.Services
             _fetcher = fetcher;
         }
 
+        /// <summary>Method that executes the task of this service.</summary>
+        /// <remarks>See the description of the class to read about what this service does.
+        /// </remarks>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             if (!_settings.DoMailboxFetching) {
@@ -32,7 +41,7 @@ namespace Fault_handling_system.Services
                 return;
             }
 
-            stoppingToken.Register(() => 
+            stoppingToken.Register(() =>
                     _logger.LogDebug("Mail fetcher task is stopping..."));
 
             _fetcher.Configure(_settings.ImapServer, _settings.ImapPort, true,

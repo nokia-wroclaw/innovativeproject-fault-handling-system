@@ -6,6 +6,8 @@ using Fault_handling_system.Models;
 
 namespace Fault_handling_system.Services
 {
+    /// <summary>Class implementing this interface is used by <c>MailboxFetcher</c> to parse
+    /// incoming e-mails that may contain a valid report.</summary>
     public interface IReportParser
     {
         /// <summary>

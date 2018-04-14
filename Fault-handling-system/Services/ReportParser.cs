@@ -8,16 +8,26 @@ using Fault_handling_system.Models;
 
 namespace Fault_handling_system.Services
 {
+    /// <summary>This class is used by <c>MailboxFetcher</c> to parse
+    /// incoming e-mails that may contain a valid report.</summary>
     public class ReportParser : IReportParser
     {
         private readonly ILogger<ReportParser> _logger;
 
+        /// <summary>The constructor; not called directly, but by Dependency Injection
+        /// mechanism.</summary>
         public ReportParser(ILogger<ReportParser> logger)
         {
             _logger = logger;
             _logger.LogInformation("Constructed ReportHandler");
         }
 
+        /// <summary>
+        /// Method that constructs a Report object from a single mail that possibly contains
+        /// a valid report.
+        /// </summary>
+        /// If the mail contains a valid report, the method returns a constructed
+        /// model object. Otherwise it returns null.
         public Report ParseReport(string sender, string subject, string message)
         {
             bool hasRfaId = false;
