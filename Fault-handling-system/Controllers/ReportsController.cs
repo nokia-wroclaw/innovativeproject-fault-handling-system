@@ -178,44 +178,6 @@ namespace Fault_handling_system.Controllers
 
 			applicationDbContext = reportRepository.GetFilteredReports(applicationDbContext, etrnumberS, priorityS, rfaidS, rfanameS, gradeS, troubletypeS, dateissuedfromS, dateissuedtoS, datesentfromS, datesenttoS, etrstatusS, etrtypeS, nsncoordS, subconS, zoneS);
 
-			//filters
-			/*if (!String.IsNullOrEmpty(etrnumberS))
-                applicationDbContext = applicationDbContext.Where(r => r.EtrNumber.Contains(etrnumberS));
-            if (!String.IsNullOrEmpty(nokiacaseidS))
-                applicationDbContext = applicationDbContext.Where(r => r.NokiaCaseId.ToString().Contains(nokiacaseidS));
-            if (!String.IsNullOrEmpty(rfaidS))
-                applicationDbContext = applicationDbContext.Where(r => r.RfaId.ToString().Contains(rfaidS));
-            if (!String.IsNullOrEmpty(rfanameS))
-                applicationDbContext = applicationDbContext.Where(r => r.RfaName.Contains(rfanameS));
-            if (!String.IsNullOrEmpty(assignedtoS))
-                applicationDbContext = applicationDbContext.Where(r => r.AssignedTo.Contains(assignedtoS));
-            if (!String.IsNullOrEmpty(priorityS))
-                applicationDbContext = applicationDbContext.Where(r => r.Priority.Contains(priorityS));
-            if (!String.IsNullOrEmpty(gradeS))
-                applicationDbContext = applicationDbContext.Where(r => r.Grade.ToString().Contains(gradeS));
-            if (!String.IsNullOrEmpty(troubletypeS))
-                applicationDbContext = applicationDbContext.Where(r => r.TroubleType.Contains(troubletypeS));
-            if (!String.IsNullOrEmpty(dateissuedS))
-                applicationDbContext = applicationDbContext.Where(r => r.DateIssued.ToString().Contains(dateissuedS));
-            if (!String.IsNullOrEmpty(datesentS))
-                applicationDbContext = applicationDbContext.Where(r => r.DateSent.ToString().Contains(datesentS));
-            if (!String.IsNullOrEmpty(etrtodesS))
-                applicationDbContext = applicationDbContext.Where(r => r.EtrToDes.ToString().Contains(etrtodesS));
-            if (!String.IsNullOrEmpty(closingdateS))
-                applicationDbContext = applicationDbContext.Where(r => r.ClosingDate.ToString().Contains(closingdateS));
-            if (!String.IsNullOrEmpty(etrstatusS))
-                applicationDbContext = applicationDbContext.Where(r => r.EtrStatus.Status.Contains(etrstatusS));
-            if (!String.IsNullOrEmpty(etrtypeS))
-                applicationDbContext = applicationDbContext.Where(r => r.EtrType.Type.Contains(etrtypeS));
-            if (!String.IsNullOrEmpty(nsncoordS))
-                applicationDbContext = applicationDbContext.Where(r => r.NsnCoordinator.UserName.Contains(nsncoordS));
-            if (!String.IsNullOrEmpty(requestorS))
-                applicationDbContext = applicationDbContext.Where(r => r.Requestor.UserName.Contains(requestorS));
-            if (!String.IsNullOrEmpty(subconS))
-                applicationDbContext = applicationDbContext.Where(r => r.Subcontractor.UserName.Contains(subconS));
-            if (!String.IsNullOrEmpty(zoneS))
-                applicationDbContext = applicationDbContext.Where(r => r.Zone.ZoneName.Contains(zoneS));*/
-
             //sorting order
             switch (sortOrder)
             {
@@ -318,7 +280,12 @@ namespace Fault_handling_system.Controllers
 			TempData["subconS"] = subconS;
 			TempData["zoneS"] = zoneS;
 
-			return View(await applicationDbContext.ToListAsync());
+			var reports = await applicationDbContext.ToListAsync();
+			var filters = await (from x in _context.ReportFilter
+						   where x.User.Equals(User)
+						   select x).ToListAsync();
+
+			return View(new ReportsAndFiltersViewModel(reports, filters));
         }
 
         // GET: Reports/Details/5
@@ -593,6 +560,61 @@ namespace Fault_handling_system.Controllers
             return _context.Report.Any(e => e.Id == id);
         }
         
+		[HttpPost]
+		public async Task<IActionResult> SaveFilter([Bind("Id,UserId,Name,EtrNumber,Priority,RfaId,RfaName,Grade,TroubleType,DateIssuedFrom,DateIssuedTo,DateIssuedFromWeeksAgo,DateIssuedFromDaysAgo,DateIssuedToWeeksAgo,DateIssuedToDaysAgo,DateSentFrom,DateSentTo,DateSentFromWeeksAgo,DateSentFromDaysAgo,DateSentToWeeksAgo,DateSentToDaysAgo,EtrStatus,EtrType,NsnCoordinatorId,SubcontractorId,Zone")] ReportFilter reportFilter/*string filterName, string etrnumberS, string priorityS, string rfaidS, string rfanameS, string gradeS, string troubletypeS, string dateissuedfromS, string dateissuedtoS, string dateissuedfromWeeksS, string dateissuedfromDaysS, string dateissuedtoWeeksS, string dateissuedtoDaysS, string datesentfromS, string datesenttoS, string datesentfromWeeksS, string datesentfromDaysS, string datesenttoWeeksS, string datesenttoDaysS, string etrstatusS, string etrtypeS, string nsncoordS, string subconS, string zoneS*/)
+		{
+			if (ModelState.IsValid)
+			{
+				_context.Add(reportFilter);
+				await _context.SaveChangesAsync();
+				return RedirectToAction(nameof(Index));
+			}
+
+			return PartialView("FilterSidebarPartial", reportFilter);
+			/*int diFromWeeksTemp, diFromDaysTemp, diToWeeksTemp, diToDaysTemp;
+			int dsFromWeeksTemp, dsFromDaysTemp, dsToWeeksTemp, dsToDaysTemp;
+			int? diFromWeeks, diFromDays, diToWeeks, diToDays;
+			int? dsFromWeeks, dsFromDays, dsToWeeks, dsToDays;
+
+			diFromWeeks = int.TryParse(dateissuedfromWeeksS, out diFromWeeksTemp) ? diFromWeeksTemp : (int?)null;
+			diFromDays = int.TryParse(dateissuedfromDaysS, out diFromDaysTemp) ? diFromDaysTemp : (int?)null;
+			diToWeeks = int.TryParse(dateissuedtoWeeksS, out diToWeeksTemp) ? diToWeeksTemp : (int?)null;
+			diToDays = int.TryParse(dateissuedtoDaysS, out diToDaysTemp) ? diToDaysTemp : (int?)null;
+			dsFromWeeks = int.TryParse(datesentfromWeeksS, out dsFromWeeksTemp) ? dsFromWeeksTemp : (int?)null;
+			dsFromDays = int.TryParse(datesentfromDaysS, out dsFromDaysTemp) ? dsFromDaysTemp : (int?)null;
+			dsToWeeks = int.TryParse(datesenttoWeeksS, out dsToWeeksTemp) ? dsToWeeksTemp : (int?)null;
+			dsToDays = int.TryParse(datesenttoDaysS, out dsToDaysTemp) ? dsToDaysTemp : (int?)null;
+
+			ReportFilter reportFilter = new ReportFilter
+			{
+				UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+				Name = filterName,
+				EtrNumber = etrnumberS,
+				Priority = priorityS,
+				RfaId = rfaidS,
+				RfaName = rfanameS,
+				Grade = gradeS,
+				TroubleType = troubletypeS,
+				DateIssuedFrom = dateissuedfromS,
+				DateIssuedTo = dateissuedtoS,
+				DateIssuedFromWeeksAgo = diFromWeeks,
+				DateIssuedFromDaysAgo = diFromDays,
+				DateIssuedToWeeksAgo = diToWeeks,
+				DateIssuedToDaysAgo = diToDays,
+				DateSentFrom = datesentfromS,
+				DateSentTo = datesenttoS,
+				DateSentFromWeeksAgo = dsFromWeeks,
+				DateSentFromDaysAgo = dsFromDays,
+				DateSentToWeeksAgo = dsToWeeks,
+				DateSentToDaysAgo = dsToDays,
+				EtrStatus = etrstatusS,
+				EtrType = etrtypeS,
+				NsnCoordinatorId = nsncoordS,
+				SubcontractorId = subconS,
+				Zone = zoneS
+			};*/
+		}
+
         /// <summary>
         /// This action can export reports to excel file.
         /// </summary>

@@ -44,6 +44,6 @@ namespace Fault_handling_system.Data
 		public DbSet<EtrType> EtrType { get; set; }
 		/// <value>Represents EtrStatus table from db.</value>
 		public DbSet<EtrStatus> EtrStatus { get; set; }
-		//public DbSet<ReportFilter> ReportFilter { get; set; }
+		public DbSet<ReportFilter> ReportFilter { get; set; }
 	}
 }
