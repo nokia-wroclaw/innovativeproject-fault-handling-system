@@ -6,10 +6,15 @@ using System.Threading.Tasks;
 
 namespace Fault_handling_system.Models
 {
-    public class Zone
+	/// <summary>
+	/// Model representing Zone db table in code.
+	/// </summary>
+	public class Zone
     {
+		/// <value>Primary key.</value>
 		[Key]
 		public int Id { get; set; }
+		/// <value>Zone's name.</value>
 		[Required]
 		public string ZoneName { get; set; }
     }

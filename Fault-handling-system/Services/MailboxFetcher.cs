@@ -15,6 +15,8 @@ using Fault_handling_system.Data;
 
 namespace Fault_handling_system.Services
 {
+    /// <summary>This class is used by <c>MailboxFetcherService</c>
+    /// to perform fetching of mail in the mailbox.</summary>
     public class MailboxFetcher : IMailboxFetcher
     {
         private readonly ILogger<MailboxFetcher> _logger;
@@ -26,6 +28,8 @@ namespace Fault_handling_system.Services
         private string _username;
         private string _password;
 
+        /// <summary>The constructor; not called directly, but by Dependency Injection
+        /// mechanism.</summary>
         public MailboxFetcher(ILogger<MailboxFetcher> logger,
                               IServiceProvider serviceProvider,
                               IReportParser reportParser)
@@ -36,6 +40,10 @@ namespace Fault_handling_system.Services
             _reportParser = reportParser;
         }
 
+        /// <summary>Configures the mailbox fetcher.</summary>
+        /// <remarks>By design, the constructor only accepts Dependency Injected objects as
+        /// parameters; the parameters of the fetchers need to be passed here before use.
+        /// </remarks>
         public void Configure(string host, int port, bool useSSL, string username, string password)
         {
             _host = host;
@@ -45,6 +53,12 @@ namespace Fault_handling_system.Services
             _password = password;
         }
 
+        /// <summary>Fetches the mailbox</summary>
+        /// <remarks>This method performs a single fetch of the mailbox using IMAP
+        /// protocol and also passed the mail to <c>ReportParser</c>. It then
+        /// tries to parse the report. This method then moves the mail to 'failed'
+        /// or 'parsed' folder on the mailbox, and inserts the new report to the
+        /// database if it was correct.</remarks>
         public bool FetchMailbox()
         {
             _logger.LogInformation("Checking mailbox...");
@@ -151,7 +165,7 @@ namespace Fault_handling_system.Services
                                 }
                                 catch (IOException e) {_logger.LogError("Could not create directory or file:  ", e);
                                 };
-                                
+
                             }
                             //end of attachments storage part
 

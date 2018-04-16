@@ -6,10 +6,15 @@ using System.Threading.Tasks;
 
 namespace Fault_handling_system.Models
 {
-    public class EtrStatus
+	/// <summary>
+	/// Model representing EtrStatus db table in code.
+	/// </summary>
+	public class EtrStatus
     {
+		/// <value>Primary key.</value>
 		[Key]
 		public int Id { get; set; }
+		/// <value>Text value of EtrStatus.</value>
 		[Required]
 		public string Status { get; set; }
     }

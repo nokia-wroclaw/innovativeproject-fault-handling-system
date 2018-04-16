@@ -5,6 +5,10 @@
     <UserSecretsId>aspnet-Fault_handling_system-96BE7559-A836-41EB-A131-55052B7D97F2</UserSecretsId>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netcoreapp2.0\Fault-handling-system.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Data\Migrations\20180314124216_FirstReportPrototypeMigration.cs" />
     <Compile Remove="Data\Migrations\20180314124216_FirstReportPrototypeMigration.Designer.cs" />
