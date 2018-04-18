@@ -8,11 +8,11 @@ namespace Fault_handling_system.Models
     public class ReportsAndFiltersViewModel
     {
 		public IEnumerable<Report> Reports { get; set; }
-		public IEnumerable<ReportFilter> Filters { get; set; }
-		public ReportsAndFiltersViewModel (IEnumerable<Report> reports, IEnumerable<ReportFilter> filters)
+		public ReportFilter Filter { get; set; }
+		public ReportsAndFiltersViewModel (IEnumerable<Report> reports, ReportFilter filter)
 		{
 			Reports = reports;
-			Filters = filters;
+			Filter = filter;
 		}
     }
 }

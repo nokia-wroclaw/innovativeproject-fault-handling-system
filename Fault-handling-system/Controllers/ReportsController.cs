@@ -281,11 +281,12 @@ namespace Fault_handling_system.Controllers
 			TempData["zoneS"] = zoneS;
 
 			var reports = await applicationDbContext.ToListAsync();
-			var filters = await (from x in _context.ReportFilter
+			ReportFilter filter = null;
+			/*var filters = await (from x in _context.ReportFilter
 						   where x.User.Equals(User)
-						   select x).ToListAsync();
+						   select x).ToListAsync();*/
 
-			return View(new ReportsAndFiltersViewModel(reports, filters));
+			return View(new ReportsAndFiltersViewModel(reports, filter));
         }
 
         // GET: Reports/Details/5
@@ -561,17 +562,17 @@ namespace Fault_handling_system.Controllers
         }
         
 		[HttpPost]
-		public async Task<IActionResult> SaveFilter([Bind("Id,UserId,Name,EtrNumber,Priority,RfaId,RfaName,Grade,TroubleType,DateIssuedFrom,DateIssuedTo,DateIssuedFromWeeksAgo,DateIssuedFromDaysAgo,DateIssuedToWeeksAgo,DateIssuedToDaysAgo,DateSentFrom,DateSentTo,DateSentFromWeeksAgo,DateSentFromDaysAgo,DateSentToWeeksAgo,DateSentToDaysAgo,EtrStatus,EtrType,NsnCoordinatorId,SubcontractorId,Zone")] ReportFilter reportFilter/*string filterName, string etrnumberS, string priorityS, string rfaidS, string rfanameS, string gradeS, string troubletypeS, string dateissuedfromS, string dateissuedtoS, string dateissuedfromWeeksS, string dateissuedfromDaysS, string dateissuedtoWeeksS, string dateissuedtoDaysS, string datesentfromS, string datesenttoS, string datesentfromWeeksS, string datesentfromDaysS, string datesenttoWeeksS, string datesenttoDaysS, string etrstatusS, string etrtypeS, string nsncoordS, string subconS, string zoneS*/)
+		public async Task<IActionResult> SaveFilter(/*[Bind("Id,UserId,Name,EtrNumber,Priority,RfaId,RfaName,Grade,TroubleType,DateIssuedFrom,DateIssuedTo,DateIssuedFromWeeksAgo,DateIssuedFromDaysAgo,DateIssuedToWeeksAgo,DateIssuedToDaysAgo,DateSentFrom,DateSentTo,DateSentFromWeeksAgo,DateSentFromDaysAgo,DateSentToWeeksAgo,DateSentToDaysAgo,EtrStatus,EtrType,NsnCoordinatorId,SubcontractorId,Zone")] ReportFilter reportFilter*/string filterName, string etrnumberS, string priorityS, string rfaidS, string rfanameS, string gradeS, string troubletypeS, string dateissuedfromS, string dateissuedtoS, string dateissuedfromWeeksS, string dateissuedfromDaysS, string dateissuedtoWeeksS, string dateissuedtoDaysS, string datesentfromS, string datesenttoS, string datesentfromWeeksS, string datesentfromDaysS, string datesenttoWeeksS, string datesenttoDaysS, string etrstatusS, string etrtypeS, string nsncoordS, string subconS, string zoneS)
 		{
-			if (ModelState.IsValid)
+			/*if (ModelState.IsValid)
 			{
 				_context.Add(reportFilter);
 				await _context.SaveChangesAsync();
 				return RedirectToAction(nameof(Index));
 			}
 
-			return PartialView("FilterSidebarPartial", reportFilter);
-			/*int diFromWeeksTemp, diFromDaysTemp, diToWeeksTemp, diToDaysTemp;
+			return PartialView("FilterSidebarPartial", reportFilter);*/
+			int diFromWeeksTemp, diFromDaysTemp, diToWeeksTemp, diToDaysTemp;
 			int dsFromWeeksTemp, dsFromDaysTemp, dsToWeeksTemp, dsToDaysTemp;
 			int? diFromWeeks, diFromDays, diToWeeks, diToDays;
 			int? dsFromWeeks, dsFromDays, dsToWeeks, dsToDays;
@@ -588,7 +589,7 @@ namespace Fault_handling_system.Controllers
 			ReportFilter reportFilter = new ReportFilter
 			{
 				UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
-				Name = filterName,
+				Name = "xddd",
 				EtrNumber = etrnumberS,
 				Priority = priorityS,
 				RfaId = rfaidS,
@@ -612,7 +613,17 @@ namespace Fault_handling_system.Controllers
 				NsnCoordinatorId = nsncoordS,
 				SubcontractorId = subconS,
 				Zone = zoneS
-			};*/
+			};
+
+			try
+			{
+				_context.Add(reportFilter);
+				await _context.SaveChangesAsync();
+				return RedirectToAction(nameof(Index));
+			} catch (Exception)
+			{
+				return RedirectToAction(nameof(Index));
+			}
 		}
 
         /// <summary>

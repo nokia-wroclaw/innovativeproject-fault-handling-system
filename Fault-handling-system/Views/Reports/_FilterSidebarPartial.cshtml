@@ -1,11 +1,11 @@
-﻿@model IEnumerable<Fault_handling_system.Models.ReportFilter>
+﻿@model Fault_handling_system.Models.ReportFilter
 
 <div id="filterMenu" class="sidenav">
 	<label class="label-header">Filters</label>
 	<button id="closeFilterMenu" class="btn btn-info btn-lg" style="float:right; margin-right: 5px" onclick="closeNav()">
 		<i class="glyphicon glyphicon-arrow-left"></i>
 	</button>
-	<form asp-action="Index" asp-controller="Reports" method="get">
+	<form>
 		<ul class="list-unstyled" style="width: 340px; margin-top: 51px; margin-left: 5px">
 			<li style="margin-bottom: 3px">
 				<label class="label-white">Etr number:</label>
@@ -152,13 +152,13 @@
 				@Html.DropDownList("zoneS", ViewData["ZoneFilter"] as IEnumerable<SelectListItem>, "", new { id = "zoneS", value = ViewBag.zoneC, style = "float:right; height:26px" })
 			</li>
 			<li style="margin-bottom: 3px; height: 30px">
-				<button class="btn btn-info btn-sm" type="submit" style="float:right">Search</button>
+				<button class="btn btn-info btn-sm" type="submit" asp-action="Index" formmethod="get" style="float:right">Search</button>
 			</li>
 			<li style="height: 30px">
 				<div class="input-group pull-right" style="width: 211px">
 					<input type="text" id="filterName" style="height: 30px" />
 					<span class="input-group-btn">
-						<button type="submit" class="btn btn-info btn-sm" formmethod="post" style="width: 61px">Save</button>
+						<button type="submit" class="btn btn-info btn-sm" asp-action="SaveFilter" formmethod="post" style="width: 61px">Save</button>
 					</span>
 				</div>
 			</li>
