@@ -56,6 +56,14 @@
     margin-bottom: 5px;
 }
 
+div.dropdown-container {
+    width: 180px;
+}
+
+select.shrinked-dropdown {
+    width: inherit;
+}
+
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
     /* Hide captions */

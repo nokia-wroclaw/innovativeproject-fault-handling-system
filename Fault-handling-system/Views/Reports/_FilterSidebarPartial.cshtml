@@ -148,11 +148,15 @@
 			</li>
 			<li style="margin-bottom: 3px">
 				<label class="label-white">Nokia coordinator:</label>
-				@Html.DropDownListFor(m => m.NsnCoordinatorId, ViewData["NsnCoordinatorFilter"] as IEnumerable<SelectListItem>, "", new { id = "nsncoordS", value = ViewBag.nsncoordC, style = "float:right; height:26px" })
+				<div class="dropdown-container" style="float: right">
+					@Html.DropDownListFor(m => m.NsnCoordinatorId, ViewData["NsnCoordinatorFilter"] as IEnumerable<SelectListItem>, "", new { id = "nsncoordS", value = ViewBag.nsncoordC, @class = "shrinked-dropdown", style = "height:26px" })
+				</div>
 			</li>
 			<li style="margin-bottom: 3px">
 				<label class="label-white">Subcontractor:</label>
-				@Html.DropDownListFor(m => m.SubcontractorId, ViewData["SubcontractorFilter"] as IEnumerable<SelectListItem>, "", new { id = "subconS", value = ViewBag.subconC, style = "float:right; height:26px" })
+				<div class="dropdown-container" style="float: right">
+					@Html.DropDownListFor(m => m.SubcontractorId, ViewData["SubcontractorFilter"] as IEnumerable<SelectListItem>, "", new { id = "subconS", value = ViewBag.subconC, @class = "shrinked-dropdown", style = "height:26px" })
+				</div>
 			</li>
 			<li style="margin-bottom: 3px">
 				<label class="label-white">Zone:</label>
