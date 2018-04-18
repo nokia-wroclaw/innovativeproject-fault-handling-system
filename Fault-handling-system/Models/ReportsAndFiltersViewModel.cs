@@ -9,6 +9,7 @@ namespace Fault_handling_system.Models
     {
 		public IEnumerable<Report> Reports { get; set; }
 		public ReportFilter Filter { get; set; }
+		//public String UserId { get; set; }
 		public ReportsAndFiltersViewModel (IEnumerable<Report> reports, ReportFilter filter)
 		{
 			Reports = reports;

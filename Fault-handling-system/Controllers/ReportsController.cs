@@ -562,17 +562,17 @@ namespace Fault_handling_system.Controllers
         }
         
 		[HttpPost]
-		public async Task<IActionResult> SaveFilter(/*[Bind("Id,UserId,Name,EtrNumber,Priority,RfaId,RfaName,Grade,TroubleType,DateIssuedFrom,DateIssuedTo,DateIssuedFromWeeksAgo,DateIssuedFromDaysAgo,DateIssuedToWeeksAgo,DateIssuedToDaysAgo,DateSentFrom,DateSentTo,DateSentFromWeeksAgo,DateSentFromDaysAgo,DateSentToWeeksAgo,DateSentToDaysAgo,EtrStatus,EtrType,NsnCoordinatorId,SubcontractorId,Zone")] ReportFilter reportFilter*/string filterName, string etrnumberS, string priorityS, string rfaidS, string rfanameS, string gradeS, string troubletypeS, string dateissuedfromS, string dateissuedtoS, string dateissuedfromWeeksS, string dateissuedfromDaysS, string dateissuedtoWeeksS, string dateissuedtoDaysS, string datesentfromS, string datesenttoS, string datesentfromWeeksS, string datesentfromDaysS, string datesenttoWeeksS, string datesenttoDaysS, string etrstatusS, string etrtypeS, string nsncoordS, string subconS, string zoneS)
+		public async Task<IActionResult> SaveFilter([Bind("Id,UserId,Name,EtrNumber,Priority,RfaId,RfaName,Grade,TroubleType,DateIssuedFrom,DateIssuedTo,DateIssuedFromWeeksAgo,DateIssuedFromDaysAgo,DateIssuedToWeeksAgo,DateIssuedToDaysAgo,DateSentFrom,DateSentTo,DateSentFromWeeksAgo,DateSentFromDaysAgo,DateSentToWeeksAgo,DateSentToDaysAgo,EtrStatus,EtrType,NsnCoordinatorId,SubcontractorId,Zone")] ReportFilter reportFilter/*string filterName, string etrnumberS, string priorityS, string rfaidS, string rfanameS, string gradeS, string troubletypeS, string dateissuedfromS, string dateissuedtoS, string dateissuedfromWeeksS, string dateissuedfromDaysS, string dateissuedtoWeeksS, string dateissuedtoDaysS, string datesentfromS, string datesenttoS, string datesentfromWeeksS, string datesentfromDaysS, string datesenttoWeeksS, string datesenttoDaysS, string etrstatusS, string etrtypeS, string nsncoordS, string subconS, string zoneS*/)
 		{
-			/*if (ModelState.IsValid)
+			if (ModelState.IsValid)
 			{
 				_context.Add(reportFilter);
 				await _context.SaveChangesAsync();
 				return RedirectToAction(nameof(Index));
 			}
-
-			return PartialView("FilterSidebarPartial", reportFilter);*/
-			int diFromWeeksTemp, diFromDaysTemp, diToWeeksTemp, diToDaysTemp;
+			return RedirectToAction(nameof(Index));
+			//return PartialView("_FilterSidebarPartial", reportFilter);
+			/*int diFromWeeksTemp, diFromDaysTemp, diToWeeksTemp, diToDaysTemp;
 			int dsFromWeeksTemp, dsFromDaysTemp, dsToWeeksTemp, dsToDaysTemp;
 			int? diFromWeeks, diFromDays, diToWeeks, diToDays;
 			int? dsFromWeeks, dsFromDays, dsToWeeks, dsToDays;
@@ -623,7 +623,7 @@ namespace Fault_handling_system.Controllers
 			} catch (Exception)
 			{
 				return RedirectToAction(nameof(Index));
-			}
+			}*/
 		}
 
         /// <summary>
