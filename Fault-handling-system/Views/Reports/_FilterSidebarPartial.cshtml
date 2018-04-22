@@ -167,7 +167,7 @@
 			</li>
 			<li style="height: 30px">
 				<div class="input-group pull-right" style="width: 211px">
-					<input asp-for="Name" type="text" id="filterName" style="height: 30px" />
+					<input asp-for="Name" type="text" id="filterName" name="filterName" style="height: 30px" />
 					<span class="input-group-btn">
 						<button type="submit" class="btn btn-info btn-sm" asp-action="SaveFilter" formmethod="post" style="width: 61px">Save</button>
 					</span>
@@ -175,4 +175,5 @@
 			</li>
 		</ul>
 	</form>
+	@Html.DropDownList("ReportFilter", ViewData["SavedFilters"] as IEnumerable<SelectListItem>, "", new { id = "savedFilters", style = "float:right; height:26px" })
 </div>

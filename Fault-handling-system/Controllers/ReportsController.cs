@@ -87,17 +87,23 @@ namespace Fault_handling_system.Controllers
         /// </returns>
         public async Task<IActionResult> Index(string sortOrder, string etrnumberS, string priorityS, string etrnumberC, string priorityC, string rfaidS, string rfaidC, string rfanameS, string rfanameC, string gradeS, string gradeC, string troubletypeS, string troubletypeC, string dateissuedfromS, string dateissuedtoS, string dateissuedfromC, string dateissuedtoC, string datesentfromS, string datesenttoS, string datesentfromC, string datesenttoC, string etrstatusS, string etrstatusC, string etrtypeS, string etrtypeC, string nsncoordS, string nsncoordC, string subconS, string subconC, string zoneS, string zoneC)
         {
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
 			//lets us see only users of given roles in our dropdowns
 			//this is for dropdowns in filter sidebar
 			var requestors = await _userManager.GetUsersInRoleAsync("Requestor");
 			var nsnCoordinators = await _userManager.GetUsersInRoleAsync("Nokia Coordinator");
 			var subcontractors = await _userManager.GetUsersInRoleAsync("Subcontractor");
+			var filters = await (from x in _context.ReportFilter
+								 where x.UserId.Equals(userId)
+								 select x).ToListAsync();
 
 			ViewData["EtrStatusFilter"] = new SelectList(_context.EtrStatus, "Status", "Status", null);
 			ViewData["EtrTypeFilter"] = new SelectList(_context.EtrType, "Type", "Type", null);
 			ViewData["NsnCoordinatorFilter"] = new SelectList(nsnCoordinators, "UserName", "UserName", null);
 			ViewData["SubcontractorFilter"] = new SelectList(subcontractors, "UserName", "UserName", null);
 			ViewData["ZoneFilter"] = new SelectList(_context.Zone, "ZoneName", "ZoneName", null);
+			ViewData["SavedFilters"] = new SelectList(filters, "Id", "Name", null);
 			//---
 			ViewBag.EtrNumSortParm = sortOrder == "etrnumber_desc" ? "etrnumber" : "etrnumber_desc";
             ViewBag.RfaIdSortParm = sortOrder == "rfaid_desc" ? "rfaid" : "rfaid_desc";
@@ -170,7 +176,7 @@ namespace Fault_handling_system.Controllers
 			}
 			else
 			{
-				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+				//var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 				applicationDbContext = _context.Report.Include(r => r.EtrStatus).Include(r => r.EtrType).Include(r => r.NsnCoordinator).Include(r => r.Requestor).Include(r => r.Subcontractor).Include(r => r.Zone).Where(r => r.NsnCoordinatorId == userId || r.SubcontractorId == userId || r.RequestorId == userId);//added where
 			}
 
@@ -562,17 +568,17 @@ namespace Fault_handling_system.Controllers
         }
         
 		[HttpPost]
-		public async Task<IActionResult> SaveFilter([Bind("Id,UserId,Name,EtrNumber,Priority,RfaId,RfaName,Grade,TroubleType,DateIssuedFrom,DateIssuedTo,DateIssuedFromWeeksAgo,DateIssuedFromDaysAgo,DateIssuedToWeeksAgo,DateIssuedToDaysAgo,DateSentFrom,DateSentTo,DateSentFromWeeksAgo,DateSentFromDaysAgo,DateSentToWeeksAgo,DateSentToDaysAgo,EtrStatus,EtrType,NsnCoordinatorId,SubcontractorId,Zone")] ReportFilter reportFilter/*string filterName, string etrnumberS, string priorityS, string rfaidS, string rfanameS, string gradeS, string troubletypeS, string dateissuedfromS, string dateissuedtoS, string dateissuedfromWeeksS, string dateissuedfromDaysS, string dateissuedtoWeeksS, string dateissuedtoDaysS, string datesentfromS, string datesenttoS, string datesentfromWeeksS, string datesentfromDaysS, string datesenttoWeeksS, string datesenttoDaysS, string etrstatusS, string etrtypeS, string nsncoordS, string subconS, string zoneS*/)
+		public async Task<IActionResult> SaveFilter(/*[Bind("Id,UserId,Name,EtrNumber,Priority,RfaId,RfaName,Grade,TroubleType,DateIssuedFrom,DateIssuedTo,DateIssuedFromWeeksAgo,DateIssuedFromDaysAgo,DateIssuedToWeeksAgo,DateIssuedToDaysAgo,DateSentFrom,DateSentTo,DateSentFromWeeksAgo,DateSentFromDaysAgo,DateSentToWeeksAgo,DateSentToDaysAgo,EtrStatus,EtrType,NsnCoordinatorId,SubcontractorId,Zone")] ReportFilter reportFilter*/string filterName, string etrnumberS, string priorityS, string rfaidS, string rfanameS, string gradeS, string troubletypeS, string dateissuedfromS, string dateissuedtoS, string dateissuedfromWeeksS, string dateissuedfromDaysS, string dateissuedtoWeeksS, string dateissuedtoDaysS, string datesentfromS, string datesenttoS, string datesentfromWeeksS, string datesentfromDaysS, string datesenttoWeeksS, string datesenttoDaysS, string etrstatusS, string etrtypeS, string nsncoordS, string subconS, string zoneS)
 		{
-			if (ModelState.IsValid)
+			/*if (ModelState.IsValid)
 			{
 				_context.Add(reportFilter);
 				await _context.SaveChangesAsync();
 				return RedirectToAction(nameof(Index));
 			}
-			return RedirectToAction(nameof(Index));
-			//return PartialView("_FilterSidebarPartial", reportFilter);
-			/*int diFromWeeksTemp, diFromDaysTemp, diToWeeksTemp, diToDaysTemp;
+			return RedirectToAction(nameof(Index));*/
+
+			int diFromWeeksTemp, diFromDaysTemp, diToWeeksTemp, diToDaysTemp;
 			int dsFromWeeksTemp, dsFromDaysTemp, dsToWeeksTemp, dsToDaysTemp;
 			int? diFromWeeks, diFromDays, diToWeeks, diToDays;
 			int? dsFromWeeks, dsFromDays, dsToWeeks, dsToDays;
@@ -589,7 +595,7 @@ namespace Fault_handling_system.Controllers
 			ReportFilter reportFilter = new ReportFilter
 			{
 				UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
-				Name = "xddd",
+				Name = filterName,
 				EtrNumber = etrnumberS,
 				Priority = priorityS,
 				RfaId = rfaidS,
@@ -615,15 +621,16 @@ namespace Fault_handling_system.Controllers
 				Zone = zoneS
 			};
 
-			try
+			bool isValid = TryValidateModel(reportFilter);
+
+			if (isValid)
 			{
 				_context.Add(reportFilter);
 				await _context.SaveChangesAsync();
 				return RedirectToAction(nameof(Index));
-			} catch (Exception)
-			{
-				return RedirectToAction(nameof(Index));
-			}*/
+			}
+
+			return RedirectToAction(nameof(Index));
 		}
 
         /// <summary>
