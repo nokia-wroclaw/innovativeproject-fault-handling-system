@@ -16,10 +16,15 @@ and log out and log in again for the change to take effect.
 
   1. Open a command prompt and navigate to the project folder
      `Fault-handling-system/`
-  1. Use the following commands to build and run your Docker image:
+  1. Use the following commands to build your Docker image:
 ```
     $ docker build -t fault-handling-system .
-    $ docker run -p 10000:80 fault-handling-system
+```
+  1. It is recommended to start both PostgreSQL
+     and the application using `docker-compose`:
+```
+    $ docker-compose -f fhs.yml up
 ```
 
-Now you can navigate your browser to http://localhost:10000/
+Now you can navigate your browser to http://localhost:8080/
+(or http://localhost:10000/ for PostgreSQL administration).
