@@ -1,18 +1,41 @@
 ﻿@model Fault_handling_system.Models.ReportFilter
-@using System.Security.Claims
+@*using System.Security.Claims*@
+@*section Scripts
+{
+<script type="text/javascript">
+	$(document).ready(function ()
+	{
+		alert("test");
+		//$('#selectPredefinedFilter').on('click', chooseFilter);
+		/*$('#selectPredefinedFilter').click(function ()
+		{
+			alert("Clicked select!");
+		});*/
 
+		/*function chooseFilter()
+		{
+			var fid = $('#savedFilters').find(":selected").val();
+			alert("Clicked select!");
+			$.ajax({
+				url: "Reports?fid=" + fid
+
+			});
+		}*/
+	});
+</script>
+}*@
 <div id="filterMenu" class="sidenav">
 	<label class="label-header">Filters</label>
 	<button id="closeFilterMenu" class="btn btn-info btn-lg" style="float:right; margin-right: 5px" onclick="closeNav()">
 		<i class="glyphicon glyphicon-arrow-left"></i>
 	</button>
 	<form>
-		@{
+		@*{
 		var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 		System.Diagnostics.Debug.WriteLine("\n\n" + userId + "\n\n");
 		//Html.HiddenFor(m => m.UserId, new { value = userId });
-		}
-		<input asp-for="UserId" type="hidden" value="@userId" />
+		}*@
+		<!--<input asp-for="UserId" type="hidden" value="@*userId*@" />-->
 		<ul class="list-unstyled" style="width: 340px; margin-top: 51px; margin-left: 5px">
 			<li style="margin-bottom: 3px">
 				<label class="label-white">Etr number:</label>
@@ -175,5 +198,12 @@
 			</li>
 		</ul>
 	</form>
-	@Html.DropDownList("ReportFilter", ViewData["SavedFilters"] as IEnumerable<SelectListItem>, "", new { id = "savedFilters", style = "float:right; height:26px" })
+	<form asp-action="Index" method="get">
+		<div class="input-group pull-right">
+			@Html.DropDownList("fid", ViewData["SavedFilters"] as IEnumerable<SelectListItem>, "", new { id = "fid", style = "float:right; height:26px" })
+			<span class="input-group-btn">
+				<button id="selectPredefinedFilter" type="submit" class="btn btn-info btn-sm">Select</button>
+			</span>
+		</div>
+	</form>
 </div>

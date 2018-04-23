@@ -9,8 +9,14 @@
 <button id="openFilterMenu" class="btn btn-info" onclick="openNav()" style="margin-top: 5px">Open filter menu</button>
 
 @{ Html.RenderPartial("_FilterSidebarPartial", Model.Filter); }
-
+@section Scripts {
 <script>
+	$(document).ready(function ()
+	{
+		//alert("test");
+		//jquery test
+	});
+
 	function openNav()
 	{
 		document.getElementById("filterMenu").style.width = "350px";
@@ -55,7 +61,7 @@
 		fromPicker.setAttribute("max", toPicker.value);
 	}
 </script>
-
+}
 <table class="table">
 	<thead>
 		<tr>

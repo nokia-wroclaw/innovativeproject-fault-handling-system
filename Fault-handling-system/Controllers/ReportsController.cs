@@ -85,7 +85,7 @@ namespace Fault_handling_system.Controllers
         /// <returns>
         /// ViewResult - list of selected reports
         /// </returns>
-        public async Task<IActionResult> Index(string sortOrder, string etrnumberS, string priorityS, string etrnumberC, string priorityC, string rfaidS, string rfaidC, string rfanameS, string rfanameC, string gradeS, string gradeC, string troubletypeS, string troubletypeC, string dateissuedfromS, string dateissuedtoS, string dateissuedfromC, string dateissuedtoC, string datesentfromS, string datesenttoS, string datesentfromC, string datesenttoC, string etrstatusS, string etrstatusC, string etrtypeS, string etrtypeC, string nsncoordS, string nsncoordC, string subconS, string subconC, string zoneS, string zoneC)
+        public async Task<IActionResult> Index(int? fid, string sortOrder, string etrnumberS, string priorityS, string etrnumberC, string priorityC, string rfaidS, string rfaidC, string rfanameS, string rfanameC, string gradeS, string gradeC, string troubletypeS, string troubletypeC, string dateissuedfromS, string dateissuedtoS, string dateissuedfromC, string dateissuedtoC, string datesentfromS, string datesenttoS, string datesentfromC, string datesenttoC, string etrstatusS, string etrstatusC, string etrtypeS, string etrtypeC, string nsncoordS, string nsncoordC, string subconS, string subconC, string zoneS, string zoneC)
         {
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -97,6 +97,13 @@ namespace Fault_handling_system.Controllers
 			var filters = await (from x in _context.ReportFilter
 								 where x.UserId.Equals(userId)
 								 select x).ToListAsync();
+			ReportFilter chosenFilter = null;
+
+			foreach (var x in filters)
+			{
+				if (x.Id == fid)
+					chosenFilter = x;
+			}
 
 			ViewData["EtrStatusFilter"] = new SelectList(_context.EtrStatus, "Status", "Status", null);
 			ViewData["EtrTypeFilter"] = new SelectList(_context.EtrType, "Type", "Type", null);
@@ -181,8 +188,10 @@ namespace Fault_handling_system.Controllers
 			}
 
 			Repositories.ReportRepository reportRepository = new Repositories.ReportRepository();
-
-			applicationDbContext = reportRepository.GetFilteredReports(applicationDbContext, etrnumberS, priorityS, rfaidS, rfanameS, gradeS, troubletypeS, dateissuedfromS, dateissuedtoS, datesentfromS, datesenttoS, etrstatusS, etrtypeS, nsncoordS, subconS, zoneS);
+			if (chosenFilter == null)
+				applicationDbContext = reportRepository.GetFilteredReports(applicationDbContext, etrnumberS, priorityS, rfaidS, rfanameS, gradeS, troubletypeS, dateissuedfromS, dateissuedtoS, datesentfromS, datesenttoS, etrstatusS, etrtypeS, nsncoordS, subconS, zoneS);
+			else
+				applicationDbContext = reportRepository.GetFilteredReports(applicationDbContext, chosenFilter);
 
             //sorting order
             switch (sortOrder)
@@ -287,12 +296,12 @@ namespace Fault_handling_system.Controllers
 			TempData["zoneS"] = zoneS;
 
 			var reports = await applicationDbContext.ToListAsync();
-			ReportFilter filter = null;
+			
 			/*var filters = await (from x in _context.ReportFilter
 						   where x.User.Equals(User)
 						   select x).ToListAsync();*/
 
-			return View(new ReportsAndFiltersViewModel(reports, filter));
+			return View(new ReportsAndFiltersViewModel(reports, chosenFilter));
         }
 
         // GET: Reports/Details/5
@@ -621,9 +630,9 @@ namespace Fault_handling_system.Controllers
 				Zone = zoneS
 			};
 
-			bool isValid = TryValidateModel(reportFilter);
+			//bool isValid = TryValidateModel(reportFilter);
 
-			if (isValid)
+			if (TryValidateModel(reportFilter))
 			{
 				_context.Add(reportFilter);
 				await _context.SaveChangesAsync();
