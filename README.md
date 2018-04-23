@@ -28,3 +28,10 @@ and log out and log in again for the change to take effect.
 
 Now you can navigate your browser to http://localhost:8080/
 (or http://localhost:10000/ for PostgreSQL administration).
+
+### Connecting to PostgreSQL from docker-compose
+
+Add the following environment variable to `fault-handling-system` container:
+
+    ConnectionStrings__AzureConnection: Server=tcp:db;Database=Pwr-fhs-dev;User ID=postgres;Password=example;
+
