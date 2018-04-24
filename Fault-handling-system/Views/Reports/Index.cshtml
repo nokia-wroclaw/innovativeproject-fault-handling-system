@@ -14,8 +14,48 @@
 	$(document).ready(function ()
 	{
 		//alert("test");
-		//jquery test
+		$('#selectPredefinedFilter').click(function ()
+		{
+			var fid = $('#fid').find(":selected").val();
+			var actionUrl = 'Reports/GetFilter?id=' + fid;
+			//alert("id = " + fid);
+			$.getJSON(actionUrl, SetFilterInputs);
+		});
 	});
+
+	function SetFilterInputs(response)
+	{
+		if (response != null)
+		{
+			$('#etrnumberS').val(response.etrNumber);
+			$('#rfaidS').val(response.rfaId);
+			$('#rfanameS').val(response.rfaName);
+			$('#priorityS').val(response.priority);
+			$('#gradeS').val(response.grade);
+			$('#troubletypeS').val(response.troubleType);
+
+			$('#dateissuedfromS').val(response.dateIssuedFrom);
+			$('#dateissuedtoS').val(response.dateIssuedTo);
+			$('#dateissuedfromDaysS').val(response.dateIssuedFromDaysAgo);
+			$('#dateissuedfromWeeksS').val(response.dateIssuedFromWeeksAgo);
+			$('#dateissuedtoDaysS').val(response.dateIssuedToDaysAgo);
+			$('#dateissuedtoWeeksS').val(response.dateIssuedToWeeksAgo);
+
+			$('#datesentfromS').val(response.dateSentFrom);
+			$('#datesenttoS').val(response.dateSentTo);
+			$('#datesentfromDaysS').val(response.dateSentFromDaysAgo);
+			$('#datesentfromWeeksS').val(response.dateSentFromWeeksAgo);
+			$('#datesenttoDaysS').val(response.dateSentToDaysAgo);
+			$('#datesenttoWeeksS').val(response.dateSentToWeeksAgo);
+
+			$('#etrstatusS').val(response.etrStatus);
+			$('#etrtypeS').val(response.etrType);
+			$('#nsncoordS').val(response.nsnCoordinatorId);
+			$('#subconS').val(response.subcontratorId);
+			$('#zoneS').val(response.zone);
+			$('#filterName').val(response.name);
+		}
+	}
 
 	function openNav()
 	{

@@ -85,7 +85,7 @@ namespace Fault_handling_system.Controllers
         /// <returns>
         /// ViewResult - list of selected reports
         /// </returns>
-        public async Task<IActionResult> Index(int? fid, string sortOrder, string etrnumberS, string priorityS, string etrnumberC, string priorityC, string rfaidS, string rfaidC, string rfanameS, string rfanameC, string gradeS, string gradeC, string troubletypeS, string troubletypeC, string dateissuedfromS, string dateissuedtoS, string dateissuedfromC, string dateissuedtoC, string datesentfromS, string datesenttoS, string datesentfromC, string datesenttoC, string etrstatusS, string etrstatusC, string etrtypeS, string etrtypeC, string nsncoordS, string nsncoordC, string subconS, string subconC, string zoneS, string zoneC)
+        public async Task<IActionResult> Index(string sortOrder, string etrnumberS, string priorityS, string etrnumberC, string priorityC, string rfaidS, string rfaidC, string rfanameS, string rfanameC, string gradeS, string gradeC, string troubletypeS, string troubletypeC, string dateissuedfromS, string dateissuedtoS, string dateissuedfromC, string dateissuedtoC, string datesentfromS, string datesenttoS, string datesentfromC, string datesenttoC, string etrstatusS, string etrstatusC, string etrtypeS, string etrtypeC, string nsncoordS, string nsncoordC, string subconS, string subconC, string zoneS, string zoneC)
         {
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -99,11 +99,11 @@ namespace Fault_handling_system.Controllers
 								 select x).ToListAsync();
 			ReportFilter chosenFilter = null;
 
-			foreach (var x in filters)
+			/*foreach (var x in filters)
 			{
 				if (x.Id == fid)
 					chosenFilter = x;
-			}
+			}*/
 
 			ViewData["EtrStatusFilter"] = new SelectList(_context.EtrStatus, "Status", "Status", null);
 			ViewData["EtrTypeFilter"] = new SelectList(_context.EtrType, "Type", "Type", null);
@@ -634,12 +634,69 @@ namespace Fault_handling_system.Controllers
 
 			if (TryValidateModel(reportFilter))
 			{
-				_context.Add(reportFilter);
-				await _context.SaveChangesAsync();
-				return RedirectToAction(nameof(Index));
+				var existingFilter = await (from x in _context.ReportFilter
+									 where x.UserId.Equals(reportFilter.UserId)
+									 && x.Name.Equals(reportFilter.Name)
+									 select x).FirstOrDefaultAsync();
+				if (existingFilter != null)
+				{
+					existingFilter.EtrNumber = reportFilter.EtrNumber;
+					existingFilter.Priority = reportFilter.Priority;
+					existingFilter.RfaId = reportFilter.RfaId;
+					existingFilter.RfaName = reportFilter.RfaName;
+					existingFilter.Grade = reportFilter.Grade;
+					existingFilter.TroubleType = reportFilter.TroubleType;
+					existingFilter.DateIssuedFrom = reportFilter.DateIssuedFrom;
+					existingFilter.DateIssuedTo = reportFilter.DateIssuedTo;
+					existingFilter.DateIssuedFromWeeksAgo = reportFilter.DateIssuedFromWeeksAgo;
+					existingFilter.DateIssuedFromDaysAgo = reportFilter.DateIssuedFromDaysAgo;
+					existingFilter.DateIssuedToWeeksAgo = reportFilter.DateIssuedToWeeksAgo;
+					existingFilter.DateIssuedToDaysAgo = reportFilter.DateIssuedToDaysAgo;
+					existingFilter.DateSentFrom = reportFilter.DateSentFrom;
+					existingFilter.DateSentTo = reportFilter.DateSentTo;
+					existingFilter.DateSentFromWeeksAgo = reportFilter.DateSentFromWeeksAgo;
+					existingFilter.DateSentFromDaysAgo = reportFilter.DateSentFromDaysAgo;
+					existingFilter.DateSentToWeeksAgo = reportFilter.DateSentToWeeksAgo;
+					existingFilter.DateSentToDaysAgo = reportFilter.DateSentToDaysAgo;
+					existingFilter.EtrStatus = reportFilter.EtrStatus;
+					existingFilter.EtrType = reportFilter.EtrType;
+					existingFilter.NsnCoordinatorId = reportFilter.NsnCoordinatorId;
+					existingFilter.SubcontractorId = reportFilter.SubcontractorId;
+					existingFilter.Zone = reportFilter.Zone;
+
+					_context.Update(existingFilter);
+					await _context.SaveChangesAsync();
+				}
+				else
+				{
+					_context.Add(reportFilter);
+					await _context.SaveChangesAsync();
+				}
+				//return RedirectToAction(nameof(Index));
 			}
 
 			return RedirectToAction(nameof(Index));
+		}
+
+		[HttpGet]
+		public async Task<JsonResult> GetFilter(int? id)
+		{
+			//string toReturn = null;
+			ReportFilter filter;
+			if (id == null)
+			{
+				filter = new ReportFilter();
+				//toReturn = JsonConvert.SerializeObject(filter);
+			}
+			else
+			{
+				filter = await (from x in _context.ReportFilter
+									  where x.Id == id
+									  select x).SingleOrDefaultAsync();
+				//toReturn = JsonConvert.SerializeObject(filter);
+			}
+
+			return Json(filter);
 		}
 
         /// <summary>
