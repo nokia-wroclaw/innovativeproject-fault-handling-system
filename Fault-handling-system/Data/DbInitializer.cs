@@ -7,8 +7,20 @@ using System.Threading.Tasks;
 
 namespace Fault_handling_system.Data
 {
-    public static class DbInitializer
+	/// <summary>
+	/// Static class used to seed exemplary data to database.
+	/// </summary>
+	public static class DbInitializer
     {
+		/// <summary>
+		/// Seeds user roles to database and an exemplary admin
+		/// provided they don't already exist.
+		/// If they do the method doesn't do anything.
+		/// Runs asynchronously.
+		/// </summary>
+		/// <remarks>Primarily used for development purposes so there's always some admin account.</remarks>
+		/// <param name="userManager">Application's UserManager service</param>
+		/// <param name="roleManager">Application's RoleManager service</param>
 		public static async Task CreateRoles(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
 		{
 			string adminRole = "Admin";

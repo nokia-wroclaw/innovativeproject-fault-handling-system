@@ -17,19 +17,38 @@ using Fault_handling_system.Services;
 
 namespace Fault_handling_system
 {
+    /// <summary>
+    /// Class responsible for creating the application's request processing pipeline
+    /// and configuring the application services.
+    /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// Application logger
+        /// </summary>
         private readonly ILogger<Startup> _logger;
-
+        
+        /// <summary>
+        /// Constructor accepting dependencies configured by the host.
+        /// </summary>
+        /// <param name="logger">Application logger</param>
+        /// <param name="configuration">Dependency to configure the application during startup</param>
         public Startup(ILogger<Startup> logger, IConfiguration configuration)
         {
             _logger = logger;
             Configuration = configuration;
         }
 
+        /// <summary>
+        /// Application configuration properties
+        /// </summary>
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// This method gets called by the runtime. 
+        /// Used to add services to the container.
+        /// </summary>
+        /// <param name="services">Collection to add the services to</param>
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<MailboxFetcherSettings>(Configuration);
@@ -51,7 +70,12 @@ namespace Fault_handling_system
             services.AddMvc();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// This method gets called by the runtime. 
+        /// Used to configure the HTTP request pipeline.
+        /// </summary>
+        /// <param name="app">Application builder</param>
+        /// <param name="env">Hosting environment</param>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())

@@ -8,9 +8,13 @@ using System.Threading.Tasks;
 
 namespace Fault_handling_system.Models.AccountViewModels
 {
+    /// <summary>
+    /// ManageUsersViewModel class cotains informations necessary for ManageUsersView.
+    /// </summary>
     [Authorize(Roles = "Admin")]
     public class ManageUsersViewModel
     {
+        /// <value>List of all users</value>
         [Display(Name = "Lista użytkowników")]
         public List<ApplicationUser> Users { get; set; }
 
