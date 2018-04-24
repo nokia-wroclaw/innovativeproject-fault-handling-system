@@ -169,12 +169,12 @@
 				<div class="input-group pull-right" style="width: 211px">
 					<input type="text" id="filterName" name="filterName" style="height: 30px" />
 					<span class="input-group-btn">
-						<button type="submit" class="btn btn-danger btn-sm" asp-action="SaveFilter" formmethod="post">
+						<button id="removeFilter" type="submit" class="btn btn-danger btn-sm" asp-action="DeleteFilter" formmethod="post">
 							<i class="glyphicon glyphicon-trash"></i>
 						</button>
 					</span>
 					<span class="input-group-btn">
-						<button type="submit" class="btn btn-info btn-sm" asp-action="SaveFilter" formmethod="post" style="width: 61px">Save</button>
+						<button id="saveOrUpdateFilter" type="submit" class="btn btn-info btn-sm" asp-action="SaveFilter" formmethod="post" style="width: 61px">Save</button>
 					</span>
 				</div>
 			</li>

@@ -21,6 +21,43 @@
 			//alert("id = " + fid);
 			$.getJSON(actionUrl, SetFilterInputs);
 		});
+
+		//In case we want to handle creating a filter via jquery it needs
+		//to be completed and controller action modified a bit
+		/*$('#saveOrUpdateFilter').click(function ()
+		{
+			var etrNumber = $('#etrnumberS').val();
+			var rfaId = $('#rfaidS').val();
+			var rfaName = $('#rfanameS').val();
+			var priority = $('#priorityS').val();
+			var grade = $('#gradeS').val();
+			var troubleType = $('#troubletypeS').val();
+
+			var dateIssuedFrom = $('#dateissuedfromS').val();
+			var dateIssuedTo = $('#dateissuedtoS').val();
+			var dateIssuedFromDaysAgo = $('#dateissuedfromDaysS').val();
+			var dateIssuedFromWeeksAgo = $('#dateissuedfromWeeksS').val();
+			var dateIssuedToDaysAgo = $('#dateissuedtoDaysS').val();
+			var dateIssuedToWeeksAgo = $('#dateissuedtoWeeksS').val();
+
+			var dateSentFrom = $('#datesentfromS').val();
+			var dateSentTo = $('#datesenttoS').val();
+			var dateSentFromDaysAgo = $('#datesentfromDaysS').val();
+			var dateSentFromWeeksAgo = $('#datesentfromWeeksS').val();
+			var dateSentToDaysAgo = $('#datesenttoDaysS').val();
+			var dateSentToWeeksAgo = $('#datesenttoWeeksS').val();
+
+			var etrStatus = $('#etrstatusS').val();
+			var etrType = $('#etrtypeS').val();
+			var nsnCoordinator = $('#nsncoordS').val();
+			var subcontractor = $('#subconS').val();
+			var zone = $('#zoneS').val();
+			var name = $('#filterName').val();
+
+			$.post(
+
+			);
+		});*/
 	});
 
 	function SetFilterInputs(response)

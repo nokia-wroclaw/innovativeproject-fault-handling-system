@@ -699,6 +699,29 @@ namespace Fault_handling_system.Controllers
 			return Json(filter);
 		}
 
+		[HttpPost]
+		public async Task<IActionResult> DeleteFilter(string filterName)
+		{
+			if (String.IsNullOrEmpty(filterName) || String.IsNullOrWhiteSpace(filterName))
+			{
+				return NotFound("404: there's no filter with name " + filterName);
+			}
+
+			var toDelete = await (from x in _context.ReportFilter
+										where x.Name.Equals(filterName) && x.UserId.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))
+										select x).SingleOrDefaultAsync();
+
+			if (toDelete == null)
+			{
+				return NotFound("404: there's no filter with name " + filterName);
+			}
+
+			_context.ReportFilter.Remove(toDelete);
+			await _context.SaveChangesAsync();
+
+			return RedirectToAction(nameof(Index));
+		}
+
         /// <summary>
         /// This action can export reports to excel file.
         /// </summary>
