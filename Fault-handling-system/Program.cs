@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Fault_handling_system.Data;
 using Fault_handling_system.Models;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
@@ -33,7 +34,9 @@ namespace Fault_handling_system
 				var services = scope.ServiceProvider;
 				var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 				var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-				Data.DbInitializer.CreateRoles(userManager, roleManager).Wait();				
+				var dbContext = services.GetRequiredService<ApplicationDbContext>();
+				DbInitializer.CreateRoles(userManager, roleManager).Wait();
+				DbInitializer.CreateEtrAttributes(dbContext).Wait();
 			}
 			host.Run();
 		}
