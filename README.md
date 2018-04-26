@@ -18,7 +18,7 @@ and log out and log in again for the change to take effect.
      `Fault-handling-system/`
   1. Use the following commands to build your Docker image:
 ```
-    $ docker build -t fault-handling-system .
+    $ docker-compose build
 ```
   1. It is recommended to start both PostgreSQL
      and the application using `docker-compose`:

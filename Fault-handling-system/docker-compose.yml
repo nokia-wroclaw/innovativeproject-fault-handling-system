@@ -20,6 +20,7 @@ services:
 
   fault-handling-system:
     image: fault-handling-system
+    build: .
     depends_on:
       - db
     restart: always
