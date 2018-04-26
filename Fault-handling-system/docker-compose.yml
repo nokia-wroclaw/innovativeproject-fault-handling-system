@@ -30,3 +30,11 @@ services:
       ASPNETCORE_ENVIRONMENT: Development
       DoMailboxFetching: 'true'
       CheckInterval: '15'
+
+  dotnet-ef-admin:
+    image: dotnet-ef-admin
+    build:
+      context: .
+      dockerfile: Dockerfile.dotnet-ef-admin
+    depends_on:
+      - db
