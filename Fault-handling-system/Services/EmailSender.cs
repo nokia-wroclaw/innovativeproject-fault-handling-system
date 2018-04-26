@@ -31,7 +31,7 @@ namespace Fault_handling_system.Services
             smtpClient.Credentials = new NetworkCredential(_settings.MailLogin, _settings.MailPassword);
             msg.IsBodyHtml = true;
 
-            smtpClient.Send(msg);
+            smtpClient.SendMailAsync(msg);
             return Task.CompletedTask;
         }
     }
