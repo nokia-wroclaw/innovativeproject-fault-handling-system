@@ -288,7 +288,7 @@ namespace Fault_handling_system.Controllers
             var roles = GetAllRoles();
             model.ERoles = GetSelectListItems(roles);
             ViewData["ReturnUrl"] = returnUrl;
-           
+
             var user = await _userManager.FindByEmailAsync(model.Email);
             await _userManager.AddToRoleAsync(user, model.Role);
             model.Roles = await _userManager.GetRolesAsync(user);
@@ -439,7 +439,11 @@ namespace Fault_handling_system.Controllers
             return View(model);
         }
 
-
+        /// <summary>
+        /// Creates random password
+        /// </summary>
+        /// <param name="length">Password length</param>
+        /// <returns>Password string</returns>
         public string CreatePassword(int length)
         {
             const string valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-!$#@*";
@@ -699,7 +703,7 @@ namespace Fault_handling_system.Controllers
         {
             IQueryable<Report> applicationDbContext;
 
-            if(User.IsInRole("Admin")) 
+            if (User.IsInRole("Admin"))
             {
                 applicationDbContext = _context.Report.Include(r => r.EtrStatus).Include(r => r.EtrType).Include(r => r.NsnCoordinator).Include(r => r.Requestor).Include(r => r.Subcontractor).Include(r => r.Zone).Where(r => r.NsnCoordinatorId == null).OrderByDescending(r => r.DateIssued);
                 return View(await applicationDbContext.ToListAsync());
