@@ -1,0 +1,30 @@
+version: '3.1'
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: Pwr-fhs-dev
+
+  adminer:
+    image: adminer
+    depends_on:
+      - db
+    restart: always
+    ports:
+      - 10000:8080
+
+  fault-handling-system:
+    image: fault-handling-system
+    depends_on:
+      - db
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      DoMailboxFetching: 'true'
+      CheckInterval: '15'
