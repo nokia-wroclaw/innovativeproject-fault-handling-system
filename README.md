@@ -12,16 +12,21 @@ As a post-installation step, add yourself to `docker` group:
 
 and log out and log in again for the change to take effect.
 
-### Running in a Docker container - Ubuntu 16.04 LTS
+### Build and deployment
 
-  1. Open a command prompt and navigate to the project folder
-     `Fault-handling-system/`
-  1. Use the following commands to build your Docker image:
+Open a command prompt and navigate to the project folder
+`Fault-handling-system/`. Then use the following commands to build
+your Docker image:
 ```
     $ docker-compose build
 ```
-  1. It is recommended to start both PostgreSQL
-     and the application using `docker-compose`:
+
+Then you have to apply migrations to the database.
+
+### Running in a Docker container - Ubuntu 16.04 LTS
+
+It is recommended to start both PostgreSQL
+and the application using `docker-compose`:
 ```
     $ docker-compose up
 ```
