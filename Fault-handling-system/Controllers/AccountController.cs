@@ -425,10 +425,13 @@ namespace Fault_handling_system.Controllers
                 {
                     await _userManager.AddToRoleAsync(user, model.Role);
                     _logger.LogInformation("User created a new account with password.");
-                    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    //var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
-                    //await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
-                    //await _signInManager.SignInAsync(user, isPersistent: false);
+                    StringBuilder emailMessage = new StringBuilder();
+                    emailMessage.Append("Username: ");
+                    emailMessage.Append(user.UserName);
+                    emailMessage.Append(" | Password to your account: ");
+                    emailMessage.Append(password);
+                    await _emailSender.SendEmailAsync(user.Email, "Password to your FHS account", emailMessage.ToString());
+                    _logger.LogInformation("Email sent!");
 
                     return RedirectToAction("Register", "Account");
                 }
