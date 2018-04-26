@@ -23,7 +23,7 @@ and log out and log in again for the change to take effect.
   1. It is recommended to start both PostgreSQL
      and the application using `docker-compose`:
 ```
-    $ docker-compose -f fhs.yml up
+    $ docker-compose up
 ```
 
 Now you can navigate your browser to http://localhost:8080/
