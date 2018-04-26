@@ -26,6 +26,8 @@ namespace Fault_handling_system.Models.AccountViewModels
         [Display(Name = "Email")]
         public string Email { get; set; }
 
+
+        /*
         /// <value>Password</value>
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
@@ -38,9 +40,10 @@ namespace Fault_handling_system.Models.AccountViewModels
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+        */
 
         /// <value>Initial role</value>
-        [Required] 
+        [Required]
         [Display(Name = "Role")]
         public string Role { get; set; }
         public IEnumerable<SelectListItem> Roles { get; set; }
