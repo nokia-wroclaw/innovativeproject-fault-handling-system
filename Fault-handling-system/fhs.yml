@@ -5,6 +5,7 @@ services:
   db:
     image: postgres
     restart: always
+    hostname: db
     environment:
       POSTGRES_PASSWORD: example
       POSTGRES_DB: Pwr-fhs-dev
