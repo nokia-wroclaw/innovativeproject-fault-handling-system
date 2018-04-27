@@ -60,6 +60,10 @@ namespace Fault_handling_system.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasFilter("[Email] IS NOT NULL");
+
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
 
@@ -146,6 +150,9 @@ namespace Fault_handling_system.Data.Migrations
                     b.Property<int>("ZoneId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EtrNumber")
+                        .IsUnique();
 
                     b.HasIndex("EtrStatusId");
 

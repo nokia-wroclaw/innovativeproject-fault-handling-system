@@ -31,6 +31,8 @@ namespace Fault_handling_system.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+			builder.Entity<ApplicationUser>().HasIndex(x => x.Email).IsUnique();
+			builder.Entity<Report>().HasIndex(x => x.EtrNumber).IsUnique();
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
