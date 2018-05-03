@@ -9,7 +9,16 @@
     ViewData.AddActivePage(ManageAdminNavPages.ManageUsers);
 }
 
+@if (TempData["ErrorMessage"] != null)
+{
+<div class="alert alert-danger">
+    <strong>Error!</strong> This user is assigned to unhandled reports!
+</div>
+}
+@{ TempData["ErrorMessage"] = null; }
+
 <h4>@ViewData["Title"]</h4>
+
 <table class="table">
     <thead>
         <tr>
@@ -46,32 +55,32 @@
 </table>
 
 @*<div id="rolesMenu" class="sidenav">
-    <label class="label-header">Roles</label>
-    <button id="closeRolesMenu" class="btn btn-info btn-lg" style="float:right; margin-right: 5px" onclick="closeNav()">
-        <i class="glyphicon glyphicon-arrow-left"></i>
-    </button>
-    <form asp-action="ManageUsers" asp-controller="Account" method="get">
-        <ul class="list-unstyled" style="width: 340px; margin-top: 51px; margin-left: 5px">
-            <li style="margin-bottom: 3px">
-                <label class="label-white">Role:</label>
-                @Html.DropDownListFor(m => m.Role, Model.ERoles, "- Please select a role -", new { @class = "form-control" })
-            </li>
-            <li>
-                <button class="btn btn-info" type="submit" style="float:left" asp- asp-action="AssignRole" asp-route-id="">Assign</button>
-                <button class="btn btn-info" type="submit" style="float:right">Unassign</button>
-            </li>
-        </ul>
-    </form>
-</div>
+        <label class="label-header">Roles</label>
+        <button id="closeRolesMenu" class="btn btn-info btn-lg" style="float:right; margin-right: 5px" onclick="closeNav()">
+            <i class="glyphicon glyphicon-arrow-left"></i>
+        </button>
+        <form asp-action="ManageUsers" asp-controller="Account" method="get">
+            <ul class="list-unstyled" style="width: 340px; margin-top: 51px; margin-left: 5px">
+                <li style="margin-bottom: 3px">
+                    <label class="label-white">Role:</label>
+                    @Html.DropDownListFor(m => m.Role, Model.ERoles, "- Please select a role -", new { @class = "form-control" })
+                </li>
+                <li>
+                    <button class="btn btn-info" type="submit" style="float:left" asp- asp-action="AssignRole" asp-route-id="">Assign</button>
+                    <button class="btn btn-info" type="submit" style="float:right">Unassign</button>
+                </li>
+            </ul>
+        </form>
+    </div>
 
-<script>
-    function openNav() {
-        document.getElementById("rolesMenu").style.width = "350px";
-        document.getElementById("openRolesMenu").style.visibility = 'hidden';
-    }
+    <script>
+        function openNav() {
+            document.getElementById("rolesMenu").style.width = "350px";
+            document.getElementById("openRolesMenu").style.visibility = 'hidden';
+        }
 
-    function closeNav() {
-        document.getElementById("rolesMenu").style.width = "0";
-        document.getElementById("openRolesMenu").style.visibility = 'visible';
-    }
-</script>*@
+        function closeNav() {
+            document.getElementById("rolesMenu").style.width = "0";
+            document.getElementById("openRolesMenu").style.visibility = 'visible';
+        }
+    </script>*@

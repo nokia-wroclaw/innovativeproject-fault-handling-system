@@ -288,7 +288,7 @@ namespace Fault_handling_system.Controllers
             var roles = GetAllRoles();
             model.ERoles = GetSelectListItems(roles);
             ViewData["ReturnUrl"] = returnUrl;
-           
+
             var user = await _userManager.FindByEmailAsync(model.Email);
             await _userManager.AddToRoleAsync(user, model.Role);
             model.Roles = await _userManager.GetRolesAsync(user);
@@ -323,7 +323,7 @@ namespace Fault_handling_system.Controllers
         /// <summary>
         /// Delete user method.
         /// </summary>
-        /// <param name="id>User id</param>
+        /// <param name="id">User id</param>
         /// <returns>View with user info and a button to confirm deletion</returns>
         [HttpGet]
         [Authorize(Roles = "Admin")]
@@ -357,8 +357,19 @@ namespace Fault_handling_system.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var user = await _userManager.FindByIdAsync(id);
-            await _userManager.DeleteAsync(user);
+            var query = await (from x in _context.Report
+                            where x.RequestorId == id || x.NsnCoordinatorId == id || x.SubcontractorId == id
+                            select x).ToListAsync();
+            if (query == null)
+            {
+                var user = await _userManager.FindByIdAsync(id);
+                await _userManager.DeleteAsync(user);
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "This user is assigned to an existing report.";
+            }
+
             return RedirectToAction(nameof(ManageUsers));
         }
 
@@ -395,6 +406,7 @@ namespace Fault_handling_system.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Register(string returnUrl = null)
         {
+            TempData["result"] = "9";
             var roles = GetAllRoles();
             var model = new RegisterViewModel();
             model.Roles = GetSelectListItems(roles);
@@ -706,7 +718,7 @@ namespace Fault_handling_system.Controllers
         {
             IQueryable<Report> applicationDbContext;
 
-            if(User.IsInRole("Admin")) 
+            if (User.IsInRole("Admin"))
             {
                 applicationDbContext = _context.Report.Include(r => r.EtrStatus).Include(r => r.EtrType).Include(r => r.NsnCoordinator).Include(r => r.Requestor).Include(r => r.Subcontractor).Include(r => r.Zone).Where(r => r.NsnCoordinatorId == null).OrderByDescending(r => r.DateIssued);
                 return View(await applicationDbContext.ToListAsync());
