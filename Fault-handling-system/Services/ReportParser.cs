@@ -31,7 +31,7 @@ namespace Fault_handling_system.Services
             report.EtrStatusId = 2;
             hasEtrStatusId = true;
 
-            MatchCollection mc = Regex.Matches(message, "^([^:\n]+): ([^:\n]+)$",
+            MatchCollection mc = Regex.Matches(message, "^([^:\n]+): ([^\n]+)$",
                                                RegexOptions.Multiline);
 
             foreach (Match match in mc) {
@@ -82,8 +82,8 @@ namespace Fault_handling_system.Services
                 case "Vendor Priority/Severity":
                     report.Priority = value;
                     break;
-                case "Trouble Reported Date":
-                    // TODO parse it
+                case "Trouble Start Time":
+                    report.DateIssued = DateTime.Parse(value);
                     break;
                 case "Network Element ID":
                     // TODO which field is it?
@@ -101,6 +101,9 @@ namespace Fault_handling_system.Services
                     break;
                 case "Software Version":
                     // TODO which field is it?
+                    break;
+                case "Created Date":
+                    report.DateSent = DateTime.Parse(value);
                     break;
                 case "Originator Name/Requestor Name":
                     // TODO map it to the requestor entity
