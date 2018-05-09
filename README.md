@@ -51,3 +51,7 @@ and the application using `docker-compose`:
 
 Now you can navigate your browser to http://localhost:8080/
 (or http://localhost:10000/ for PostgreSQL administration).
+
+When first run, the application creates an admin account
+with email admin@example.com and password "Admin-123".
+You can use it to log in.
