@@ -21,7 +21,25 @@ your Docker image:
     $ docker-compose build
 ```
 
-Then you have to apply migrations to the database.
+Then you have to apply migrations to the database. To do this:
+
+1. Comment out `fault-handling-system` container in `docker-compose.yml`
+to prevent it from starting.
+
+2. Launch the database container:
+```
+docker-compose up
+```
+
+3. Export the variable pointing to the database inside the container:
+```
+export ConnectionStrings__DefaultConnection="Server=localhost;Port=10001;Database=Pwr-fhs-dev;User ID=postgres;Password=example;"
+```
+
+4. Perform the migrations on the selected database:
+```
+dotnet ef database update
+```
 
 ### Running in a Docker container - Ubuntu 16.04 LTS
 
@@ -33,10 +51,3 @@ and the application using `docker-compose`:
 
 Now you can navigate your browser to http://localhost:8080/
 (or http://localhost:10000/ for PostgreSQL administration).
-
-### Connecting to PostgreSQL from docker-compose
-
-Add the following environment variable to `fault-handling-system` container:
-
-    ConnectionStrings__AzureConnection: Server=tcp:db;Database=Pwr-fhs-dev;User ID=postgres;Password=example;
-
