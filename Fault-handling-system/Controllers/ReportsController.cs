@@ -369,11 +369,16 @@ namespace Fault_handling_system.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,EtrNumber,NokiaCaseId,RfaId,RfaName,ZoneId,AssignedTo,Priority,EtrTypeId,EtrStatusId,RequestorId,NsnCoordinatorId,SubcontractorId,Grade,TroubleType,DateIssued,DateSent,EtrToDes,ClosingDate,EtrDescription,Comment")] Report report)
         {
-            if (ModelState.IsValid)
+			var existing = await (from x in _context.Report
+								  where x.EtrNumber.Equals(report.EtrNumber)
+								  select x).SingleOrDefaultAsync();
+			if (existing != null) ModelState.AddModelError("EtrNumber", "A report with given Etr Number already exists.");
+
+			if (ModelState.IsValid)
             {
-                _context.Add(report);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+				_context.Add(report);
+				await _context.SaveChangesAsync();
+				return RedirectToAction(nameof(Index));
             }
             ViewData["EtrStatusId"] = new SelectList(_context.EtrStatus, "Id", "Status", report.EtrStatusId);
             ViewData["EtrTypeId"] = new SelectList(_context.EtrType, "Id", "Type", report.EtrTypeId);
@@ -600,6 +605,11 @@ namespace Fault_handling_system.Controllers
 			dsFromDays = int.TryParse(datesentfromDaysS, out dsFromDaysTemp) ? dsFromDaysTemp : (int?)null;
 			dsToWeeks = int.TryParse(datesenttoWeeksS, out dsToWeeksTemp) ? dsToWeeksTemp : (int?)null;
 			dsToDays = int.TryParse(datesenttoDaysS, out dsToDaysTemp) ? dsToDaysTemp : (int?)null;
+
+			if (diFromWeeks != null || diFromDays != null) dateissuedfromS = null;
+			if (diToWeeks != null || diToDays != null) dateissuedtoS = null;
+			if (dsFromWeeks != null || dsFromDays != null) datesentfromS = null;
+			if (dsToWeeks != null || dsToDays != null) datesenttoS = null;
 
 			ReportFilter reportFilter = new ReportFilter
 			{

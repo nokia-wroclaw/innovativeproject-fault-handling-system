@@ -13,13 +13,191 @@
 <script>
 	$(document).ready(function ()
 	{
-		//alert("test");
+		var dateIssuedFrom = $('#dateissuedfromS')[0];
+		var dateIssuedTo = $('#dateissuedtoS')[0];
+		var dateIssuedFromWeeks = $('#dateissuedfromWeeksS')[0];
+		var dateIssuedFromDays = $('#dateissuedfromDaysS')[0];
+		var dateIssuedToWeeks = $('#dateissuedtoWeeksS')[0];
+		var dateIssuedToDays = $('#dateissuedtoDaysS')[0];
+		var dateSentFrom = $('#datesentfromS')[0];
+		var dateSentTo = $('#datesenttoS')[0];
+		var dateSentFromWeeks = $('#datesentfromWeeksS')[0];
+		var dateSentFromDays = $('#datesentfromDaysS')[0];
+		var dateSentToWeeks = $('#datesenttoWeeksS')[0];
+		var dateSentToDays = $('#datesenttoDaysS')[0];
+
 		$('#selectPredefinedFilter').click(function ()
 		{
 			var fid = $('#fid').find(":selected").val();
 			var actionUrl = 'Reports/GetFilter?id=' + fid;
 			//alert("id = " + fid);
 			$.getJSON(actionUrl, SetFilterInputs);
+		});
+
+		$('#dateissuedfromWeeksS').on('change', function (e)
+		{
+			var from = Number(dateIssuedFromWeeks.value * 7) + Number(dateIssuedFromDays.value);
+			var to = Number(dateIssuedToWeeks.value * 7) + Number(dateIssuedToDays.value);
+			
+			if (from < to)
+			{
+				if (dateIssuedFromDays.value < dateIssuedToDays.value)
+					$(this).val(dateIssuedToWeeks.value - 1);
+				else
+					$(this).val(dateIssuedToWeeks.value);
+				from = Number(dateIssuedFromWeeks.value * 7) + Number(dateIssuedFromDays.value);
+			}
+			var toSet = new Date();
+			toSet.setDate(toSet.getDate() - from);
+			var toSetString = toSet.toISOString();
+			$('#dateissuedfromS').val(toSetString.slice(0, 10));
+			dateIssuedTo.setAttribute("min", dateIssuedFrom.value);
+		});
+
+		$('#dateissuedfromDaysS').on('change', function (e)
+		{
+			var from = Number(dateIssuedFromWeeks.value * 7) + Number(dateIssuedFromDays.value);
+			var to = Number(dateIssuedToWeeks.value * 7) + Number(dateIssuedToDays.value);
+			
+			if (from < to)
+			{
+				$(this).val(dateIssuedToDays.value);
+				from = Number(dateIssuedFromWeeks.value * 7) + Number(dateIssuedFromDays.value);
+			}
+			var toSet = new Date();
+			toSet.setDate(toSet.getDate() - from);
+			var toSetString = toSet.toISOString();
+			$('#dateissuedfromS').val(toSetString.slice(0, 10));
+			dateIssuedTo.setAttribute("min", dateIssuedFrom.value);
+		});
+
+		$('#dateissuedtoWeeksS').on('change', function (e)
+		{
+			var from = Number(dateIssuedFromWeeks.value * 7) + Number(dateIssuedFromDays.value);
+			var to = Number(dateIssuedToWeeks.value * 7) + Number(dateIssuedToDays.value);
+
+			if (from < to)
+			{
+				if (dateIssuedFromDays.value < dateIssuedToDays.value)
+					$(this).val(dateIssuedFromWeeks.value - 1);
+				else
+					$(this).val(dateIssuedFromWeeks.value);
+				to = Number(dateIssuedToWeeks.value * 7) + Number(dateIssuedToDays.value);
+			}
+			var toSet = new Date();
+			toSet.setDate(toSet.getDate() - to);
+			var toSetString = toSet.toISOString();
+			$('#dateissuedtoS').val(toSetString.slice(0, 10));
+			dateIssuedFrom.setAttribute("max", dateIssuedTo.value);
+		});
+
+		$('#dateissuedtoDaysS').on('change', function (e)
+		{
+			var from = Number(dateIssuedFromWeeks.value * 7) + Number(dateIssuedFromDays.value);
+			var to = Number(dateIssuedToWeeks.value * 7) + Number(dateIssuedToDays.value);
+
+			if (from < to)
+			{
+				$(this).val(dateIssuedFromDays.value);
+				to = Number(dateIssuedToWeeks.value * 7) + Number(dateIssuedToDays.value);
+			}
+			var toSet = new Date();
+			toSet.setDate(toSet.getDate() - to);
+			var toSetString = toSet.toISOString();
+			$('#dateissuedtoS').val(toSetString.slice(0, 10));
+			dateIssuedFrom.setAttribute("max", dateIssuedTo.value);
+		});
+
+		$('#datesentfromWeeksS').on('change', function (e)
+		{
+			var from = Number(dateSentFromWeeks.value * 7) + Number(dateSentFromDays.value);
+			var to = Number(dateSentToWeeks.value * 7) + Number(dateSentToDays.value);
+
+			if (from < to)
+			{
+				$(this).val(dateSentToWeeks.value);
+				from = Number(dateSentFromWeeks.value * 7) + Number(dateSentFromDays.value);
+			}
+			var toSet = new Date();
+			toSet.setDate(toSet.getDate() - from);
+			var toSetString = toSet.toISOString();
+			$('#datesentfromS').val(toSetString.slice(0, 10));
+			dateSentTo.setAttribute("min", dateSentFrom.value);
+		});
+
+		$('#datesentfromDaysS').on('change', function (e)
+		{
+			var from = Number(dateSentFromWeeks.value * 7) + Number(dateSentFromDays.value);
+			var to = Number(dateSentToWeeks.value * 7) + Number(dateSentToDays.value);
+
+			if (from < to)
+			{
+				$(this).val(dateSentToDays.value);
+				from = Number(dateSentFromWeeks.value * 7) + Number(dateSentFromDays.value);
+			}
+			var toSet = new Date();
+			toSet.setDate(toSet.getDate() - from);
+			var toSetString = toSet.toISOString();
+			$('#datesentfromS').val(toSetString.slice(0, 10));
+			dateSentTo.setAttribute("min", dateSentFrom.value);
+		});
+
+		$('#datesenttoWeeksS').on('change', function (e)
+		{
+			var from = Number(dateSentFromWeeks.value * 7) + Number(dateSentFromDays.value);
+			var to = Number(dateSentToWeeks.value * 7) + Number(dateSentToDays.value);
+
+			if (from < to)
+			{
+				$(this).val(dateSentFromWeeks.value);
+				to = Number(dateSentToWeeks.value * 7) + Number(dateSentToDays.value);
+			}
+			var toSet = new Date();
+			toSet.setDate(toSet.getDate() - to);
+			var toSetString = toSet.toISOString();
+			$('#datesenttoS').val(toSetString.slice(0, 10));
+			dateSentFrom.setAttribute("max", dateSentTo.value);
+		});
+
+		$('#datesenttoDaysS').on('change', function (e)
+		{
+			var from = Number(dateSentFromWeeks.value * 7) + Number(dateSentFromDays.value);
+			var to = Number(dateSentToWeeks.value * 7) + Number(dateSentToDays.value);
+
+			if (from < to)
+			{
+				$(this).val(dateSentFromDays.value);
+				to = Number(dateSentToWeeks.value * 7) + Number(dateSentToDays.value);
+			}
+			var toSet = new Date();
+			toSet.setDate(toSet.getDate() - to);
+			var toSetString = toSet.toISOString();
+			$('#datesenttoS').val(toSetString.slice(0, 10));
+			dateSentFrom.setAttribute("max", dateSentTo.value);
+		});
+		//zeroing relative data input when given concrete ones by the user
+		$('#dateissuedfromS').on('change', function ()
+		{
+			dateIssuedTo.setAttribute("min", dateIssuedFrom.value);
+			dateIssuedFromWeeks.value = dateIssuedFromDays.value = dateIssuedToWeeks.value = dateIssuedToDays.value = "";
+		});
+
+		$('#dateissuedtoS').on('change', function ()
+		{
+			dateIssuedFrom.setAttribute("max", dateIssuedTo.value);
+			dateIssuedFromWeeks.value = dateIssuedFromDays.value = dateIssuedToWeeks.value = dateIssuedToDays.value = "";
+		});
+
+		$('#datesentfromS').on('change', function ()
+		{
+			dateSentTo.setAttribute("min", dateSentFrom.value);
+			dateSentFromWeeks.value = dateSentFromDays.value = dateSentToWeeks.value = dateSentToDays.value = "";
+		});
+
+		$('#datesenttoS').on('change', function ()
+		{
+			dateSentFrom.setAttribute("max", dateSentTo.value);
+			dateSentFromWeeks.value = dateSentFromDays.value = dateSentToWeeks.value = dateSentToDays.value = "";
 		});
 
 		//In case we want to handle creating a filter via jquery it needs
@@ -91,6 +269,15 @@
 			$('#subconS').val(response.subcontratorId);
 			$('#zoneS').val(response.zone);
 			$('#filterName').val(response.name);
+
+			if ($('#dateissuedfromWeeksS').val()) $('#dateissuedfromWeeksS').trigger('change');
+			if ($('#dateissuedfromDaysS').val()) $('#dateissuedfromDaysS').trigger('change');
+			if ($('#dateissuedtoWeeksS').val()) $('#dateissuedtoWeeksS').trigger('change');
+			if ($('#dateissuedtoDaysS').val()) $('#dateissuedtoDaysS').trigger('change');
+			if ($('#datesentfromWeeksS').val()) $('#datesentfromWeeksS').trigger('change');
+			if ($('#datesentfromDaysS').val()) $('#datesentfromDaysS').trigger('change');
+			if ($('#datesenttoWeeksS').val()) $('#datesenttoWeeksS').trigger('change');
+			if ($('#datesenttoDaysS').val()) $('#datesenttoDaysS').trigger('change');
 		}
 	}
 
@@ -106,7 +293,7 @@
 		document.getElementById("openFilterMenu").style.visibility = 'visible';
 	}
 	//not very elegant, could change to something reusable
-	function setIssuedMinDate()
+	/*function setIssuedMinDate()
 	{
 		var fromPicker = document.getElementById("dateissuedfromS");
 		var toPicker = document.getElementById("dateissuedtoS");
@@ -136,7 +323,7 @@
 		var toPicker = document.getElementById("datesenttoS");
 
 		fromPicker.setAttribute("max", toPicker.value);
-	}
+	}*/
 </script>
 }
 <table class="table">

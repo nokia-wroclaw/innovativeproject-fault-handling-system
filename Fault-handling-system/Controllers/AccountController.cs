@@ -429,6 +429,10 @@ namespace Fault_handling_system.Controllers
             var roles = GetAllRoles();
             model.Roles = GetSelectListItems(roles);
             ViewData["ReturnUrl"] = returnUrl;
+			
+			var existing = await _userManager.FindByEmailAsync(model.Email);
+			if (existing != null) ModelState.AddModelError("Email", "A user witth given e-mail address already exists.");
+
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Login, Email = model.Email };
