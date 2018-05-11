@@ -8,18 +8,18 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
 
-namespace Fault_handling_system.Data.Migrations
+namespace Faulthandlingsystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180317160714_ReportEtrNumberNotNull")]
-    partial class ReportEtrNumberNotNull
+    [Migration("20180511002239_CreateDbSchema")]
+    partial class CreateDbSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.1-rtm-125")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
+                .HasAnnotation("ProductVersion", "2.0.2-rtm-10011");
 
             modelBuilder.Entity("Fault_handling_system.Models.ApplicationUser", b =>
                 {
@@ -61,33 +61,41 @@ namespace Fault_handling_system.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+                        .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
                 });
 
             modelBuilder.Entity("Fault_handling_system.Models.EtrStatus", b =>
                 {
-                    b.Property<string>("Status")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.HasKey("Status");
+                    b.Property<string>("Status")
+                        .IsRequired();
+
+                    b.HasKey("Id");
 
                     b.ToTable("EtrStatus");
                 });
 
             modelBuilder.Entity("Fault_handling_system.Models.EtrType", b =>
                 {
-                    b.Property<string>("Type")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.HasKey("Type");
+                    b.Property<string>("Type")
+                        .IsRequired();
+
+                    b.HasKey("Id");
 
                     b.ToTable("EtrType");
                 });
@@ -113,17 +121,15 @@ namespace Fault_handling_system.Data.Migrations
                     b.Property<string>("EtrNumber")
                         .IsRequired();
 
-                    b.Property<string>("EtrStatusStatus")
-                        .IsRequired();
+                    b.Property<int>("EtrStatusId");
 
                     b.Property<DateTime?>("EtrToDes");
 
-                    b.Property<string>("EtrTypeType")
-                        .IsRequired();
+                    b.Property<int>("EtrTypeId");
 
                     b.Property<int?>("Grade");
 
-                    b.Property<int?>("NokiaCaseId");
+                    b.Property<long?>("NokiaCaseId");
 
                     b.Property<string>("NsnCoordinatorId");
 
@@ -132,7 +138,7 @@ namespace Fault_handling_system.Data.Migrations
                     b.Property<string>("RequestorId")
                         .IsRequired();
 
-                    b.Property<int>("RfaId");
+                    b.Property<long>("RfaId");
 
                     b.Property<string>("RfaName");
 
@@ -144,9 +150,12 @@ namespace Fault_handling_system.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EtrStatusStatus");
+                    b.HasIndex("EtrNumber")
+                        .IsUnique();
 
-                    b.HasIndex("EtrTypeType");
+                    b.HasIndex("EtrStatusId");
+
+                    b.HasIndex("EtrTypeId");
 
                     b.HasIndex("NsnCoordinatorId");
 
@@ -159,12 +168,76 @@ namespace Fault_handling_system.Data.Migrations
                     b.ToTable("Report");
                 });
 
+            modelBuilder.Entity("Fault_handling_system.Models.ReportFilter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("DateIssuedFrom");
+
+                    b.Property<int?>("DateIssuedFromDaysAgo");
+
+                    b.Property<int?>("DateIssuedFromWeeksAgo");
+
+                    b.Property<string>("DateIssuedTo");
+
+                    b.Property<int?>("DateIssuedToDaysAgo");
+
+                    b.Property<int?>("DateIssuedToWeeksAgo");
+
+                    b.Property<string>("DateSentFrom");
+
+                    b.Property<int?>("DateSentFromDaysAgo");
+
+                    b.Property<int?>("DateSentFromWeeksAgo");
+
+                    b.Property<string>("DateSentTo");
+
+                    b.Property<int?>("DateSentToDaysAgo");
+
+                    b.Property<int?>("DateSentToWeeksAgo");
+
+                    b.Property<string>("EtrNumber");
+
+                    b.Property<string>("EtrStatus");
+
+                    b.Property<string>("EtrType");
+
+                    b.Property<string>("Grade");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("NsnCoordinatorId");
+
+                    b.Property<string>("Priority");
+
+                    b.Property<string>("RfaId");
+
+                    b.Property<string>("RfaName");
+
+                    b.Property<string>("SubcontractorId");
+
+                    b.Property<string>("TroubleType");
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.Property<string>("Zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ReportFilter");
+                });
+
             modelBuilder.Entity("Fault_handling_system.Models.Zone", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ZoneName");
+                    b.Property<string>("ZoneName")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -189,8 +262,7 @@ namespace Fault_handling_system.Data.Migrations
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
+                        .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
                 });
@@ -283,12 +355,12 @@ namespace Fault_handling_system.Data.Migrations
                 {
                     b.HasOne("Fault_handling_system.Models.EtrStatus", "EtrStatus")
                         .WithMany()
-                        .HasForeignKey("EtrStatusStatus")
+                        .HasForeignKey("EtrStatusId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Fault_handling_system.Models.EtrType", "EtrType")
                         .WithMany()
-                        .HasForeignKey("EtrTypeType")
+                        .HasForeignKey("EtrTypeId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Fault_handling_system.Models.ApplicationUser", "NsnCoordinator")
@@ -307,6 +379,14 @@ namespace Fault_handling_system.Data.Migrations
                     b.HasOne("Fault_handling_system.Models.Zone", "Zone")
                         .WithMany()
                         .HasForeignKey("ZoneId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Fault_handling_system.Models.ReportFilter", b =>
+                {
+                    b.HasOne("Fault_handling_system.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

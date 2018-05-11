@@ -55,7 +55,7 @@ namespace Fault_handling_system
             services.Configure<EmailSenderSettings>(Configuration);
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("AzureConnection"))); //DefaultConnection
+                options.UseNpgsql(Configuration.GetConnectionString("AzureConnection"))); //DefaultConnection
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
