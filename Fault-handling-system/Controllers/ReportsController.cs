@@ -345,10 +345,13 @@ namespace Fault_handling_system.Controllers
         {
 			//lets us see only users of given roles in our dropdowns
 			var requestors = await _userManager.GetUsersInRoleAsync("Requestor");
-			var nsnCoordinators = await _userManager.GetUsersInRoleAsync("Nokia Coordinator");
+            requestors = requestors.Where(u => u.LockoutEnd == null).ToList();
+            var nsnCoordinators = await _userManager.GetUsersInRoleAsync("Nokia Coordinator");
+            nsnCoordinators = nsnCoordinators.Where(u => u.LockoutEnd == null).ToList();
 			var subcontractors = await _userManager.GetUsersInRoleAsync("Subcontractor");
+            subcontractors = subcontractors.Where(u => u.LockoutEnd == null).ToList();
 
-			ViewData["EtrStatusId"] = new SelectList(_context.EtrStatus, "Id", "Status");
+            ViewData["EtrStatusId"] = new SelectList(_context.EtrStatus, "Id", "Status");
             ViewData["EtrTypeId"] = new SelectList(_context.EtrType, "Id", "Type");
             ViewData["NsnCoordinatorId"] = new SelectList(nsnCoordinators, "Id", "UserName");
             ViewData["RequestorId"] = new SelectList(requestors, "Id", "UserName");
@@ -408,12 +411,15 @@ namespace Fault_handling_system.Controllers
                 return NotFound();
             }
 
-			//lets us see only users of given roles in our dropdowns
-			var requestors = await _userManager.GetUsersInRoleAsync("Requestor");
-			var nsnCoordinators = await _userManager.GetUsersInRoleAsync("Nokia Coordinator");
-			var subcontractors = await _userManager.GetUsersInRoleAsync("Subcontractor");
+            //lets us see only users of given roles in our dropdowns
+            var requestors = await _userManager.GetUsersInRoleAsync("Requestor");
+            requestors = requestors.Where(u => u.LockoutEnd == null).ToList();
+            var nsnCoordinators = await _userManager.GetUsersInRoleAsync("Nokia Coordinator");
+            nsnCoordinators = nsnCoordinators.Where(u => u.LockoutEnd == null).ToList();
+            var subcontractors = await _userManager.GetUsersInRoleAsync("Subcontractor");
+            subcontractors = subcontractors.Where(u => u.LockoutEnd == null).ToList();
 
-			ViewData["EtrStatusId"] = new SelectList(_context.EtrStatus, "Id", "Status", report.EtrStatusId);
+            ViewData["EtrStatusId"] = new SelectList(_context.EtrStatus, "Id", "Status", report.EtrStatusId);
             ViewData["EtrTypeId"] = new SelectList(_context.EtrType, "Id", "Type", report.EtrTypeId);
             ViewData["NsnCoordinatorId"] = new SelectList(nsnCoordinators, "Id", "UserName", report.NsnCoordinatorId);
             ViewData["RequestorId"] = new SelectList(requestors, "Id", "UserName", report.RequestorId);

@@ -1,461 +1,455 @@
 ﻿@model Fault_handling_system.Models.ReportsAndFiltersViewModel
 
 @{
-	ViewData["Title"] = "Index";
+    ViewData["Title"] = "Index";
 }
 
 <!--<h2>Index</h2>-->
-<input type="button" value="Create" onclick="location.href='@Url.Action("Create", "Reports")'" class="btn btn-info" style="margin-top: 5px"/>
+<input type="button" value="Create" onclick="location.href='@Url.Action("Create", "Reports")'" class="btn btn-info" style="margin-top: 5px" />
 <button id="openFilterMenu" class="btn btn-info" onclick="openNav()" style="margin-top: 5px">Open filter menu</button>
 
 @{ Html.RenderPartial("_FilterSidebarPartial", Model.Filter); }
 @section Scripts {
-<script>
-	$(document).ready(function ()
-	{
-		var dateIssuedFrom = $('#dateissuedfromS')[0];
-		var dateIssuedTo = $('#dateissuedtoS')[0];
-		var dateIssuedFromWeeks = $('#dateissuedfromWeeksS')[0];
-		var dateIssuedFromDays = $('#dateissuedfromDaysS')[0];
-		var dateIssuedToWeeks = $('#dateissuedtoWeeksS')[0];
-		var dateIssuedToDays = $('#dateissuedtoDaysS')[0];
-		var dateSentFrom = $('#datesentfromS')[0];
-		var dateSentTo = $('#datesenttoS')[0];
-		var dateSentFromWeeks = $('#datesentfromWeeksS')[0];
-		var dateSentFromDays = $('#datesentfromDaysS')[0];
-		var dateSentToWeeks = $('#datesenttoWeeksS')[0];
-		var dateSentToDays = $('#datesenttoDaysS')[0];
+    <script>
+        $(document).ready(function () {
+            var dateIssuedFrom = $('#dateissuedfromS')[0];
+            var dateIssuedTo = $('#dateissuedtoS')[0];
+            var dateIssuedFromWeeks = $('#dateissuedfromWeeksS')[0];
+            var dateIssuedFromDays = $('#dateissuedfromDaysS')[0];
+            var dateIssuedToWeeks = $('#dateissuedtoWeeksS')[0];
+            var dateIssuedToDays = $('#dateissuedtoDaysS')[0];
+            var dateSentFrom = $('#datesentfromS')[0];
+            var dateSentTo = $('#datesenttoS')[0];
+            var dateSentFromWeeks = $('#datesentfromWeeksS')[0];
+            var dateSentFromDays = $('#datesentfromDaysS')[0];
+            var dateSentToWeeks = $('#datesenttoWeeksS')[0];
+            var dateSentToDays = $('#datesenttoDaysS')[0];
 
-		$('#selectPredefinedFilter').click(function ()
-		{
-			var fid = $('#fid').find(":selected").val();
-			var actionUrl = 'Reports/GetFilter?id=' + fid;
-			//alert("id = " + fid);
-			$.getJSON(actionUrl, SetFilterInputs);
-		});
+            $('#selectPredefinedFilter').click(function () {
+                var fid = $('#fid').find(":selected").val();
+                var actionUrl = 'Reports/GetFilter?id=' + fid;
+                //alert("id = " + fid);
+                $.getJSON(actionUrl, SetFilterInputs);
+            });
 
-		$('#dateissuedfromWeeksS').on('change', function (e)
-		{
-			var from = Number(dateIssuedFromWeeks.value * 7) + Number(dateIssuedFromDays.value);
-			var to = Number(dateIssuedToWeeks.value * 7) + Number(dateIssuedToDays.value);
-			
-			if (from < to)
-			{
-				if (dateIssuedFromDays.value < dateIssuedToDays.value)
-					$(this).val(dateIssuedToWeeks.value - 1);
-				else
-					$(this).val(dateIssuedToWeeks.value);
-				from = Number(dateIssuedFromWeeks.value * 7) + Number(dateIssuedFromDays.value);
-			}
-			var toSet = new Date();
-			toSet.setDate(toSet.getDate() - from);
-			var toSetString = toSet.toISOString();
-			$('#dateissuedfromS').val(toSetString.slice(0, 10));
-			dateIssuedTo.setAttribute("min", dateIssuedFrom.value);
-		});
+            $('#dateissuedfromWeeksS').on('change', function (e) {
+                var from = Number(dateIssuedFromWeeks.value * 7) + Number(dateIssuedFromDays.value);
+                var to = Number(dateIssuedToWeeks.value * 7) + Number(dateIssuedToDays.value);
 
-		$('#dateissuedfromDaysS').on('change', function (e)
-		{
-			var from = Number(dateIssuedFromWeeks.value * 7) + Number(dateIssuedFromDays.value);
-			var to = Number(dateIssuedToWeeks.value * 7) + Number(dateIssuedToDays.value);
-			
-			if (from < to)
-			{
-				$(this).val(dateIssuedToDays.value);
-				from = Number(dateIssuedFromWeeks.value * 7) + Number(dateIssuedFromDays.value);
-			}
-			var toSet = new Date();
-			toSet.setDate(toSet.getDate() - from);
-			var toSetString = toSet.toISOString();
-			$('#dateissuedfromS').val(toSetString.slice(0, 10));
-			dateIssuedTo.setAttribute("min", dateIssuedFrom.value);
-		});
+                if (from < to) {
+                    if (dateIssuedFromDays.value < dateIssuedToDays.value)
+                        $(this).val(dateIssuedToWeeks.value - 1);
+                    else
+                        $(this).val(dateIssuedToWeeks.value);
+                    from = Number(dateIssuedFromWeeks.value * 7) + Number(dateIssuedFromDays.value);
+                }
+                var toSet = new Date();
+                toSet.setDate(toSet.getDate() - from);
+                var toSetString = toSet.toISOString();
+                $('#dateissuedfromS').val(toSetString.slice(0, 10));
+                dateIssuedTo.setAttribute("min", dateIssuedFrom.value);
+            });
 
-		$('#dateissuedtoWeeksS').on('change', function (e)
-		{
-			var from = Number(dateIssuedFromWeeks.value * 7) + Number(dateIssuedFromDays.value);
-			var to = Number(dateIssuedToWeeks.value * 7) + Number(dateIssuedToDays.value);
+            $('#dateissuedfromDaysS').on('change', function (e) {
+                var from = Number(dateIssuedFromWeeks.value * 7) + Number(dateIssuedFromDays.value);
+                var to = Number(dateIssuedToWeeks.value * 7) + Number(dateIssuedToDays.value);
 
-			if (from < to)
-			{
-				if (dateIssuedFromDays.value < dateIssuedToDays.value)
-					$(this).val(dateIssuedFromWeeks.value - 1);
-				else
-					$(this).val(dateIssuedFromWeeks.value);
-				to = Number(dateIssuedToWeeks.value * 7) + Number(dateIssuedToDays.value);
-			}
-			var toSet = new Date();
-			toSet.setDate(toSet.getDate() - to);
-			var toSetString = toSet.toISOString();
-			$('#dateissuedtoS').val(toSetString.slice(0, 10));
-			dateIssuedFrom.setAttribute("max", dateIssuedTo.value);
-		});
+                if (from < to) {
+                    $(this).val(dateIssuedToDays.value);
+                    from = Number(dateIssuedFromWeeks.value * 7) + Number(dateIssuedFromDays.value);
+                }
+                var toSet = new Date();
+                toSet.setDate(toSet.getDate() - from);
+                var toSetString = toSet.toISOString();
+                $('#dateissuedfromS').val(toSetString.slice(0, 10));
+                dateIssuedTo.setAttribute("min", dateIssuedFrom.value);
+            });
 
-		$('#dateissuedtoDaysS').on('change', function (e)
-		{
-			var from = Number(dateIssuedFromWeeks.value * 7) + Number(dateIssuedFromDays.value);
-			var to = Number(dateIssuedToWeeks.value * 7) + Number(dateIssuedToDays.value);
+            $('#dateissuedtoWeeksS').on('change', function (e) {
+                var from = Number(dateIssuedFromWeeks.value * 7) + Number(dateIssuedFromDays.value);
+                var to = Number(dateIssuedToWeeks.value * 7) + Number(dateIssuedToDays.value);
 
-			if (from < to)
-			{
-				$(this).val(dateIssuedFromDays.value);
-				to = Number(dateIssuedToWeeks.value * 7) + Number(dateIssuedToDays.value);
-			}
-			var toSet = new Date();
-			toSet.setDate(toSet.getDate() - to);
-			var toSetString = toSet.toISOString();
-			$('#dateissuedtoS').val(toSetString.slice(0, 10));
-			dateIssuedFrom.setAttribute("max", dateIssuedTo.value);
-		});
+                if (from < to) {
+                    if (dateIssuedFromDays.value < dateIssuedToDays.value)
+                        $(this).val(dateIssuedFromWeeks.value - 1);
+                    else
+                        $(this).val(dateIssuedFromWeeks.value);
+                    to = Number(dateIssuedToWeeks.value * 7) + Number(dateIssuedToDays.value);
+                }
+                var toSet = new Date();
+                toSet.setDate(toSet.getDate() - to);
+                var toSetString = toSet.toISOString();
+                $('#dateissuedtoS').val(toSetString.slice(0, 10));
+                dateIssuedFrom.setAttribute("max", dateIssuedTo.value);
+            });
 
-		$('#datesentfromWeeksS').on('change', function (e)
-		{
-			var from = Number(dateSentFromWeeks.value * 7) + Number(dateSentFromDays.value);
-			var to = Number(dateSentToWeeks.value * 7) + Number(dateSentToDays.value);
+            $('#dateissuedtoDaysS').on('change', function (e) {
+                var from = Number(dateIssuedFromWeeks.value * 7) + Number(dateIssuedFromDays.value);
+                var to = Number(dateIssuedToWeeks.value * 7) + Number(dateIssuedToDays.value);
 
-			if (from < to)
-			{
-				$(this).val(dateSentToWeeks.value);
-				from = Number(dateSentFromWeeks.value * 7) + Number(dateSentFromDays.value);
-			}
-			var toSet = new Date();
-			toSet.setDate(toSet.getDate() - from);
-			var toSetString = toSet.toISOString();
-			$('#datesentfromS').val(toSetString.slice(0, 10));
-			dateSentTo.setAttribute("min", dateSentFrom.value);
-		});
+                if (from < to) {
+                    $(this).val(dateIssuedFromDays.value);
+                    to = Number(dateIssuedToWeeks.value * 7) + Number(dateIssuedToDays.value);
+                }
+                var toSet = new Date();
+                toSet.setDate(toSet.getDate() - to);
+                var toSetString = toSet.toISOString();
+                $('#dateissuedtoS').val(toSetString.slice(0, 10));
+                dateIssuedFrom.setAttribute("max", dateIssuedTo.value);
+            });
 
-		$('#datesentfromDaysS').on('change', function (e)
-		{
-			var from = Number(dateSentFromWeeks.value * 7) + Number(dateSentFromDays.value);
-			var to = Number(dateSentToWeeks.value * 7) + Number(dateSentToDays.value);
+            $('#datesentfromWeeksS').on('change', function (e) {
+                var from = Number(dateSentFromWeeks.value * 7) + Number(dateSentFromDays.value);
+                var to = Number(dateSentToWeeks.value * 7) + Number(dateSentToDays.value);
 
-			if (from < to)
-			{
-				$(this).val(dateSentToDays.value);
-				from = Number(dateSentFromWeeks.value * 7) + Number(dateSentFromDays.value);
-			}
-			var toSet = new Date();
-			toSet.setDate(toSet.getDate() - from);
-			var toSetString = toSet.toISOString();
-			$('#datesentfromS').val(toSetString.slice(0, 10));
-			dateSentTo.setAttribute("min", dateSentFrom.value);
-		});
+                if (from < to) {
+                    $(this).val(dateSentToWeeks.value);
+                    from = Number(dateSentFromWeeks.value * 7) + Number(dateSentFromDays.value);
+                }
+                var toSet = new Date();
+                toSet.setDate(toSet.getDate() - from);
+                var toSetString = toSet.toISOString();
+                $('#datesentfromS').val(toSetString.slice(0, 10));
+                dateSentTo.setAttribute("min", dateSentFrom.value);
+            });
 
-		$('#datesenttoWeeksS').on('change', function (e)
-		{
-			var from = Number(dateSentFromWeeks.value * 7) + Number(dateSentFromDays.value);
-			var to = Number(dateSentToWeeks.value * 7) + Number(dateSentToDays.value);
+            $('#datesentfromDaysS').on('change', function (e) {
+                var from = Number(dateSentFromWeeks.value * 7) + Number(dateSentFromDays.value);
+                var to = Number(dateSentToWeeks.value * 7) + Number(dateSentToDays.value);
 
-			if (from < to)
-			{
-				$(this).val(dateSentFromWeeks.value);
-				to = Number(dateSentToWeeks.value * 7) + Number(dateSentToDays.value);
-			}
-			var toSet = new Date();
-			toSet.setDate(toSet.getDate() - to);
-			var toSetString = toSet.toISOString();
-			$('#datesenttoS').val(toSetString.slice(0, 10));
-			dateSentFrom.setAttribute("max", dateSentTo.value);
-		});
+                if (from < to) {
+                    $(this).val(dateSentToDays.value);
+                    from = Number(dateSentFromWeeks.value * 7) + Number(dateSentFromDays.value);
+                }
+                var toSet = new Date();
+                toSet.setDate(toSet.getDate() - from);
+                var toSetString = toSet.toISOString();
+                $('#datesentfromS').val(toSetString.slice(0, 10));
+                dateSentTo.setAttribute("min", dateSentFrom.value);
+            });
 
-		$('#datesenttoDaysS').on('change', function (e)
-		{
-			var from = Number(dateSentFromWeeks.value * 7) + Number(dateSentFromDays.value);
-			var to = Number(dateSentToWeeks.value * 7) + Number(dateSentToDays.value);
+            $('#datesenttoWeeksS').on('change', function (e) {
+                var from = Number(dateSentFromWeeks.value * 7) + Number(dateSentFromDays.value);
+                var to = Number(dateSentToWeeks.value * 7) + Number(dateSentToDays.value);
 
-			if (from < to)
-			{
-				$(this).val(dateSentFromDays.value);
-				to = Number(dateSentToWeeks.value * 7) + Number(dateSentToDays.value);
-			}
-			var toSet = new Date();
-			toSet.setDate(toSet.getDate() - to);
-			var toSetString = toSet.toISOString();
-			$('#datesenttoS').val(toSetString.slice(0, 10));
-			dateSentFrom.setAttribute("max", dateSentTo.value);
-		});
-		//zeroing relative data input when given concrete ones by the user
-		$('#dateissuedfromS').on('change', function ()
-		{
-			dateIssuedTo.setAttribute("min", dateIssuedFrom.value);
-			dateIssuedFromWeeks.value = dateIssuedFromDays.value = dateIssuedToWeeks.value = dateIssuedToDays.value = "";
-		});
+                if (from < to) {
+                    $(this).val(dateSentFromWeeks.value);
+                    to = Number(dateSentToWeeks.value * 7) + Number(dateSentToDays.value);
+                }
+                var toSet = new Date();
+                toSet.setDate(toSet.getDate() - to);
+                var toSetString = toSet.toISOString();
+                $('#datesenttoS').val(toSetString.slice(0, 10));
+                dateSentFrom.setAttribute("max", dateSentTo.value);
+            });
 
-		$('#dateissuedtoS').on('change', function ()
-		{
-			dateIssuedFrom.setAttribute("max", dateIssuedTo.value);
-			dateIssuedFromWeeks.value = dateIssuedFromDays.value = dateIssuedToWeeks.value = dateIssuedToDays.value = "";
-		});
+            $('#datesenttoDaysS').on('change', function (e) {
+                var from = Number(dateSentFromWeeks.value * 7) + Number(dateSentFromDays.value);
+                var to = Number(dateSentToWeeks.value * 7) + Number(dateSentToDays.value);
 
-		$('#datesentfromS').on('change', function ()
-		{
-			dateSentTo.setAttribute("min", dateSentFrom.value);
-			dateSentFromWeeks.value = dateSentFromDays.value = dateSentToWeeks.value = dateSentToDays.value = "";
-		});
+                if (from < to) {
+                    $(this).val(dateSentFromDays.value);
+                    to = Number(dateSentToWeeks.value * 7) + Number(dateSentToDays.value);
+                }
+                var toSet = new Date();
+                toSet.setDate(toSet.getDate() - to);
+                var toSetString = toSet.toISOString();
+                $('#datesenttoS').val(toSetString.slice(0, 10));
+                dateSentFrom.setAttribute("max", dateSentTo.value);
+            });
+            //zeroing relative data input when given concrete ones by the user
+            $('#dateissuedfromS').on('change', function () {
+                dateIssuedTo.setAttribute("min", dateIssuedFrom.value);
+                dateIssuedFromWeeks.value = dateIssuedFromDays.value = dateIssuedToWeeks.value = dateIssuedToDays.value = "";
+            });
 
-		$('#datesenttoS').on('change', function ()
-		{
-			dateSentFrom.setAttribute("max", dateSentTo.value);
-			dateSentFromWeeks.value = dateSentFromDays.value = dateSentToWeeks.value = dateSentToDays.value = "";
-		});
+            $('#dateissuedtoS').on('change', function () {
+                dateIssuedFrom.setAttribute("max", dateIssuedTo.value);
+                dateIssuedFromWeeks.value = dateIssuedFromDays.value = dateIssuedToWeeks.value = dateIssuedToDays.value = "";
+            });
 
-		//In case we want to handle creating a filter via jquery it needs
-		//to be completed and controller action modified a bit
-		/*$('#saveOrUpdateFilter').click(function ()
-		{
-			var etrNumber = $('#etrnumberS').val();
-			var rfaId = $('#rfaidS').val();
-			var rfaName = $('#rfanameS').val();
-			var priority = $('#priorityS').val();
-			var grade = $('#gradeS').val();
-			var troubleType = $('#troubletypeS').val();
+            $('#datesentfromS').on('change', function () {
+                dateSentTo.setAttribute("min", dateSentFrom.value);
+                dateSentFromWeeks.value = dateSentFromDays.value = dateSentToWeeks.value = dateSentToDays.value = "";
+            });
 
-			var dateIssuedFrom = $('#dateissuedfromS').val();
-			var dateIssuedTo = $('#dateissuedtoS').val();
-			var dateIssuedFromDaysAgo = $('#dateissuedfromDaysS').val();
-			var dateIssuedFromWeeksAgo = $('#dateissuedfromWeeksS').val();
-			var dateIssuedToDaysAgo = $('#dateissuedtoDaysS').val();
-			var dateIssuedToWeeksAgo = $('#dateissuedtoWeeksS').val();
+            $('#datesenttoS').on('change', function () {
+                dateSentFrom.setAttribute("max", dateSentTo.value);
+                dateSentFromWeeks.value = dateSentFromDays.value = dateSentToWeeks.value = dateSentToDays.value = "";
+            });
 
-			var dateSentFrom = $('#datesentfromS').val();
-			var dateSentTo = $('#datesenttoS').val();
-			var dateSentFromDaysAgo = $('#datesentfromDaysS').val();
-			var dateSentFromWeeksAgo = $('#datesentfromWeeksS').val();
-			var dateSentToDaysAgo = $('#datesenttoDaysS').val();
-			var dateSentToWeeksAgo = $('#datesenttoWeeksS').val();
+            //In case we want to handle creating a filter via jquery it needs
+            //to be completed and controller action modified a bit
+            /*$('#saveOrUpdateFilter').click(function ()
+            {
+                var etrNumber = $('#etrnumberS').val();
+                var rfaId = $('#rfaidS').val();
+                var rfaName = $('#rfanameS').val();
+                var priority = $('#priorityS').val();
+                var grade = $('#gradeS').val();
+                var troubleType = $('#troubletypeS').val();
 
-			var etrStatus = $('#etrstatusS').val();
-			var etrType = $('#etrtypeS').val();
-			var nsnCoordinator = $('#nsncoordS').val();
-			var subcontractor = $('#subconS').val();
-			var zone = $('#zoneS').val();
-			var name = $('#filterName').val();
+                var dateIssuedFrom = $('#dateissuedfromS').val();
+                var dateIssuedTo = $('#dateissuedtoS').val();
+                var dateIssuedFromDaysAgo = $('#dateissuedfromDaysS').val();
+                var dateIssuedFromWeeksAgo = $('#dateissuedfromWeeksS').val();
+                var dateIssuedToDaysAgo = $('#dateissuedtoDaysS').val();
+                var dateIssuedToWeeksAgo = $('#dateissuedtoWeeksS').val();
 
-			$.post(
+                var dateSentFrom = $('#datesentfromS').val();
+                var dateSentTo = $('#datesenttoS').val();
+                var dateSentFromDaysAgo = $('#datesentfromDaysS').val();
+                var dateSentFromWeeksAgo = $('#datesentfromWeeksS').val();
+                var dateSentToDaysAgo = $('#datesenttoDaysS').val();
+                var dateSentToWeeksAgo = $('#datesenttoWeeksS').val();
 
-			);
-		});*/
-	});
+                var etrStatus = $('#etrstatusS').val();
+                var etrType = $('#etrtypeS').val();
+                var nsnCoordinator = $('#nsncoordS').val();
+                var subcontractor = $('#subconS').val();
+                var zone = $('#zoneS').val();
+                var name = $('#filterName').val();
 
-	function SetFilterInputs(response)
-	{
-		if (response != null)
-		{
-			$('#etrnumberS').val(response.etrNumber);
-			$('#rfaidS').val(response.rfaId);
-			$('#rfanameS').val(response.rfaName);
-			$('#priorityS').val(response.priority);
-			$('#gradeS').val(response.grade);
-			$('#troubletypeS').val(response.troubleType);
+                $.post(
 
-			$('#dateissuedfromS').val(response.dateIssuedFrom);
-			$('#dateissuedtoS').val(response.dateIssuedTo);
-			$('#dateissuedfromDaysS').val(response.dateIssuedFromDaysAgo);
-			$('#dateissuedfromWeeksS').val(response.dateIssuedFromWeeksAgo);
-			$('#dateissuedtoDaysS').val(response.dateIssuedToDaysAgo);
-			$('#dateissuedtoWeeksS').val(response.dateIssuedToWeeksAgo);
+                );
+            });*/
+        });
 
-			$('#datesentfromS').val(response.dateSentFrom);
-			$('#datesenttoS').val(response.dateSentTo);
-			$('#datesentfromDaysS').val(response.dateSentFromDaysAgo);
-			$('#datesentfromWeeksS').val(response.dateSentFromWeeksAgo);
-			$('#datesenttoDaysS').val(response.dateSentToDaysAgo);
-			$('#datesenttoWeeksS').val(response.dateSentToWeeksAgo);
+        function SetFilterInputs(response) {
+            if (response != null) {
+                $('#etrnumberS').val(response.etrNumber);
+                $('#rfaidS').val(response.rfaId);
+                $('#rfanameS').val(response.rfaName);
+                $('#priorityS').val(response.priority);
+                $('#gradeS').val(response.grade);
+                $('#troubletypeS').val(response.troubleType);
 
-			$('#etrstatusS').val(response.etrStatus);
-			$('#etrtypeS').val(response.etrType);
-			$('#nsncoordS').val(response.nsnCoordinatorId);
-			$('#subconS').val(response.subcontratorId);
-			$('#zoneS').val(response.zone);
-			$('#filterName').val(response.name);
+                $('#dateissuedfromS').val(response.dateIssuedFrom);
+                $('#dateissuedtoS').val(response.dateIssuedTo);
+                $('#dateissuedfromDaysS').val(response.dateIssuedFromDaysAgo);
+                $('#dateissuedfromWeeksS').val(response.dateIssuedFromWeeksAgo);
+                $('#dateissuedtoDaysS').val(response.dateIssuedToDaysAgo);
+                $('#dateissuedtoWeeksS').val(response.dateIssuedToWeeksAgo);
 
-			if ($('#dateissuedfromWeeksS').val()) $('#dateissuedfromWeeksS').trigger('change');
-			if ($('#dateissuedfromDaysS').val()) $('#dateissuedfromDaysS').trigger('change');
-			if ($('#dateissuedtoWeeksS').val()) $('#dateissuedtoWeeksS').trigger('change');
-			if ($('#dateissuedtoDaysS').val()) $('#dateissuedtoDaysS').trigger('change');
-			if ($('#datesentfromWeeksS').val()) $('#datesentfromWeeksS').trigger('change');
-			if ($('#datesentfromDaysS').val()) $('#datesentfromDaysS').trigger('change');
-			if ($('#datesenttoWeeksS').val()) $('#datesenttoWeeksS').trigger('change');
-			if ($('#datesenttoDaysS').val()) $('#datesenttoDaysS').trigger('change');
-		}
-	}
+                $('#datesentfromS').val(response.dateSentFrom);
+                $('#datesenttoS').val(response.dateSentTo);
+                $('#datesentfromDaysS').val(response.dateSentFromDaysAgo);
+                $('#datesentfromWeeksS').val(response.dateSentFromWeeksAgo);
+                $('#datesenttoDaysS').val(response.dateSentToDaysAgo);
+                $('#datesenttoWeeksS').val(response.dateSentToWeeksAgo);
 
-	function openNav()
-	{
-		document.getElementById("filterMenu").style.width = "350px";
-		document.getElementById("openFilterMenu").style.visibility = 'hidden';
-	}
+                $('#etrstatusS').val(response.etrStatus);
+                $('#etrtypeS').val(response.etrType);
+                $('#nsncoordS').val(response.nsnCoordinatorId);
+                $('#subconS').val(response.subcontratorId);
+                $('#zoneS').val(response.zone);
+                $('#filterName').val(response.name);
 
-	function closeNav()
-	{
-		document.getElementById("filterMenu").style.width = "0";
-		document.getElementById("openFilterMenu").style.visibility = 'visible';
-	}
-	//not very elegant, could change to something reusable
-	/*function setIssuedMinDate()
-	{
-		var fromPicker = document.getElementById("dateissuedfromS");
-		var toPicker = document.getElementById("dateissuedtoS");
+                if ($('#dateissuedfromWeeksS').val()) $('#dateissuedfromWeeksS').trigger('change');
+                if ($('#dateissuedfromDaysS').val()) $('#dateissuedfromDaysS').trigger('change');
+                if ($('#dateissuedtoWeeksS').val()) $('#dateissuedtoWeeksS').trigger('change');
+                if ($('#dateissuedtoDaysS').val()) $('#dateissuedtoDaysS').trigger('change');
+                if ($('#datesentfromWeeksS').val()) $('#datesentfromWeeksS').trigger('change');
+                if ($('#datesentfromDaysS').val()) $('#datesentfromDaysS').trigger('change');
+                if ($('#datesenttoWeeksS').val()) $('#datesenttoWeeksS').trigger('change');
+                if ($('#datesenttoDaysS').val()) $('#datesenttoDaysS').trigger('change');
+            }
+        }
 
-		toPicker.setAttribute("min", fromPicker.value);
-	}
+        function openNav() {
+            document.getElementById("filterMenu").style.width = "350px";
+            document.getElementById("openFilterMenu").style.visibility = 'hidden';
+        }
 
-	function setIssuedMaxDate()
-	{
-		var fromPicker = document.getElementById("dateissuedfromS");
-		var toPicker = document.getElementById("dateissuedtoS");
+        function closeNav() {
+            document.getElementById("filterMenu").style.width = "0";
+            document.getElementById("openFilterMenu").style.visibility = 'visible';
+        }
+        //not very elegant, could change to something reusable
+        /*function setIssuedMinDate()
+        {
+            var fromPicker = document.getElementById("dateissuedfromS");
+            var toPicker = document.getElementById("dateissuedtoS");
 
-		fromPicker.setAttribute("max", toPicker.value);
-	}
+            toPicker.setAttribute("min", fromPicker.value);
+        }
 
-	function setSentMinDate()
-	{
-		var fromPicker = document.getElementById("datesentfromS");
-		var toPicker = document.getElementById("datesenttoS");
+        function setIssuedMaxDate()
+        {
+            var fromPicker = document.getElementById("dateissuedfromS");
+            var toPicker = document.getElementById("dateissuedtoS");
 
-		toPicker.setAttribute("min", fromPicker.value);
-	}
+            fromPicker.setAttribute("max", toPicker.value);
+        }
 
-	function setSentMaxDate()
-	{
-		var fromPicker = document.getElementById("datesentfromS");
-		var toPicker = document.getElementById("datesenttoS");
+        function setSentMinDate()
+        {
+            var fromPicker = document.getElementById("datesentfromS");
+            var toPicker = document.getElementById("datesenttoS");
 
-		fromPicker.setAttribute("max", toPicker.value);
-	}*/
-</script>
+            toPicker.setAttribute("min", fromPicker.value);
+        }
+
+        function setSentMaxDate()
+        {
+            var fromPicker = document.getElementById("datesentfromS");
+            var toPicker = document.getElementById("datesenttoS");
+
+            fromPicker.setAttribute("max", toPicker.value);
+        }*/
+    </script>
 }
 <table class="table">
-	<thead>
-		<tr>
-			<th>
-				@Html.ActionLink("EtrNumber", "Index", new { sortOrder = ViewBag.EtrNumSortParam, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
-			</th>
-			<!--<th>
-				@*Html.ActionLink("NokiaCaseId", "Index", new { sortOrder = ViewBag.NokiaCaseIdSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })*@
-			</th>-->
-			<th>
-				@Html.ActionLink("RfaId", "Index", new { sortOrder = ViewBag.RfaIdSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
-			</th>
-			<th>
-				@Html.ActionLink("RfaName", "Index", new { sortOrder = ViewBag.RfaNameSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
-			</th>
-			<!--<th>
-				@*Html.ActionLink("AssignedTo", "Index", new { sortOrder = ViewBag.AssignedToSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })*@
-			</th>-->
-			<th>
-				@Html.ActionLink("Priority", "Index", new { sortOrder = ViewBag.PrioritySortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
-			</th>
-			<th>
-				@Html.ActionLink("Grade", "Index", new { sortOrder = ViewBag.GradeSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
-			</th>
-			<th>
-				@Html.ActionLink("TroubleType", "Index", new { sortOrder = ViewBag.TroubleTypeSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
-			</th>
-			<th>
-				@Html.ActionLink("DateIssued", "Index", new { sortOrder = ViewBag.DateIssuedSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
-			</th>
-			<th>
-				@Html.ActionLink("DateSent", "Index", new { sortOrder = ViewBag.DateSentSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
-			</th>
-			<!--<th>
-				@*Html.ActionLink("EtrToDes", "Index", new { sortOrder = ViewBag.EtrToDesSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })*@
-			</th>
-			<th>
-				@*Html.ActionLink("ClosingDate", "Index", new { sortOrder = ViewBag.ClosingDateSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })*@
-			</th>-->
-			<th>
-				@Html.ActionLink("EtrStatus", "Index", new { sortOrder = ViewBag.EtrStatusSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
-			</th>
-			<th>
-				@Html.ActionLink("EtrType", "Index", new { sortOrder = ViewBag.EtrTypeSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
-			</th>
-			<th>
-				@Html.ActionLink("NsnCoordinator", "Index", new { sortOrder = ViewBag.NsnCoordSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
-			</th>
-			<!--<th>
-				@*Html.ActionLink("Requestor", "Index", new { sortOrder = ViewBag.RequestorSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })*@
-			</th>-->
-			<th>
-				@Html.ActionLink("Subcontractor", "Index", new { sortOrder = ViewBag.SubconSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
-			</th>
-			<th>
-				@Html.ActionLink("Zone", "Index", new { sortOrder = ViewBag.ZoneSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
-			</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var item in Model.Reports)
-		{
-			<tr>
-				<td>
-					@Html.DisplayFor(modelItem => item.EtrNumber)
-				</td>
-				<!--<td>
-					@*Html.DisplayFor(modelItem => item.NokiaCaseId)*@
-				</td>-->
-				<td>
-					@Html.DisplayFor(modelItem => item.RfaId)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.RfaName)
-				</td>
-				<!--<td>
-					@*Html.DisplayFor(modelItem => item.AssignedTo)*@
-				</td>-->
-				<td>
-					@Html.DisplayFor(modelItem => item.Priority)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Grade)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.TroubleType)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.DateIssued)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.DateSent)
-				</td>
-				<!--<td>
-					@*Html.DisplayFor(modelItem => item.EtrToDes)*@
-				</td>
-				<td>
-					@*Html.DisplayFor(modelItem => item.ClosingDate)*@
-				</td>-->
-				<td>
-					@Html.DisplayFor(modelItem => item.EtrStatus.Status)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.EtrType.Type)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.NsnCoordinator.UserName)<!--Id by default-->
-				</td>
-				<!--<td>-->
-				@*Html.DisplayFor(modelItem => item.Requestor.UserName)*@<!--Id by default-->
-				<!--</td>-->
-				<td>
-					@Html.DisplayFor(modelItem => item.Subcontractor.UserName)<!--Id by default-->
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Zone.ZoneName)
-				</td>
-				<td>
-					<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-					<a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-					<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-				</td>
-			</tr>
-		}
-	</tbody>
+    <thead>
+        <tr>
+            <th>
+                @Html.ActionLink("EtrNumber", "Index", new { sortOrder = ViewBag.EtrNumSortParam, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
+            </th>
+            <!--<th>
+                @*Html.ActionLink("NokiaCaseId", "Index", new { sortOrder = ViewBag.NokiaCaseIdSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })*@
+            </th>-->
+            <th>
+                @Html.ActionLink("RfaId", "Index", new { sortOrder = ViewBag.RfaIdSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
+            </th>
+            <th>
+                @Html.ActionLink("RfaName", "Index", new { sortOrder = ViewBag.RfaNameSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
+            </th>
+            <!--<th>
+                @*Html.ActionLink("AssignedTo", "Index", new { sortOrder = ViewBag.AssignedToSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })*@
+            </th>-->
+            <th>
+                @Html.ActionLink("Priority", "Index", new { sortOrder = ViewBag.PrioritySortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
+            </th>
+            <th>
+                @Html.ActionLink("Grade", "Index", new { sortOrder = ViewBag.GradeSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
+            </th>
+            <th>
+                @Html.ActionLink("TroubleType", "Index", new { sortOrder = ViewBag.TroubleTypeSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
+            </th>
+            <th>
+                @Html.ActionLink("DateIssued", "Index", new { sortOrder = ViewBag.DateIssuedSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
+            </th>
+            <th>
+                @Html.ActionLink("DateSent", "Index", new { sortOrder = ViewBag.DateSentSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
+            </th>
+            <!--<th>
+                @*Html.ActionLink("EtrToDes", "Index", new { sortOrder = ViewBag.EtrToDesSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })*@
+            </th>
+            <th>
+                @*Html.ActionLink("ClosingDate", "Index", new { sortOrder = ViewBag.ClosingDateSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })*@
+            </th>-->
+            <th>
+                @Html.ActionLink("EtrStatus", "Index", new { sortOrder = ViewBag.EtrStatusSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
+            </th>
+            <th>
+                @Html.ActionLink("EtrType", "Index", new { sortOrder = ViewBag.EtrTypeSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
+            </th>
+            <th>
+                @Html.ActionLink("NsnCoordinator", "Index", new { sortOrder = ViewBag.NsnCoordSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
+            </th>
+            <!--<th>
+                @*Html.ActionLink("Requestor", "Index", new { sortOrder = ViewBag.RequestorSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })*@
+            </th>-->
+            <th>
+                @Html.ActionLink("Subcontractor", "Index", new { sortOrder = ViewBag.SubconSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
+            </th>
+            <th>
+                @Html.ActionLink("Zone", "Index", new { sortOrder = ViewBag.ZoneSortParm, etrnumberC = ViewBag.etrnumberC as string, nokiacaseidC = ViewBag.nokiacaseidC as string, rfaidC = ViewBag.rfaidC as string, rfanameC = ViewBag.rfanameC as string, assignedtoC = ViewBag.assignedtoC as string, priorityC = ViewBag.priorityC as string, gradeC = ViewBag.gradeC as string, troubletypeC = ViewBag.troubletypeC as string, dateissuedC = ViewBag.dateissuedC as string, datesentC = ViewBag.datesentC as string, etrtodesC = ViewBag.etrtodesC as string, closingdateC = ViewBag.closingdateC as string, etrstatusC = ViewBag.etrstatusC as string, etrtypeC = ViewBag.etrtypeC as string, nsncoordC = ViewBag.nsncoordC as string, requestorC = ViewBag.requestorC as string, subconC = ViewBag.subconC as string, zoneC = ViewBag.zoneC as string })
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Reports)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EtrNumber)
+                </td>
+                <!--<td>
+                    @*Html.DisplayFor(modelItem => item.NokiaCaseId)*@
+                </td>-->
+                <td>
+                    @Html.DisplayFor(modelItem => item.RfaId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RfaName)
+                </td>
+                <!--<td>
+                    @*Html.DisplayFor(modelItem => item.AssignedTo)*@
+                </td>-->
+                <td>
+                    @Html.DisplayFor(modelItem => item.Priority)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Grade)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TroubleType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateIssued)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateSent)
+                </td>
+                <!--<td>
+                    @*Html.DisplayFor(modelItem => item.EtrToDes)*@
+                </td>
+                <td>
+                    @*Html.DisplayFor(modelItem => item.ClosingDate)*@
+                </td>-->
+                <td>
+                    @Html.DisplayFor(modelItem => item.EtrStatus.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EtrType.Type)
+                </td>
+                <td>
+                    @if (item.NsnCoordinator != null)
+                    {
+                        @if (item.NsnCoordinator.LockoutEnd != null)
+                        {
+                            <span style="background-color: indianred;">@Html.DisplayFor(modelItem => item.NsnCoordinator.UserName)</span><!--Id by default-->
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(modelItem => item.NsnCoordinator.UserName)<!--Id by default-->
+                        }
+                    }
+                </td>
+                <!--<td>-->
+                @*Html.DisplayFor(modelItem => item.Requestor.UserName)*@<!--Id by default-->
+                <!--</td>-->
+                <td>
+                    @if (item.Subcontractor != null)
+                    {
+                        @if (item.Subcontractor.LockoutEnd != null)
+                        {
+                            <span style="background-color: indianred;">@Html.DisplayFor(modelItem => item.Subcontractor.UserName)</span><!--Id by default-->
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(modelItem => item.Subcontractor.UserName)<!--Id by default-->
+                        }
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Zone.ZoneName)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
 
 @using (Html.BeginForm("Export", "Reports", FormMethod.Post))
 {
-	<input class="btn btn-info" type="submit" value="Export" />
+    <input class="btn btn-info" type="submit" value="Export" />
 }
 
