@@ -14,6 +14,7 @@ using System.IO;
 using OfficeOpenXml;
 using Newtonsoft.Json;
 using OfficeOpenXml.Style;
+using Fault_handling_system.Repositories;
 
 namespace Fault_handling_system.Controllers
 {
@@ -28,17 +29,20 @@ namespace Fault_handling_system.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IHostingEnvironment _hostingEnvironment;
 		private readonly Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> _userManager;
-        /// <summary>
-        /// ReportsController constructor.
-        /// </summary>
-        /// <param name="hostingEnvironment">Provides application-management functions and application services.</param>
-        /// <param name="context">Instance of <c>ApplicationDbContext</c> is responsible for communication with SQL server</param>
-        /// <param name="userManager">Instance of <c>UserManager</c> class.</param>
-        public ReportsController(IHostingEnvironment hostingEnvironment, ApplicationDbContext context, Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager)
+		private readonly IReportRepository _reportRepository;
+		/// <summary>
+		/// ReportsController constructor.
+		/// </summary>
+		/// <param name="hostingEnvironment">Provides application-management functions and application services.</param>
+		/// <param name="context">Instance of <c>ApplicationDbContext</c> is responsible for communication with SQL server</param>
+		/// <param name="userManager">Instance of <c>UserManager</c> class.</param>
+		/// <param name="reportRepository"></param>
+		public ReportsController(IHostingEnvironment hostingEnvironment, ApplicationDbContext context, Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager, IReportRepository reportRepository)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment;
 			_userManager = userManager;
+			_reportRepository = reportRepository;
         }
 
         // GET: Reports
@@ -97,13 +101,6 @@ namespace Fault_handling_system.Controllers
 			var filters = await (from x in _context.ReportFilter
 								 where x.UserId.Equals(userId)
 								 select x).ToListAsync();
-			ReportFilter chosenFilter = null;
-
-			/*foreach (var x in filters)
-			{
-				if (x.Id == fid)
-					chosenFilter = x;
-			}*/
 
 			ViewData["EtrStatusFilter"] = new SelectList(_context.EtrStatus, "Status", "Status", null);
 			ViewData["EtrTypeFilter"] = new SelectList(_context.EtrType, "Type", "Type", null);
@@ -175,109 +172,102 @@ namespace Fault_handling_system.Controllers
             ViewBag.subconC = subconS;
             ViewBag.zoneC = zoneS;
 
-			IQueryable<Report> applicationDbContext;
+			IQueryable<Report> reports;
 
 			if (User.IsInRole("Admin"))
 			{
-				applicationDbContext = _context.Report.Include(r => r.EtrStatus).Include(r => r.EtrType).Include(r => r.NsnCoordinator).Include(r => r.Requestor).Include(r => r.Subcontractor).Include(r => r.Zone).AsQueryable();
+				reports = _reportRepository.GetAllReportsWithNavigationProperties();
 			}
 			else
 			{
 				//var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-				applicationDbContext = _context.Report.Include(r => r.EtrStatus).Include(r => r.EtrType).Include(r => r.NsnCoordinator).Include(r => r.Requestor).Include(r => r.Subcontractor).Include(r => r.Zone).Where(r => r.NsnCoordinatorId == userId || r.SubcontractorId == userId || r.RequestorId == userId);//added where
+				reports = _reportRepository.GetReportsWhereInvolved(userId);
 			}
 
-			Repositories.ReportRepository reportRepository = new Repositories.ReportRepository();
-			if (chosenFilter == null)
-				applicationDbContext = reportRepository.GetFilteredReports(applicationDbContext, etrnumberS, priorityS, rfaidS, rfanameS, gradeS, troubletypeS, dateissuedfromS, dateissuedtoS, datesentfromS, datesenttoS, etrstatusS, etrtypeS, nsncoordS, subconS, zoneS);
-			else
-				applicationDbContext = reportRepository.GetFilteredReports(applicationDbContext, chosenFilter);
+			reports = _reportRepository.GetFilteredReports(reports, etrnumberS, priorityS, rfaidS, rfanameS, gradeS, troubletypeS, dateissuedfromS, dateissuedtoS, datesentfromS, datesenttoS, etrstatusS, etrtypeS, nsncoordS, subconS, zoneS);
 
             //sorting order
             switch (sortOrder)
             {
                 case "etrnumber":
-                    applicationDbContext = applicationDbContext.OrderBy(r => r.EtrNumber);
+                    reports = reports.OrderBy(r => r.EtrNumber);
                     break;
                 case "etrnumber_desc":
-                    applicationDbContext = applicationDbContext.OrderByDescending(r => r.EtrNumber);
+                    reports = reports.OrderByDescending(r => r.EtrNumber);
                     break;
                 case "rfaid":
-                    applicationDbContext = applicationDbContext.OrderBy(r => r.RfaId);
+                    reports = reports.OrderBy(r => r.RfaId);
                     break;
                 case "rfaid_desc":
-                    applicationDbContext = applicationDbContext.OrderByDescending(r => r.RfaId);
+                    reports = reports.OrderByDescending(r => r.RfaId);
                     break;
                 case "rfaname":
-                    applicationDbContext = applicationDbContext.OrderBy(r => r.RfaName);
+                    reports = reports.OrderBy(r => r.RfaName);
                     break;
                 case "rfaname_desc":
-                    applicationDbContext = applicationDbContext.OrderByDescending(r => r.RfaName);
+                    reports = reports.OrderByDescending(r => r.RfaName);
                     break;
                 case "priority":
-                    applicationDbContext = applicationDbContext.OrderBy(r => r.Priority);
+                    reports = reports.OrderBy(r => r.Priority);
                     break;
                 case "priority_desc":
-                    applicationDbContext = applicationDbContext.OrderByDescending(r => r.Priority);
+                    reports = reports.OrderByDescending(r => r.Priority);
                     break;
                 case "grade":
-                    applicationDbContext = applicationDbContext.OrderBy(r => r.Grade).Include(r => r.EtrStatus);
+                    reports = reports.OrderBy(r => r.Grade).Include(r => r.EtrStatus);
                     break;
                 case "grade_desc":
-                    applicationDbContext = applicationDbContext.OrderByDescending(r => r.Grade).Include(r => r.EtrStatus);
+                    reports = reports.OrderByDescending(r => r.Grade).Include(r => r.EtrStatus);
                     break;
                 case "troubletype":
-                    applicationDbContext = applicationDbContext.OrderBy(r => r.TroubleType).Include(r => r.EtrStatus);
+                    reports = reports.OrderBy(r => r.TroubleType).Include(r => r.EtrStatus);
                     break;
                 case "troubletype_desc":
-                    applicationDbContext = applicationDbContext.OrderByDescending(r => r.TroubleType).Include(r => r.EtrStatus);
+                    reports = reports.OrderByDescending(r => r.TroubleType).Include(r => r.EtrStatus);
                     break;
                 case "dateissued":
-                    applicationDbContext = applicationDbContext.OrderBy(r => r.DateIssued).Include(r => r.EtrStatus).Include(r => r.EtrType);
+                    reports = reports.OrderBy(r => r.DateIssued).Include(r => r.EtrStatus).Include(r => r.EtrType);
                     break;
                 case "dateissued_desc":
-                    applicationDbContext = applicationDbContext.OrderByDescending(r => r.DateIssued).Include(r => r.EtrStatus);
+                    reports = reports.OrderByDescending(r => r.DateIssued).Include(r => r.EtrStatus);
                     break;
                 case "datesent":
-                    applicationDbContext = applicationDbContext.OrderBy(r => r.DateSent);
+                    reports = reports.OrderBy(r => r.DateSent);
                     break;
                 case "datesent_desc":
-                    applicationDbContext = applicationDbContext.OrderByDescending(r => r.DateSent);
+                    reports = reports.OrderByDescending(r => r.DateSent);
                     break;
                 case "etrstatus":
-                    applicationDbContext = applicationDbContext.OrderBy(r => r.EtrStatus);
+                    reports = reports.OrderBy(r => r.EtrStatus);
                     break;
                 case "etrstatus_desc":
-                    applicationDbContext = applicationDbContext.OrderByDescending(r => r.EtrStatus);
+                    reports = reports.OrderByDescending(r => r.EtrStatus);
                     break;
                 case "etrtype":
-                    applicationDbContext = applicationDbContext.OrderBy(r => r.EtrType);
+                    reports = reports.OrderBy(r => r.EtrType);
                     break;
                 case "etrtype_desc":
-                    applicationDbContext = applicationDbContext.OrderByDescending(r => r.EtrType);
+                    reports = reports.OrderByDescending(r => r.EtrType);
                     break;
                 case "nsncoord":
-                    applicationDbContext = applicationDbContext.OrderBy(r => r.NsnCoordinator);
+                    reports = reports.OrderBy(r => r.NsnCoordinator);
                     break;
                 case "nsncoord_desc":
-                    applicationDbContext = applicationDbContext.OrderByDescending(r => r.NsnCoordinator);
+                    reports = reports.OrderByDescending(r => r.NsnCoordinator);
                     break;
                 case "subcon":
-                    applicationDbContext = applicationDbContext.OrderBy(r => r.Subcontractor);
+                    reports = reports.OrderBy(r => r.Subcontractor);
                     break;
                 case "subcon_desc":
-                    applicationDbContext = applicationDbContext.OrderByDescending(r => r.Subcontractor);
+                    reports = reports.OrderByDescending(r => r.Subcontractor);
                     break;
                 case "zone":
-                    applicationDbContext = applicationDbContext.OrderBy(r => r.Zone);
+                    reports = reports.OrderBy(r => r.Zone);
                     break;
                 case "zone_desc":
-                    applicationDbContext = applicationDbContext.OrderByDescending(r => r.Zone);
+                    reports = reports.OrderByDescending(r => r.Zone);
                     break;
             }
-
-			//var filteredReportsJson = JsonConvert.SerializeObject(applicationDbContext.ToList()); //serialize list of filtered reports to json so TempData can handle it
-			//TempData["FilteredReports"] = filteredReportsJson;
 
 			TempData["etrnumberS"] = etrnumberS;
 			TempData["rfaidS"] = rfaidS;
@@ -295,13 +285,13 @@ namespace Fault_handling_system.Controllers
 			TempData["subconS"] = subconS;
 			TempData["zoneS"] = zoneS;
 
-			var reports = await applicationDbContext.ToListAsync();
+			var reportsList = await reports.ToListAsync();
 			
 			/*var filters = await (from x in _context.ReportFilter
 						   where x.User.Equals(User)
 						   select x).ToListAsync();*/
 
-			return View(new ReportsAndFiltersViewModel(reports, chosenFilter));
+			return View(new ReportsAndFiltersViewModel(reportsList, null));
         }
 
         // GET: Reports/Details/5
@@ -320,14 +310,7 @@ namespace Fault_handling_system.Controllers
                 return NotFound();
             }
 
-            var report = await _context.Report
-                .Include(r => r.EtrStatus)
-                .Include(r => r.EtrType)
-                .Include(r => r.NsnCoordinator)
-                .Include(r => r.Requestor)
-                .Include(r => r.Subcontractor)
-                .Include(r => r.Zone)
-                .SingleOrDefaultAsync(m => m.Id == id);
+			var report = await _reportRepository.GetReportById(id);
             if (report == null)
             {
                 return NotFound();
@@ -372,9 +355,7 @@ namespace Fault_handling_system.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,EtrNumber,NokiaCaseId,RfaId,RfaName,ZoneId,AssignedTo,Priority,EtrTypeId,EtrStatusId,RequestorId,NsnCoordinatorId,SubcontractorId,Grade,TroubleType,DateIssued,DateSent,EtrToDes,ClosingDate,EtrDescription,Comment")] Report report)
         {
-			var existing = await (from x in _context.Report
-								  where x.EtrNumber.Equals(report.EtrNumber)
-								  select x).SingleOrDefaultAsync();
+			var existing = _reportRepository.GetReportByEtrNumber(report.EtrNumber);
 			if (existing != null) ModelState.AddModelError("EtrNumber", "A report with given Etr Number already exists.");
 
 			if (ModelState.IsValid)
@@ -405,7 +386,7 @@ namespace Fault_handling_system.Controllers
                 return NotFound();
             }
 
-            var report = await _context.Report.SingleOrDefaultAsync(m => m.Id == id);
+			var report = await _reportRepository.GetReportById(id);
             if (report == null)
             {
                 return NotFound();
@@ -492,14 +473,7 @@ namespace Fault_handling_system.Controllers
             var nsnCoordinators = await _userManager.GetUsersInRoleAsync("Nokia Coordinator");
             ViewData["NsnCoordinatorId"] = new SelectList(nsnCoordinators, "Id", "UserName");
 
-            var report = await _context.Report
-                .Include(r => r.EtrStatus)
-                .Include(r => r.EtrType)
-                .Include(r => r.NsnCoordinator)
-                .Include(r => r.Requestor)
-                .Include(r => r.Subcontractor)
-                .Include(r => r.Zone)
-                .SingleOrDefaultAsync(m => m.Id == id);
+			var report = await _reportRepository.GetReportByIdWithNavigationProperties(id);
             if (report == null)
             {
                 return NotFound();
@@ -545,15 +519,8 @@ namespace Fault_handling_system.Controllers
                 return NotFound();
             }
 
-            var report = await _context.Report
-                .Include(r => r.EtrStatus)
-                .Include(r => r.EtrType)
-                .Include(r => r.NsnCoordinator)
-                .Include(r => r.Requestor)
-                .Include(r => r.Subcontractor)
-                .Include(r => r.Zone)
-                .SingleOrDefaultAsync(m => m.Id == id);
-            if (report == null)
+            var report = await _reportRepository.GetReportByIdWithNavigationProperties(id);
+			if (report == null)
             {
                 return NotFound();
             }
@@ -571,7 +538,7 @@ namespace Fault_handling_system.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var report = await _context.Report.SingleOrDefaultAsync(m => m.Id == id);
+			var report = await _reportRepository.GetReportById(id);
             _context.Report.Remove(report);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -762,22 +729,20 @@ namespace Fault_handling_system.Controllers
                 file = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
             }
 
-			IQueryable<Report> applicationDbContext;
+			IQueryable<Report> reports;
 
 			if (User.IsInRole("Admin"))
 			{
-				applicationDbContext = _context.Report.Include(r => r.EtrStatus).Include(r => r.EtrType).Include(r => r.NsnCoordinator).Include(r => r.Requestor).Include(r => r.Subcontractor).Include(r => r.Zone).AsQueryable();
+				reports = _reportRepository.GetAllReportsWithNavigationProperties();
 			}
 			else
 			{
 				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-				applicationDbContext = _context.Report.Include(r => r.EtrStatus).Include(r => r.EtrType).Include(r => r.NsnCoordinator).Include(r => r.Requestor).Include(r => r.Subcontractor).Include(r => r.Zone).Where(r => r.NsnCoordinatorId == userId || r.SubcontractorId == userId || r.RequestorId == userId);//added where
+				reports = _reportRepository.GetReportsWhereInvolved(userId);
 			}
 
-			Repositories.ReportRepository reportRepository = new Repositories.ReportRepository();
-
-			applicationDbContext = reportRepository.GetFilteredReports(applicationDbContext, TempData["etrnumberS"] as string, TempData["priorityS"] as string, TempData["rfaidS"] as string, TempData["rfanameS"] as string, TempData["gradeS"] as string, TempData["troubletypeS"] as string, TempData["dateissuedfromS"] as string, TempData["dateissuedtoS"] as string, TempData["datesentfromS"] as string, TempData["datesenttoS"] as string, TempData["etrstatusS"] as string, TempData["etrtypeS"] as string, TempData["nsncoordS"] as string, TempData["subconS"] as string, TempData["zoneS"] as string);
-			if (applicationDbContext != null)
+			reports = _reportRepository.GetFilteredReports(reports, TempData["etrnumberS"] as string, TempData["priorityS"] as string, TempData["rfaidS"] as string, TempData["rfanameS"] as string, TempData["gradeS"] as string, TempData["troubletypeS"] as string, TempData["dateissuedfromS"] as string, TempData["dateissuedtoS"] as string, TempData["datesentfromS"] as string, TempData["datesenttoS"] as string, TempData["etrstatusS"] as string, TempData["etrtypeS"] as string, TempData["nsncoordS"] as string, TempData["subconS"] as string, TempData["zoneS"] as string);
+			if (reports != null)
 			{
 				System.Diagnostics.Debug.WriteLine("!!!Załadowano zgłoszenia!!!");
 			}
@@ -811,7 +776,7 @@ namespace Fault_handling_system.Controllers
                 worksheet.Cells[line, 20].Value = "Zone";
                 line++;
                 //Add lines
-                foreach (Report report in applicationDbContext)
+                foreach (Report report in reports)
                 {
                     worksheet.Cells[line, 1].Value = report.EtrNumber;
                     worksheet.Cells[line, 2].Value = report.NokiaCaseId;
