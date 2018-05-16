@@ -71,3 +71,33 @@ select.shrinked-dropdown {
         display: none;
     }
 }
+
+/* Override bootstrap settings */
+.btn-primary {
+  color: #fff;
+  background-color: #124191;
+  border-color: #2e6da4;
+}
+
+.navbar-inverse {
+  background-color: #124191;
+  border-color: #080808;
+}
+
+.navbar-inverse .navbar-brand {
+  color: #dcdcdc;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+  color: #dcdcdc;
+}
+
+.panel-primary {
+  border-color: #124191;
+}
+
+.panel-primary > .panel-heading {
+  color: #fff;
+  background-color: #124191;
+  border-color: #337ab7;
+}
