@@ -1,0 +1,57 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+@using (Html.BeginForm("Start", "Scheduler", FormMethod.Post, new { @class = "form-group" }))
+{
+    @Html.Label("IntervalLabel", "Interval", new { @style = "margin: 5px", @id = "IntervalLabel" })
+    @Html.DropDownList("IntervalDropDown", ViewData["IntervalOptionList"] as List<SelectListItem>, new { @class = "form-control dropdown-toggle", @style = "margin: 5px" })
+    @Html.Label("FilterLabel", "Filter", new { @style = "margin: 5px", @id = "FilterLabel" })
+    @Html.DropDownList("FilterId", ViewData["FilterId"] as IEnumerable<SelectListItem>, new { @class = "form-control dropdown-toggle", @style = "margin: 5px" })
+    @Html.Label("CronLabel", "Cron", new { @style = "margin: 5px", @id = "CronLabel" })
+    @Html.TextBox("Cron", "", new { @class = " form-control", @style = "margin: 5px" })
+    @Html.Label("HourLabel", "Hour", new { @style = "margin: 5px", @id = "HourLabel" })
+    @Html.TextBox("Hour", "", new { @class = "form-control", @style = "margin: 5px", @type = "time" })
+    @Html.Label("DayofWeekLabel", "Day of week", new { @style = "margin: 5px", @id = "DayOfWeekLabel" })
+    @Html.DropDownList("DayOfWeek", ViewData["DaysOfWeek"] as IEnumerable<SelectListItem>, new { @class = "form-control dropdown-toggle", @style = "margin: 5px" })
+    <input class="btn btn-info form-control" type="submit" value="Start schedulera" style="margin: 5px" />
+}
+
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#Cron,#CronLabel').hide();
+
+            $('#IntervalDropDown').click(function () {
+                var interval = $('#IntervalDropDown').find(":selected").val();
+                var cron = $('#Cron,#CronLabel');
+                var hour = $('#Hour,#HourLabel');
+                var dayOfWeek = $('#DayOfWeek,#DayOfWeekLabel');
+                console.log(cron);
+                console.log(hour);
+                console.log(dayOfWeek);
+                if (interval == "C") { //Cron
+                    cron.show();
+                    hour.hide();
+                    dayOfWeek.hide(); hour
+                } else if (interval == "H") { //Hourly
+                    cron.hide();
+                    hour.show();
+                    dayOfWeek.hide();
+                } else if (interval == "D") { //Daily
+                    cron.hide();
+                    hour.show();
+                    dayOfWeek.hide();
+                } else if (interval == "W") { //Weekly
+                    cron.hide();
+                    hour.show();
+                    dayOfWeek.show();
+                }
+            });
+        });
+
+    </script>
+}

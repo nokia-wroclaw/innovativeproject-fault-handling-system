@@ -66,6 +66,7 @@ namespace Fault_handling_system
             services.AddSingleton<IHostedService, MailboxFetcherService>();
             services.AddSingleton<IMailboxFetcher, MailboxFetcher>();
             services.AddSingleton<IReportParser, ReportParser>();
+            services.AddSingleton<ISchedulerService, SchedulerService>();
 
             services.AddMvc();
         }
