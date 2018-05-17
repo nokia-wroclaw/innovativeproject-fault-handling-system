@@ -355,7 +355,7 @@ namespace Fault_handling_system.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,EtrNumber,NokiaCaseId,RfaId,RfaName,ZoneId,AssignedTo,Priority,EtrTypeId,EtrStatusId,RequestorId,NsnCoordinatorId,SubcontractorId,Grade,TroubleType,DateIssued,DateSent,EtrToDes,ClosingDate,EtrDescription,Comment")] Report report)
         {
-			var existing = _reportRepository.GetReportByEtrNumber(report.EtrNumber);
+			var existing = await _reportRepository.GetReportByEtrNumber(report.EtrNumber);
 			if (existing != null) ModelState.AddModelError("EtrNumber", "A report with given Etr Number already exists.");
 
 			if (ModelState.IsValid)
