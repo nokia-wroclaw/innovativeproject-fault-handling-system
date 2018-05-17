@@ -13,7 +13,7 @@
 		//Html.HiddenFor(m => m.UserId, new { value = userId });
 		}*@
 		<!--<input asp-for="UserId" type="hidden" value="@*userId*@" />-->
-		<ul class="list-unstyled" style="width: 340px; margin-top: 51px; margin-left: 5px; margin-bottom: 3px">
+		<ul class="list-unstyled" style="margin-top: 51px; margin-left: 5px; margin-bottom: 3px; margin-right: 5px; width: auto; display: block">
 			<li style="margin-bottom: 3px">
 				<label class="label-white">Etr number:</label>
 				<input type="text" id="etrnumberS" name="etrnumberS" value="@(ViewBag.etrnumberC)" placeholder="Etr number" style="float:right" />
@@ -180,7 +180,7 @@
 			</li>
 		</ul>
 	</form>
-	<ul class="list-unstyled" style="width: 340px; margin-left: 5px">
+	<ul class="list-unstyled" style="float: right; width: 340px; margin-left: 5px; margin-right: 5px">
 		<li>
 			<div class="input-group pull-right">
 				@Html.DropDownList("fid", ViewData["SavedFilters"] as IEnumerable<SelectListItem>, "Clear filters", new { id = "fid", style = "float:right; height:30px" })
