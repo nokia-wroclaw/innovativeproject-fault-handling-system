@@ -7,13 +7,13 @@
 
 <!--<h2>Index</h2>-->
 <input type="button" value="Create" onclick="location.href='@Url.Action("Create", "Reports")'" class="btn btn-info" style="margin-top: 5px" />
-<button id="openFilterMenu" class="btn btn-info sidenavToggle" onclick="openNav()" style="margin-top: 5px">Open filter menu</button>
+<a id="openFilterMenu" class="btn btn-info sidenavToggle" href="#filterCollapsible" data-toggle="collapse" style="margin-top: 5px">Open filter menu</a>
 <button id="helpBtn" class="btn btn-success" style="margin-top: 5px; float: right">
 	<i class="glyphicon glyphicon-question-sign"></i>
 </button>
-
-@{ Html.RenderPartial("_FilterSidebarPartial"); }
-
+<div id="filterCollapsible" class="collapse panel-collapse" style="margin-top: 5px; background-color: slategray">
+	@{ Html.RenderPartial("_FilterSidebarPartial"); }
+</div>
 @{ Html.RenderPartial("_ReportTablePartial", Model); }
 
 @using (Html.BeginForm("Export", "Reports", FormMethod.Post))
