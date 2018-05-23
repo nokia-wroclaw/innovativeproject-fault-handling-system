@@ -1,18 +1,10 @@
-﻿@model Fault_handling_system.Models.ReportFilter
-@*using System.Security.Claims*@
-
+﻿
 <div id="filterMenu" class="sidenav">
 	<label class="label-header">Filters</label>
-	<button id="closeFilterMenu" class="btn btn-info btn-lg" style="float:right; margin-right: 5px" onclick="closeNav()">
+	<button id="closeFilterMenu" class="btn btn-info btn-lg sidenavToggle" style="float:right; margin-right: 5px" onclick="closeNav()">
 		<i class="glyphicon glyphicon-arrow-left"></i>
 	</button>
-	<form>
-		@*{
-		var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-		System.Diagnostics.Debug.WriteLine("\n\n" + userId + "\n\n");
-		//Html.HiddenFor(m => m.UserId, new { value = userId });
-		}*@
-		<!--<input asp-for="UserId" type="hidden" value="@*userId*@" />-->
+	<form id="filterForm">
 		<ul class="list-unstyled" style="margin-top: 51px; margin-left: 5px; margin-bottom: 3px; margin-right: 5px; width: auto; display: block">
 			<li style="margin-bottom: 3px">
 				<label class="label-white">Etr number:</label>
@@ -163,7 +155,7 @@
 				@Html.DropDownList("zoneS", ViewData["ZoneFilter"] as IEnumerable<SelectListItem>, "", new { id = "zoneS", value = ViewBag.zoneC, style = "float:right; height:26px" })
 			</li>
 			<li style="margin-bottom: 3px; height: 30px">
-				<button class="btn btn-info btn-sm" type="submit" asp-action="Index" formmethod="get" style="float:right">Search</button>
+				<button id="applyFilter" class="btn btn-info btn-sm" type="submit" asp-action="Index" formmethod="get" style="float:right">Search</button>
 			</li>
 			<li style="height: 30px">
 				<div class="input-group pull-right" style="width: 211px">

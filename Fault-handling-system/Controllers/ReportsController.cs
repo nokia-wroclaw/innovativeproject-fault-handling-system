@@ -286,12 +286,12 @@ namespace Fault_handling_system.Controllers
 			TempData["zoneS"] = zoneS;
 
 			var reportsList = await reports.ToListAsync();
-			
+
 			/*var filters = await (from x in _context.ReportFilter
 						   where x.User.Equals(User)
 						   select x).ToListAsync();*/
 
-			return View(new ReportsAndFiltersViewModel(reportsList, null));
+			return View(reportsList);
         }
 
         // GET: Reports/Details/5
@@ -555,7 +555,7 @@ namespace Fault_handling_system.Controllers
         }
         
 		[HttpPost]
-		public async Task<IActionResult> SaveFilter(/*[Bind("Id,UserId,Name,EtrNumber,Priority,RfaId,RfaName,Grade,TroubleType,DateIssuedFrom,DateIssuedTo,DateIssuedFromWeeksAgo,DateIssuedFromDaysAgo,DateIssuedToWeeksAgo,DateIssuedToDaysAgo,DateSentFrom,DateSentTo,DateSentFromWeeksAgo,DateSentFromDaysAgo,DateSentToWeeksAgo,DateSentToDaysAgo,EtrStatus,EtrType,NsnCoordinatorId,SubcontractorId,Zone")] ReportFilter reportFilter*/string filterName, string etrnumberS, string priorityS, string rfaidS, string rfanameS, string gradeS, string troubletypeS, string dateissuedfromS, string dateissuedtoS, string dateissuedfromWeeksS, string dateissuedfromDaysS, string dateissuedtoWeeksS, string dateissuedtoDaysS, string datesentfromS, string datesenttoS, string datesentfromWeeksS, string datesentfromDaysS, string datesenttoWeeksS, string datesenttoDaysS, string etrstatusS, string etrtypeS, string nsncoordS, string subconS, string zoneS)
+		public async Task<IActionResult> SaveFilter(string filterName, string etrnumberS, string priorityS, string rfaidS, string rfanameS, string gradeS, string troubletypeS, string dateissuedfromS, string dateissuedtoS, string dateissuedfromWeeksS, string dateissuedfromDaysS, string dateissuedtoWeeksS, string dateissuedtoDaysS, string datesentfromS, string datesenttoS, string datesentfromWeeksS, string datesentfromDaysS, string datesenttoWeeksS, string datesenttoDaysS, string etrstatusS, string etrtypeS, string nsncoordS, string subconS, string zoneS)
 		{
 			/*if (ModelState.IsValid)
 			{
@@ -658,7 +658,7 @@ namespace Fault_handling_system.Controllers
 				//return RedirectToAction(nameof(Index));
 			}
 
-			return RedirectToAction(nameof(Index));
+			return Redirect(HttpContext.Request.Headers["Referer"].ToString());
 		}
 
 		[HttpGet]
@@ -811,5 +811,16 @@ namespace Fault_handling_system.Controllers
             }
             return File(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", sFileName);
         }
-    }
+		private IActionResult RedirectToLocal(string returnUrl)
+		{
+			if (Url.IsLocalUrl(returnUrl))
+			{
+				return Redirect(returnUrl);
+			}
+			else
+			{
+				return RedirectToAction(nameof(Index));
+			}
+		}
+	}
 }
