@@ -1,193 +1,203 @@
-﻿@model Fault_handling_system.Models.ReportFilter
-@*using System.Security.Claims*@
-
-<div id="filterMenu" class="sidenav">
-	<label class="label-header">Filters</label>
-	<button id="closeFilterMenu" class="btn btn-info btn-lg" style="float:right; margin-right: 5px" onclick="closeNav()">
-		<i class="glyphicon glyphicon-arrow-left"></i>
-	</button>
-	<form>
-		@*{
-		var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-		System.Diagnostics.Debug.WriteLine("\n\n" + userId + "\n\n");
-		//Html.HiddenFor(m => m.UserId, new { value = userId });
-		}*@
-		<!--<input asp-for="UserId" type="hidden" value="@*userId*@" />-->
-		<ul class="list-unstyled" style="width: 340px; margin-top: 51px; margin-left: 5px; margin-bottom: 3px">
-			<li style="margin-bottom: 3px">
-				<label class="label-white">Etr number:</label>
-				<input type="text" id="etrnumberS" name="etrnumberS" value="@(ViewBag.etrnumberC)" placeholder="Etr number" style="float:right" />
-			</li>
-			<li style="margin-bottom: 3px">
-				<label class="label-white">Rfa id:</label>
-				<input type="text" id="rfaidS" name="rfaidS" value="@(ViewBag.rfaidC)" placeholder="Rfa id" style="float:right" />
-			</li>
-			<li style="margin-bottom: 3px">
-				<label class="label-white">Rfa name:</label>
-				<input type="text" id="rfanameS" name="rfanameS" value="@(ViewBag.rfanameC)" placeholder="Rfa name" style="float:right" />
-			</li>
-			<li style="margin-bottom: 3px">
-				<label class="label-white">Priority:</label>
-				<input type="text" id="priorityS" name="priorityS" value="@(ViewBag.priorityC)" placeholder="Priority" style="float:right" />
-			</li>
-			<li style="margin-bottom: 3px">
-				<label class="label-white">Grade:</label>
-				<input type="text" id="gradeS" name="gradeS" value="@(ViewBag.gradeC)" placeholder="Grade" style="float:right" />
-			</li>
-			<li style="margin-bottom: 3px">
-				<label class="label-white">Trouble type:</label>
-				<input type="text" id="troubletypeS" name="troubletypeS" value="@(ViewBag.troubletypeC)" placeholder="Trouble type" style="float:right" />
-			</li>
-			<li style="margin-bottom: 3px">
-				<ul class="nav nav-tabs">
-					<li class="active"><a data-toggle="tab" href="#dateIssuedCal">Calendar</a></li>
-					<li><a data-toggle="tab" href="#dateIssuedRel">Time from now</a></li>
-				</ul>
-				<div class="tab-content">
-					<div id="dateIssuedCal" class="tab-pane fade in active">
+﻿
+<div class="panel panel-info" style="margin-top: 5px; ">
+	<div class="panel-heading">
+		<h2 class="panel-title">
+			<a id="filterCollapsibleToggle" href="#filterCollapsible" data-toggle="collapse">Filters</a>
+		</h2>
+	</div>
+	<div id="filterCollapsible" class="panel-collapse collapse sidenav">
+		<div class="panel-body" style="background-color: aliceblue">
+			<form id="filterForm">
+				<div class="row">
+					<div class="col-md-4">
 						<ul class="list-unstyled">
-							<li style="margin-bottom: 3px">
-								<label class="label-white">Date Issued from:</label>
-								<input type="date" id="dateissuedfromS" name="dateissuedfromS" value="@(ViewBag.dateissuedfromC)" style="float:right" />
+							<li>
+								<label class="label-white">Etr number:</label>
+								<input type="text" id="etrnumberS" name="etrnumberS" value="@(ViewBag.etrnumberC)" placeholder="Etr number" style="float:right" />
 							</li>
-							<li style="margin-bottom: 3px">
-								<label class="label-white">To:</label>
-								<input type="date" id="dateissuedtoS" name="dateissuedtoS" value="@(ViewBag.dateissuedtoC)" style="float:right" />
+							<li>
+								<label class="label-white">Rfa id:</label>
+								<input type="text" id="rfaidS" name="rfaidS" value="@(ViewBag.rfaidC)" placeholder="Rfa id" style="float:right" />
+							</li>
+							<li>
+								<label class="label-white">Rfa name:</label>
+								<input type="text" id="rfanameS" name="rfanameS" value="@(ViewBag.rfanameC)" placeholder="Rfa name" style="float:right" />
+							</li>
+							<li>
+								<label class="label-white">Priority:</label>
+								<input type="text" id="priorityS" name="priorityS" value="@(ViewBag.priorityC)" placeholder="Priority" style="float:right" />
+							</li>
+							<li>
+								<label class="label-white">Grade:</label>
+								<input type="text" id="gradeS" name="gradeS" value="@(ViewBag.gradeC)" placeholder="Grade" style="float:right" />
+							</li>
+							<li>
+								<label class="label-white">Trouble type:</label>
+								<input type="text" id="troubletypeS" name="troubletypeS" value="@(ViewBag.troubletypeC)" placeholder="Trouble type" style="float:right" />
 							</li>
 						</ul>
 					</div>
-					<div id="dateIssuedRel" class="tab-pane fade">
-						<ul class="list-unstyled">
-							<li style="margin-bottom: 3px; height: 31px">
-								<label class="label-white">Date Issued from:</label>
-								<div class="input-group pull-right" style="width: 102px">
-									<span class="input-group-addon">Weeks:</span>
-									<input type="text" id="dateissuedfromWeeksS" name="dateissuedfromWeeksS" style="width: 30px; height: 28px" />
+					<div class="col-md-4">
+						<ul class="list-unstyled" id="filterDatePickers">
+							<li>
+								<ul class="nav nav-tabs">
+									<li class="active"><a data-toggle="tab" href="#dateIssuedCal">Calendar</a></li>
+									<li><a data-toggle="tab" href="#dateIssuedRel">Time from now</a></li>
+								</ul>
+								<div class="tab-content">
+									<div id="dateIssuedCal" class="tab-pane fade in active">
+										<ul class="list-unstyled">
+											<li>
+												<label class="label-white">Date Issued from:</label>
+												<input type="date" id="dateissuedfromS" name="dateissuedfromS" value="@(ViewBag.dateissuedfromC)" style="float:right" />
+											</li>
+											<li>
+												<label class="label-white">To:</label>
+												<input type="date" id="dateissuedtoS" name="dateissuedtoS" value="@(ViewBag.dateissuedtoC)" style="float:right" />
+											</li>
+										</ul>
+									</div>
+									<div id="dateIssuedRel" class="tab-pane fade">
+										<ul class="list-unstyled">
+											<li style="height: 31px">
+												<label class="label-white">Date Issued from:</label>
+												<div class="input-group pull-right" style="width: 102px">
+													<span class="input-group-addon">Weeks:</span>
+													<input type="text" id="dateissuedfromWeeksS" name="dateissuedfromWeeksS" style="width: 30px; height: 28px" />
+												</div>
+											</li>
+											<li style="height: 31px">
+												<div class="input-group pull-right" style="width: 102px">
+													<span class="input-group-addon" style="width: 72px">Days:</span>
+													<input type="text" id="dateissuedfromDaysS" name="dateissuedfromDaysS" style="width: 30px; height: 28px" />
+												</div>
+											</li>
+											<li style="height: 31px">
+												<label class="label-white">To:</label>
+												<div class="input-group pull-right" style="width: 102px">
+													<span class="input-group-addon">Weeks:</span>
+													<input type="text" id="dateissuedtoWeeksS" name="dateissuedtoWeeksS" style="width: 30px; height: 28px" />
+												</div>
+											</li>
+											<li style="height: 31px">
+												<div class="input-group pull-right" style="width: 102px">
+													<span class="input-group-addon" style="width: 72px">Days:</span>
+													<input type="text" id="dateissuedtoDaysS" name="dateissuedtoDaysS" style="width: 30px; height: 28px" />
+												</div>
+											</li>
+										</ul>
+									</div>
 								</div>
 							</li>
-							<li style="margin-bottom: 3px; height: 31px">
-								<div class="input-group pull-right" style="width: 102px">
-									<span class="input-group-addon" style="width: 72px">Days:</span>
-									<input type="text" id="dateissuedfromDaysS" name="dateissuedfromDaysS" style="width: 30px; height: 28px" />
-								</div>
-							</li>
-							<li style="margin-bottom: 3px; height: 31px">
-								<label class="label-white">To:</label>
-								<div class="input-group pull-right" style="width: 102px">
-									<span class="input-group-addon">Weeks:</span>
-									<input type="text" id="dateissuedtoWeeksS" name="dateissuedtoWeeksS" style="width: 30px; height: 28px" />
-								</div>
-							</li>
-							<li style="margin-bottom: 3px; height: 31px">
-								<div class="input-group pull-right" style="width: 102px">
-									<span class="input-group-addon" style="width: 72px">Days:</span>
-									<input type="text" id="dateissuedtoDaysS" name="dateissuedtoDaysS" style="width: 30px; height: 28px" />
+							<li>
+								<ul class="nav nav-tabs">
+									<li class="active"><a data-toggle="tab" href="#dateSentCal">Calendar</a></li>
+									<li><a data-toggle="tab" href="#dateSentRel">Time from now</a></li>
+								</ul>
+								<div class="tab-content">
+									<div id="dateSentCal" class="tab-pane fade in active">
+										<ul class="list-unstyled">
+											<li>
+												<label class="label-white">Date sent from:</label>
+												<input type="date" id="datesentfromS" name="datesentfromS" value="@(ViewBag.datesentfromC)" style="float:right" />
+											</li>
+											<li>
+												<label class="label-white">To:</label>
+												<input type="date" id="datesenttoS" name="datesenttoS" value="@(ViewBag.datesenttoC)" style="float:right" />
+											</li>
+										</ul>
+									</div>
+									<div id="dateSentRel" class="tab-pane fade">
+										<ul class="list-unstyled">
+											<li style="height: 31px">
+												<label class="label-white">Date Sent from:</label>
+												<div class="input-group pull-right" style="width: 102px">
+													<span class="input-group-addon">Weeks:</span>
+													<input type="text" id="datesentfromWeeksS" name="datesentfromWeeksS" style="width: 30px; height: 28px" />
+												</div>
+											</li>
+											<li style="height: 31px">
+												<div class="input-group pull-right" style="width: 102px">
+													<span class="input-group-addon" style="width: 72px">Days:</span>
+													<input type="text" id="datesentfromDaysS" name="datesentfromDaysS" style="width: 30px; height: 28px" />
+												</div>
+											</li>
+											<li style="height: 31px">
+												<label class="label-white">To:</label>
+												<div class="input-group pull-right" style="width: 102px">
+													<span class="input-group-addon">Weeks:</span>
+													<input type="text" id="datesenttoWeeksS" name="datesenttoWeeksS" style="width: 30px; height: 28px" />
+												</div>
+											</li>
+											<li style="height: 31px">
+												<div class="input-group pull-right" style="width: 102px">
+													<span class="input-group-addon" style="width: 72px">Days:</span>
+													<input type="text" id="datesenttoDaysS" name="datesenttoDaysS" style="width: 30px; height: 28px" />
+												</div>
+											</li>
+										</ul>
+									</div>
 								</div>
 							</li>
 						</ul>
 					</div>
-				</div>
-			</li>
-			<li style="margin-bottom: 3px">
-				<ul class="nav nav-tabs">
-					<li class="active"><a data-toggle="tab" href="#dateSentCal">Calendar</a></li>
-					<li><a data-toggle="tab" href="#dateSentRel">Time from now</a></li>
-				</ul>
-				<div class="tab-content">
-					<div id="dateSentCal" class="tab-pane fade in active">
+					<div class="col-md-4">
 						<ul class="list-unstyled">
-							<li style="margin-bottom: 3px">
-								<label class="label-white">Date sent from:</label>
-								<input type="date" id="datesentfromS" name="datesentfromS" value="@(ViewBag.datesentfromC)" style="float:right" />
+							<li>
+								<label class="label-white">Etr status:</label>
+								@Html.DropDownList("etrstatusS", ViewData["EtrStatusFilter"] as IEnumerable<SelectListItem>, "", new { id = "etrstatusS", value = ViewBag.etrstatusC, style = "float:right; height:26px" })
 							</li>
-							<li style="margin-bottom: 3px">
-								<label class="label-white">To:</label>
-								<input type="date" id="datesenttoS" name="datesenttoS" value="@(ViewBag.datesenttoC)" style="float:right" />
+							<li>
+								<label class="label-white">Etr type:</label>
+								@Html.DropDownList("etrtypeS", ViewData["EtrTypeFilter"] as IEnumerable<SelectListItem>, "", new { id = "etrtypeS", value = ViewBag.etrtypeC, style = "float:right; height:26px" })
 							</li>
-						</ul>
-					</div>
-					<div id="dateSentRel" class="tab-pane fade">
-						<ul class="list-unstyled">
-							<li style="margin-bottom: 3px; height: 31px">
-								<label class="label-white">Date Sent from:</label>
-								<div class="input-group pull-right" style="width: 102px">
-									<span class="input-group-addon">Weeks:</span>
-									<input type="text" id="datesentfromWeeksS" name="datesentfromWeeksS" style="width: 30px; height: 28px" />
+							<li>
+								<label class="label-white">Nokia coordinator:</label>
+								<div class="dropdown-container" style="float: right">
+									@Html.DropDownList("nsncoordS", ViewData["NsnCoordinatorFilter"] as IEnumerable<SelectListItem>, "", new { id = "nsncoordS", value = ViewBag.nsncoordC, @class = "shrinked-dropdown", style = "height:26px" })
 								</div>
 							</li>
-							<li style="margin-bottom: 3px; height: 31px">
-								<div class="input-group pull-right" style="width: 102px">
-									<span class="input-group-addon" style="width: 72px">Days:</span>
-									<input type="text" id="datesentfromDaysS" name="datesentfromDaysS" style="width: 30px; height: 28px" />
+							<li>
+								<label class="label-white">Subcontractor:</label>
+								<div class="dropdown-container" style="float: right">
+									@Html.DropDownList("subconS", ViewData["SubcontractorFilter"] as IEnumerable<SelectListItem>, "", new { id = "subconS", value = ViewBag.subconC, @class = "shrinked-dropdown", style = "height:26px" })
 								</div>
 							</li>
-							<li style="margin-bottom: 3px; height: 31px">
-								<label class="label-white">To:</label>
-								<div class="input-group pull-right" style="width: 102px">
-									<span class="input-group-addon">Weeks:</span>
-									<input type="text" id="datesenttoWeeksS" name="datesenttoWeeksS" style="width: 30px; height: 28px" />
-								</div>
-							</li>
-							<li style="margin-bottom: 3px; height: 31px">
-								<div class="input-group pull-right" style="width: 102px">
-									<span class="input-group-addon" style="width: 72px">Days:</span>
-									<input type="text" id="datesenttoDaysS" name="datesenttoDaysS" style="width: 30px; height: 28px" />
-								</div>
+							<li>
+								<label class="label-white">Zone:</label>
+								@Html.DropDownList("zoneS", ViewData["ZoneFilter"] as IEnumerable<SelectListItem>, "", new { id = "zoneS", value = ViewBag.zoneC, style = "float:right; height:26px" })
 							</li>
 						</ul>
 					</div>
 				</div>
-			</li>
-			<li style="margin-bottom: 3px">
-				<label class="label-white">Etr status:</label>
-				@Html.DropDownList("etrstatusS", ViewData["EtrStatusFilter"] as IEnumerable<SelectListItem>, "", new { id = "etrstatusS", value = ViewBag.etrstatusC, style = "float:right; height:26px" })
-			</li>
-			<li style="margin-bottom: 3px">
-				<label class="label-white">Etr type:</label>
-				@Html.DropDownList("etrtypeS", ViewData["EtrTypeFilter"] as IEnumerable<SelectListItem>, "", new { id = "etrtypeS", value = ViewBag.etrtypeC, style = "float:right; height:26px" })
-			</li>
-			<li style="margin-bottom: 3px">
-				<label class="label-white">Nokia coordinator:</label>
-				<div class="dropdown-container" style="float: right">
-					@Html.DropDownList("nsncoordS", ViewData["NsnCoordinatorFilter"] as IEnumerable<SelectListItem>, "", new { id = "nsncoordS", value = ViewBag.nsncoordC, @class = "shrinked-dropdown", style = "height:26px" })
+			</form>
+			<div class="row">
+				<div class="col-md-3 col-sm-4">
+					<div id="filterPicker" class="input-group pull-right" style="width: 100%">
+						@Html.DropDownList("fid", ViewData["SavedFilters"] as IEnumerable<SelectListItem>, "Clear filters", new { id = "fid", @class = "form-control", style = "float:right; height:30px" })
+						<span class="input-group-btn">
+							<button id="selectPredefinedFilter" class="btn btn-info btn-sm" style="width: 61px">Select</button>
+						</span>
+					</div>
 				</div>
-			</li>
-			<li style="margin-bottom: 3px">
-				<label class="label-white">Subcontractor:</label>
-				<div class="dropdown-container" style="float: right">
-					@Html.DropDownList("subconS", ViewData["SubcontractorFilter"] as IEnumerable<SelectListItem>, "", new { id = "subconS", value = ViewBag.subconC, @class = "shrinked-dropdown", style = "height:26px" })
+				<div class="col-md-3 col-sm-4">
+					<div id="filterSaverRemover" class="input-group pull-right" style="width: 100%">
+						<input type="text" class="form-control" form="filterForm" id="filterName" name="filterName" style="height: 30px" />
+						<span class="input-group-btn">
+							<button id="removeFilter" form="filterForm" type="submit" class="btn btn-danger btn-sm" asp-action="DeleteFilter" formmethod="post">
+								<i class="glyphicon glyphicon-trash"></i>
+							</button>
+						</span>
+						<span class="input-group-btn">
+							<button id="saveOrUpdateFilter" form="filterForm" type="submit" class="btn btn-info btn-sm" asp-action="SaveFilter" formmethod="post" style="width: 61px">Save</button>
+						</span>
+					</div>
 				</div>
-			</li>
-			<li style="margin-bottom: 3px">
-				<label class="label-white">Zone:</label>
-				@Html.DropDownList("zoneS", ViewData["ZoneFilter"] as IEnumerable<SelectListItem>, "", new { id = "zoneS", value = ViewBag.zoneC, style = "float:right; height:26px" })
-			</li>
-			<li style="margin-bottom: 3px; height: 30px">
-				<button class="btn btn-info btn-sm" type="submit" asp-action="Index" formmethod="get" style="float:right">Search</button>
-			</li>
-			<li style="height: 30px">
-				<div class="input-group pull-right" style="width: 211px">
-					<input type="text" id="filterName" name="filterName" style="height: 30px" />
-					<span class="input-group-btn">
-						<button id="removeFilter" type="submit" class="btn btn-danger btn-sm" asp-action="DeleteFilter" formmethod="post">
-							<i class="glyphicon glyphicon-trash"></i>
-						</button>
-					</span>
-					<span class="input-group-btn">
-						<button id="saveOrUpdateFilter" type="submit" class="btn btn-info btn-sm" asp-action="SaveFilter" formmethod="post" style="width: 61px">Save</button>
-					</span>
+				<div class="col-md-2 col-sm-4">
+					<button id="applyFilter" form="filterForm" class="btn btn-info btn-sm" type="submit" asp-action="Index" formmethod="get" style="width: 100%">Search</button>
 				</div>
-			</li>
-		</ul>
-	</form>
-	<ul class="list-unstyled" style="width: 340px; margin-left: 5px">
-		<li>
-			<div class="input-group pull-right">
-				@Html.DropDownList("fid", ViewData["SavedFilters"] as IEnumerable<SelectListItem>, "Clear filters", new { id = "fid", style = "float:right; height:30px" })
-				<span class="input-group-btn">
-					<button id="selectPredefinedFilter" class="btn btn-info btn-sm" style="width: 61px">Select</button><!--type="submit"-->
-				</span>
+				<div class="col-md-*"></div>
 			</div>
-		</li>
-	</ul>
+		</div>
+	</div>
 </div>

@@ -18,45 +18,29 @@ namespace Fault_handling_system.Services
             _logger.LogInformation("Constructed ReportHandler");
         }
 
-        public Report ParseReport(string sender, string subject, string message)
+        private Report ParseKeyValuePair(Report target, ReportParsingProgress progress,
+                                         string subject, string key, string value)
         {
-            bool hasRfaId = false;
-            bool hasZoneId = false;
-            bool hasEtrTypeId = false;
-            bool hasEtrStatusId = false;
-
-            Report report = new Report();
-
-            // For "New ETR" mails, it is always "In Realization" - hardcode
-            report.EtrStatusId = 2;
-            hasEtrStatusId = true;
-
-            MatchCollection mc = Regex.Matches(message, "^([^:\n]+): ([^\n]+)$",
-                                               RegexOptions.Multiline);
-
-            foreach (Match match in mc) {
-                string key = match.Groups[1].Value;
-                string value = match.Groups[2].Value;
-                switch (key) {
+            switch (key) {
                 case "Polkomtel ETR Number":
-                    report.EtrNumber = value;
+                    target.EtrNumber = value;
                     break;
                 case "Nokia case id":
                     if (value != "NULL") {
                         try {
-                            report.NokiaCaseId = Convert.ToInt64(value);
+                            target.NokiaCaseId = Convert.ToInt64(value);
                         } catch (FormatException) {
                             _logger.LogError("Couldn't parse number: {0}: '{1}'", key, value);
                         }
                     }
                     break;
                 case "Assigned To":
-                    report.AssignedTo = value;
+                    target.AssignedTo = value;
                     break;
                 case "RFA ID":
                     try {
-                        report.RfaId = Convert.ToInt64(value);
-                        hasRfaId = true;
+                        target.RfaId = Convert.ToInt64(value);
+                        progress.hasRfaId = true;
                     } catch (FormatException) {
                         _logger.LogError("Couldn't parse number: {0}: '{1}'", key, value);
                     } catch (OverflowException) {
@@ -66,24 +50,24 @@ namespace Fault_handling_system.Services
                     break;
                 case "Ocena":
                     try {
-                        report.Grade = Convert.ToInt32(value);
+                        target.Grade = Convert.ToInt32(value);
                     } catch (FormatException) {
                         _logger.LogError("Couldn't parse number: {0}: '{1}'", key, value);
                     }
                     break;
                 case "Trouble Type/Case Title":
-                    report.TroubleType = value;
+                    target.TroubleType = value;
                     break;
                 case "Subsystem":
                     // TODO map it to EtrType entity
-                    report.EtrTypeId = 1;
-                    hasEtrTypeId = true; // I believe this is this field; TODO check it
+                    target.EtrTypeId = 1;
+                    progress.hasEtrTypeId = true; // I believe this is this field; TODO check it
                     break;
                 case "Vendor Priority/Severity":
-                    report.Priority = value;
+                    target.Priority = value;
                     break;
                 case "Trouble Start Time":
-                    report.DateIssued = DateTime.Parse(value);
+                    target.DateIssued = DateTime.Parse(value);
                     break;
                 case "Network Element ID":
                     // TODO which field is it?
@@ -93,8 +77,8 @@ namespace Fault_handling_system.Services
                     break;
                 case "Zone":
                     try {
-                        report.ZoneId = Convert.ToInt32(value);
-                        hasZoneId = true;
+                        target.ZoneId = Convert.ToInt32(value);
+                        progress.hasZoneId = true;
                     } catch (FormatException) {
                         _logger.LogError("Couldn't parse number: {0}: '{1}'", key, value);
                     }
@@ -103,7 +87,7 @@ namespace Fault_handling_system.Services
                     // TODO which field is it?
                     break;
                 case "Created Date":
-                    report.DateSent = DateTime.Parse(value);
+                    target.DateSent = DateTime.Parse(value);
                     break;
                 case "Originator Name/Requestor Name":
                     // TODO map it to the requestor entity
@@ -126,7 +110,26 @@ namespace Fault_handling_system.Services
                 default:
                     // Ignore unknown key-value pairs
                     break;
-                }
+            }
+            return target;
+        }
+
+        public Report ParseReport(string sender, string subject, string message)
+        {
+            ReportParsingProgress progress = new ReportParsingProgress();
+            Report report = new Report();
+
+            // For "New ETR" mails, it is always "In Realization" - hardcode
+            report.EtrStatusId = 2;
+            progress.hasEtrStatusId = true;
+
+            MatchCollection mc = Regex.Matches(message, "^([^:\n]+): ([^\n]+)$",
+                                               RegexOptions.Multiline);
+
+            foreach (Match match in mc) {
+                string key = match.Groups[1].Value;
+                string value = match.Groups[2].Value;
+                ParseKeyValuePair(report, progress, subject, key, value);
             }
 
             Match m = Regex.Match(message, @"^Description:\s(.*)", RegexOptions.Multiline);
@@ -145,10 +148,7 @@ namespace Fault_handling_system.Services
              && report.EtrDescription != null
              && report.DateIssued != null
              && report.RequestorId != null
-             && hasRfaId
-             && hasZoneId
-             && hasEtrTypeId
-             && hasEtrStatusId) {
+             && progress.HasEverything()) {
                 return report;
             } else {
                 string missingFields = "";
@@ -160,14 +160,7 @@ namespace Fault_handling_system.Services
                     missingFields += "DateIssued ";
                 if (report.RequestorId == null)
                     missingFields += "Requestor ";
-                if (!hasRfaId)
-                    missingFields += "RfaId ";
-                if (!hasZoneId)
-                    missingFields += "Zone ";
-                if (!hasEtrTypeId)
-                    missingFields += "EtrType ";
-                if (!hasEtrStatusId)
-                    missingFields += "EtrStatus ";
+                missingFields += progress.MissingFields();
 
                 if (report.EtrNumber != null)
                     _logger.LogDebug("Parsing of {0} failed because of missing fields: {1}",

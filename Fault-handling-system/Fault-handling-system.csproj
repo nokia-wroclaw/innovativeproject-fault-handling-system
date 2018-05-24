@@ -9,29 +9,6 @@
     <DocumentationFile>bin\Debug\netcoreapp2.0\Fault-handling-system.xml</DocumentationFile>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Data\Migrations\20180314124216_FirstReportPrototypeMigration.cs" />
-    <Compile Remove="Data\Migrations\20180314124216_FirstReportPrototypeMigration.Designer.cs" />
-    <Compile Remove="Data\Migrations\20180314125603_FirstReportPrototypeMigration.cs" />
-    <Compile Remove="Data\Migrations\20180314125603_FirstReportPrototypeMigration.Designer.cs" />
-    <Compile Remove="Data\Migrations\20180314130155_FirstReportPrototypeMigration.cs" />
-    <Compile Remove="Data\Migrations\20180314130155_FirstReportPrototypeMigration.Designer.cs" />
-    <Compile Remove="Data\Migrations\20180314130438_FirstReportPrototypeMigration.cs" />
-    <Compile Remove="Data\Migrations\20180314130438_FirstReportPrototypeMigration.Designer.cs" />
-    <Compile Remove="Data\Migrations\20180314130758_FirstReportPrototypeMigration.cs" />
-    <Compile Remove="Data\Migrations\20180314130758_FirstReportPrototypeMigration.Designer.cs" />
-    <Compile Remove="Data\Migrations\20180314130917_FirstReportPrototypeMigration.cs" />
-    <Compile Remove="Data\Migrations\20180314130917_FirstReportPrototypeMigration.Designer.cs" />
-    <Compile Remove="Data\Migrations\20180314131247_FirstReportPrototypeMigration.cs" />
-    <Compile Remove="Data\Migrations\20180314131247_FirstReportPrototypeMigration.Designer.cs" />
-    <Compile Remove="Data\Migrations\20180314131432_FirstReportPrototypeMigration.cs" />
-    <Compile Remove="Data\Migrations\20180314131432_FirstReportPrototypeMigration.Designer.cs" />
-    <Compile Remove="Data\Migrations\20180314131745_FirstReportPrototypeMigration.cs" />
-    <Compile Remove="Data\Migrations\20180314131745_FirstReportPrototypeMigration.Designer.cs" />
-    <Compile Remove="Data\Migrations\20180314133645_FirstReportPrototypeMigration.cs" />
-    <Compile Remove="Data\Migrations\20180314133645_FirstReportPrototypeMigration.Designer.cs" />
-  </ItemGroup>
-
 
   <ItemGroup>
     <PackageReference Include="EPPlus.Core" Version="1.5.4" />
@@ -40,6 +17,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.1" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.2" PrivateAssets="All" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.0.2" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.1" />
   </ItemGroup>
 
   <ItemGroup>
