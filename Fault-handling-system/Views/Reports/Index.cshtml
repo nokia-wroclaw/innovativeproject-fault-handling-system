@@ -6,13 +6,13 @@
 }
 
 <!--<h2>Index</h2>-->
-<input type="button" value="Create" onclick="location.href='@Url.Action("Create", "Reports")'" class="btn btn-info" style="margin-top: 5px" />
+<input id="createReport" type="button" value="Create" onclick="location.href='@Url.Action("Create", "Reports")'" class="btn btn-info" style="margin-top: 5px" />
 <!--<a id="openFilterMenu" class="btn btn-info" href="#filterCollapsible" data-toggle="collapse" style="margin-top: 5px">Open filter menu</a>-->
 @using (Html.BeginForm("Export", "Reports", FormMethod.Post, new { style="display: inline" }))
 {
-	<input class="btn btn-info" type="submit" value="Export" style="margin-top: 5px"/>
+	<input id="exportReports" class="btn btn-info" type="submit" value="Export" style="margin-top: 5px"/>
 }
-<a id="helpBtn" class="btn btn-success" href="javascript:void(0)" onclick="javascript:introJs().start();" style="margin-top: 5px; float: right">
+<a id="helpBtn" class="btn btn-success" onclick="startIntro()" style="margin-top: 5px; float: right">
 	<i class="glyphicon glyphicon-question-sign"></i>
 </a>
 

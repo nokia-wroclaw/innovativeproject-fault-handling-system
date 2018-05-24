@@ -2,7 +2,7 @@
 <div class="panel panel-info" style="margin-top: 5px; ">
 	<div class="panel-heading">
 		<h2 class="panel-title">
-			<a href="#filterCollapsible" data-toggle="collapse">Filters</a>
+			<a id="filterCollapsibleToggle" href="#filterCollapsible" data-toggle="collapse">Filters</a>
 		</h2>
 	</div>
 	<div id="filterCollapsible" class="panel-collapse collapse sidenav">
@@ -38,7 +38,7 @@
 						</ul>
 					</div>
 					<div class="col-md-4">
-						<ul class="list-unstyled">
+						<ul class="list-unstyled" id="filterDatePickers">
 							<li>
 								<ul class="nav nav-tabs">
 									<li class="active"><a data-toggle="tab" href="#dateIssuedCal">Calendar</a></li>
@@ -173,7 +173,7 @@
 			</form>
 			<div class="row">
 				<div class="col-md-3 col-sm-4">
-					<div class="input-group pull-right" style="width: 100%">
+					<div id="filterPicker" class="input-group pull-right" style="width: 100%">
 						@Html.DropDownList("fid", ViewData["SavedFilters"] as IEnumerable<SelectListItem>, "Clear filters", new { id = "fid", @class = "form-control", style = "float:right; height:30px" })
 						<span class="input-group-btn">
 							<button id="selectPredefinedFilter" class="btn btn-info btn-sm" style="width: 61px">Select</button>
@@ -181,7 +181,7 @@
 					</div>
 				</div>
 				<div class="col-md-3 col-sm-4">
-					<div class="input-group pull-right" style="width: 100%">
+					<div id="filterSaverRemover" class="input-group pull-right" style="width: 100%">
 						<input type="text" class="form-control" form="filterForm" id="filterName" name="filterName" style="height: 30px" />
 						<span class="input-group-btn">
 							<button id="removeFilter" form="filterForm" type="submit" class="btn btn-danger btn-sm" asp-action="DeleteFilter" formmethod="post">

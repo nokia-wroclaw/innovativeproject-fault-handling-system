@@ -16,14 +16,20 @@
 	var helpBtn = $('#helpBtn')[0];
 	var helpPanel = $('#helpPanel')[0];
 
-	/*$('#helpBtn').click(function () {
-		helpPanel.style.display = "block";
+	var tour = new Tour({
+		steps: [
+			{
+				element: "#helpBtn",
+				title: "Title of my step",
+				content: "Content of my step"
+			},
+			{
+				element: "#reportPanel",
+				title: "Title of my step",
+				content: "Content of my step"
+			}
+		]
 	});
-
-	$('#helpClose').click(function ()
-	{
-		helpPanel.style.display = "hidden";
-	});*/
 
 	$('#selectPredefinedFilter').click(function ()
 	{
@@ -235,6 +241,7 @@
 
 		);
 	});*/
+	
 });
 
 function SetFilterInputs(response)
@@ -280,14 +287,56 @@ function SetFilterInputs(response)
 	}
 }
 
-function openNav()
-{
-	document.getElementById("filterMenu").style.width = "350px";
-	document.getElementById("openFilterMenu").style.visibility = 'hidden';
-}
+var options_before = {
+	steps: [
+		{
+			element: '#reportPanel',
+			intro: 'Here are your reports.'
+		},
+		{
+			element: '#reportTableHeaders',
+			intro: "You can sort your reports by clicking on column headers."
+		},
+		{
+			element: '#filterCollapsibleToggle',
+			intro: "Click the header to open a panel with filters."
+		},
+		{
+			element: '#filterDatePickers',
+			intro: "You can filter tables with a calendar or pick reports with dates relative to this day."
+		},
+		{
+			element: '#filterPicker',
+			intro: "Pick a filter then click <b>Select</b> to select a previously saved filter."
+		},
+		{
+			element: '#filterSaverRemover',
+			intro: "You can save current filter by giving it a name and clicking on <b>Save</b> button or remove an existing filter by providing its name and clicking on the trash bin."
+		},
+		{
+			element: '#applyFilter',
+			intro: "Hit <b>Search</b> to apply chosen filters."
+		},
+		{
+			element: '#createReport',
+			intro: "Click on <b>Create</b> button to manually create a new report."
+		},
+		{
+			element: '#exportReports',
+			intro: "Click on <b>Export</b> button to download an Excel sheet with reports you see in the table."
+		}
+	]
+};
 
-function closeNav()
+function startIntro()
 {
-	document.getElementById("filterMenu").style.width = "0";
-	document.getElementById("openFilterMenu").style.visibility = 'visible';
+	var intro = introJs();
+	intro.setOptions(options_before);
+	intro.start().onbeforechange(function ()
+	{
+		if (intro._currentStep == "3")
+		{
+			$('#filterCollapsible').collapse("show");
+		}
+	});
 }
