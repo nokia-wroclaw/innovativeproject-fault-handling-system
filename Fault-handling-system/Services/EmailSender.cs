@@ -6,6 +6,8 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Fault_handling_system.Models;
+using System.Text.Encodings.Web;
+
 
 namespace Fault_handling_system.Services
 {
@@ -33,6 +35,35 @@ namespace Fault_handling_system.Services
 
             smtpClient.SendMailAsync(msg);
             return Task.CompletedTask;
+        }
+
+        public Task SendDailyReport(string email, List<Report> todaysReports) 
+        {
+            //List<String> adminEmailAddresses = new List<String>();
+            //adminEmailAddresses.Add("226044@student.pwr.edu.pl");
+            String subject = "Daily report";
+            String message = "Hello, " + email + "<br><br>Reports created in the last 24 hours:<br><br>\n\n";
+            
+            //
+            foreach(var report in todaysReports) {
+                string link = "http://localhost:5000/Reports/Details/" + report.Id;
+                //message += report.EtrNumber + "\n";
+                message += $"<a href='{HtmlEncoder.Default.Encode(link)}'>" + report.EtrNumber + "</a><br>";
+            }
+            SmtpClient smtpClient = new SmtpClient(_settings.SmtpServer, _settings.SmtpPort);
+            smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+            smtpClient.EnableSsl = true;
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = new NetworkCredential(_settings.MailLogin, _settings.MailPassword);
+            
+            //foreach(String mail in adminEmailAddresses) 
+            //{
+                MailMessage msg = new MailMessage(_settings.MailAddress, email, subject, message);
+                msg.IsBodyHtml = true;
+                smtpClient.SendMailAsync(msg);
+            //}
+            return Task.CompletedTask;
+
         }
     }
 }
