@@ -16,21 +16,6 @@
 	var helpBtn = $('#helpBtn')[0];
 	var helpPanel = $('#helpPanel')[0];
 
-	var tour = new Tour({
-		steps: [
-			{
-				element: "#helpBtn",
-				title: "Title of my step",
-				content: "Content of my step"
-			},
-			{
-				element: "#reportPanel",
-				title: "Title of my step",
-				content: "Content of my step"
-			}
-		]
-	});
-
 	$('#selectPredefinedFilter').click(function ()
 	{
 		var fid = $('#fid').find(":selected").val();
