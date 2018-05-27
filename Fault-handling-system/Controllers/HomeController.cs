@@ -22,7 +22,10 @@ namespace Fault_handling_system.Controllers
         /// </returns>
         public IActionResult Index()
         {
-            return View();
+			if (User.Identity.IsAuthenticated)
+				return RedirectToAction("UserPage", "Account");
+
+			return View();
         }
 
         /// <summary>

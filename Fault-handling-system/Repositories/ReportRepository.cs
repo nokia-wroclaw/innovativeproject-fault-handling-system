@@ -13,17 +13,60 @@ namespace Fault_handling_system.Repositories
 	/// Mainly used when the action performed is more complicated
 	/// than simple create, select, update, delete actions.
 	/// </summary>
-	public class ReportRepository
+	public class ReportRepository : IReportRepository
 	{
-		//private readonly ApplicationDbContext dbContext;
+		private readonly ApplicationDbContext _context;
 
 		/// <summary>
 		/// Default constructor.
 		/// </summary>
-		public ReportRepository(/*ApplicationDbContext applicationDbContext*/)
+		public ReportRepository(ApplicationDbContext applicationDbContext)
 		{
-			//dbContext = applicationDbContext;
+			_context = applicationDbContext;
 		}
+
+		public async Task<Report> GetReportById(int? id)
+		{
+			var report = await (from x in _context.Report
+								  where x.Id == id
+								  select x).SingleOrDefaultAsync();
+
+			return report;
+		}
+
+		public async Task<Report> GetReportByIdWithNavigationProperties(int? id)
+		{
+			var report = await _context.Report
+				.Include(r => r.EtrStatus)
+				.Include(r => r.EtrType)
+				.Include(r => r.NsnCoordinator)
+				.Include(r => r.Requestor)
+				.Include(r => r.Subcontractor)
+				.Include(r => r.Zone)
+				.SingleOrDefaultAsync(m => m.Id == id);
+
+			return report;
+		}
+
+		public async Task<Report> GetReportByEtrNumber(string etrNumber)
+		{
+			var report = await (from x in _context.Report
+								  where x.EtrNumber.Equals(etrNumber)
+								  select x).SingleOrDefaultAsync();
+
+			return report;
+		}
+
+		public IQueryable<Report> GetAllReportsWithNavigationProperties()
+		{
+			return _context.Report.Include(r => r.EtrStatus).Include(r => r.EtrType).Include(r => r.NsnCoordinator).Include(r => r.Requestor).Include(r => r.Subcontractor).Include(r => r.Zone).AsQueryable();
+		}
+
+		public IQueryable<Report> GetReportsWhereInvolved(string userId)
+		{
+			return _context.Report.Include(r => r.EtrStatus).Include(r => r.EtrType).Include(r => r.NsnCoordinator).Include(r => r.Requestor).Include(r => r.Subcontractor).Include(r => r.Zone).Where(r => r.NsnCoordinatorId == userId || r.SubcontractorId == userId || r.RequestorId == userId);
+		}
+
 		/// <summary>
 		/// Gets collection of reports, filters the reports with given
 		/// parameters and returns reports with filters applied.
@@ -93,7 +136,7 @@ namespace Fault_handling_system.Repositories
 			return applicationDbContext;
 		}
 
-		public IQueryable<Report> GetFilteredReports(IQueryable<Report> applicationDbContext, ReportFilter filter)
+		/*public IQueryable<Report> GetFilteredReports(IQueryable<Report> applicationDbContext, ReportFilter filter)
 		{
 			if (!String.IsNullOrEmpty(filter.EtrNumber))
 				applicationDbContext = applicationDbContext.Where(r => r.EtrNumber.Contains(filter.EtrNumber));
@@ -139,6 +182,6 @@ namespace Fault_handling_system.Repositories
 				applicationDbContext = applicationDbContext.Where(r => r.Zone.ZoneName.Contains(filter.Zone));
 
 			return applicationDbContext;
-		}
+		}*/
 	}
 }

@@ -93,7 +93,8 @@ namespace Fault_handling_system.Controllers
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
@@ -358,17 +359,18 @@ namespace Fault_handling_system.Controllers
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var query = await (from x in _context.Report
-                            where x.RequestorId == id || x.NsnCoordinatorId == id || x.SubcontractorId == id
-                            select x).ToListAsync();
-            if (query == null)
-            {
-                var user = await _userManager.FindByIdAsync(id);
-                await _userManager.DeleteAsync(user);
-            }
-            else
+                               where x.RequestorId == id || x.NsnCoordinatorId == id || x.SubcontractorId == id
+                               select x).ToListAsync();
+            if (query.Count() > 0)
             {
                 TempData["ErrorMessage"] = "This user is assigned to an existing report.";
             }
+
+            var user = await _userManager.FindByIdAsync(id);
+            user.LockoutEnabled = true;
+            user.LockoutEnd = DateTime.UtcNow.AddYears(100);
+            await _userManager.UpdateAsync(user);
+            //await _userManager.DeleteAsync(user);
 
             return RedirectToAction(nameof(ManageUsers));
         }
@@ -384,7 +386,8 @@ namespace Fault_handling_system.Controllers
         {
             var model = new ManageUsersViewModel();
             var roles = GetAllRoles();
-            model.Users = _userManager.Users.ToList();
+            //model.Users = _userManager.Users.ToList();
+            model.Users = _userManager.Users.Where(u => u.LockoutEnd == null).ToList();
             model.Roles = new IList<string>[model.Users.Count];
             model.ERoles = GetSelectListItems(roles);
             int counter = 0;
@@ -429,9 +432,9 @@ namespace Fault_handling_system.Controllers
             var roles = GetAllRoles();
             model.Roles = GetSelectListItems(roles);
             ViewData["ReturnUrl"] = returnUrl;
-			
-			var existing = await _userManager.FindByEmailAsync(model.Email);
-			if (existing != null) ModelState.AddModelError("Email", "A user witth given e-mail address already exists.");
+
+            var existing = await _userManager.FindByEmailAsync(model.Email);
+            if (existing != null) ModelState.AddModelError("Email", "A user witth given e-mail address already exists.");
 
             if (ModelState.IsValid)
             {

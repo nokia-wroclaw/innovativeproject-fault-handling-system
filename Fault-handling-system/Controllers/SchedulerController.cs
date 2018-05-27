@@ -2,35 +2,37 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Fault_handling_system.Data;
 using Fault_handling_system.Models;
 using Fault_handling_system.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Quartz;
 
 namespace Fault_handling_system.Controllers
 {
+    [Authorize]
     public class SchedulerController : Controller
     {
         private ILogger _logger;
-        private IEmailSender _emailSender;
         private ApplicationDbContext _context;
         private readonly ISchedulerService _scheduler;
-        enum Intervals { Hourly, Daily, Weekly };
 
-        public SchedulerController(ApplicationDbContext context, IEmailSender emailSender,
+        public SchedulerController(ApplicationDbContext context,
             ILogger<SchedulerController> logger, ISchedulerService scheduler)
         {
             _context = context;
-            _emailSender = emailSender;
             _logger = logger;
             _scheduler = scheduler;
+            
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var list = new List<SelectListItem>
             {      
@@ -51,6 +53,7 @@ namespace Fault_handling_system.Controllers
             };
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            _logger.LogDebug(userId);
             var filters = (from x in _context.ReportFilter
                                 where x.UserId.Equals(userId)
                                 select x);
@@ -58,39 +61,98 @@ namespace Fault_handling_system.Controllers
             ViewData["IntervalOptionList"] = list;
             ViewData["FilterId"] = new SelectList(filters, "Id", "Name", null);
             ViewData["DaysOfWeek"] = daysOfWeek;
-            return View();
+
+            _logger.LogDebug(userId);
+            var SchedulerFilters = _context.ScheduleFilter
+                .Include(r=>r.Filter)
+                .Where(r => r.UserId == userId)
+                .OrderByDescending(r=>r.Active)
+                .ThenByDescending(r=>r.Id);
+
+            var SchedulerFiltersList = await SchedulerFilters.ToListAsync();
+
+            return View(new ScheduleFilterViewModel(SchedulerFiltersList));
         }
 
         [HttpPost]
-        [Route("Start")]
-        public async Task<IActionResult> Start(String IntervalDropDown, int FilterId, String Cron, String Hour, String DayOfWeek)
+        [Route("AddNew")]
+        public async Task<IActionResult> AddNew(String IntervalDropDown, int FilterId, String Cron, String Hour, String DayOfWeek, String MailingLists)
         {
             var filter = await (from x in _context.ReportFilter
                                 where x.Id == FilterId
                                 select x).SingleOrDefaultAsync();
-
+            var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            int MaxId = _context.ScheduleFilter.Max(x => (int?) x.Id) ?? 0;
+            int NewSchedulerFilterId = MaxId + 1;
+            bool status;
             switch (IntervalDropDown)
             {
                 case ("H"):
-                    _scheduler.AddHourly(FilterId, Hour);
+                    status = _scheduler.AddHourly(NewSchedulerFilterId, FilterId, UserId, Hour, MailingLists);
                     break;
                 case ("D"):
-                    _scheduler.AddDaily(FilterId, Hour);
+                    status = _scheduler.AddDaily(NewSchedulerFilterId, FilterId, UserId, Hour, MailingLists);
                     break;
                 case ("W"):
-                    _scheduler.AddWeekly(FilterId, Hour, DayOfWeek);
+                    status = _scheduler.AddWeekly(NewSchedulerFilterId, FilterId, UserId, Hour, DayOfWeek, MailingLists);
                     break;
                 case ("C"):
-                    _scheduler.AddCron(FilterId, Cron);
+                    status = AddCron(NewSchedulerFilterId, FilterId, UserId, Cron, MailingLists);
                     break;
                 default:
+                    status = false;
                     _logger.LogError("Wrong interval option");
                     break;
             }
-
-            
-
+            _logger.LogDebug(status.ToString());
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [Route("Start")]
+        public async Task<IActionResult> Start(int Id)
+        {
+            _scheduler.StartReportSendJob(Id);
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [Route("Stop")]
+        public async Task<IActionResult> Stop(int Id)
+        {
+            _scheduler.StopReportSendJob(Id);
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [Route("Delete")]
+        public async Task<IActionResult> Delete(int Id)
+        {
+            _scheduler.DeleteReportSendJob(Id);
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool AddCron(int NewSchedulerFilterId, int FilterId, String UserId, String Cron, String MailingLists)
+        {
+            if (ValidateCron(Cron))
+            {
+                _logger.LogInformation("Validated");
+            } else
+            {
+                _logger.LogInformation("Unvalidated");
+            }
+            return _scheduler.AddCron(NewSchedulerFilterId, FilterId, UserId, Cron, MailingLists);
+        }
+
+        private bool ValidateCron(String Cron)
+        {
+            var valid = CronExpression.IsValidExpression(Cron);
+            // Some expressions are parsed as valid by the above method but they are not valid, like "* * * ? * *&54".
+            //In order to avoid such invalid expressions an additional check is required, that is done using the below regex.
+
+            var regex = @"^\s*($|#|\w+\s*=|(\?|\*|(?:[0-5]?\d)(?:(?:-|\/|\,)(?:[0-5]?\d))?(?:,(?:[0-5]?\d)(?:(?:-|\/|\,)(?:[0-5]?\d))?)*)\s+(\?|\*|(?:[0-5]?\d)(?:(?:-|\/|\,)(?:[0-5]?\d))?(?:,(?:[0-5]?\d)(?:(?:-|\/|\,)(?:[0-5]?\d))?)*)\s+(\?|\*|(?:[01]?\d|2[0-3])(?:(?:-|\/|\,)(?:[01]?\d|2[0-3]))?(?:,(?:[01]?\d|2[0-3])(?:(?:-|\/|\,)(?:[01]?\d|2[0-3]))?)*)\s+(\?|\*|(?:0?[1-9]|[12]\d|3[01])(?:(?:-|\/|\,)(?:0?[1-9]|[12]\d|3[01]))?(?:,(?:0?[1-9]|[12]\d|3[01])(?:(?:-|\/|\,)(?:0?[1-9]|[12]\d|3[01]))?)*)\s+(\?|\*|(?:[1-9]|1[012])(?:(?:-|\/|\,)(?:[1-9]|1[012]))?(?:L|W)?(?:,(?:[1-9]|1[012])(?:(?:-|\/|\,)(?:[1-9]|1[012]))?(?:L|W)?)*|\?|\*|(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)(?:(?:-)(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC))?(?:,(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)(?:(?:-)(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC))?)*)\s+(\?|\*|(?:[0-6])(?:(?:-|\/|\,|#)(?:[0-6]))?(?:L)?(?:,(?:[0-6])(?:(?:-|\/|\,|#)(?:[0-6]))?(?:L)?)*|\?|\*|(?:MON|TUE|WED|THU|FRI|SAT|SUN)(?:(?:-)(?:MON|TUE|WED|THU|FRI|SAT|SUN))?(?:,(?:MON|TUE|WED|THU|FRI|SAT|SUN)(?:(?:-)(?:MON|TUE|WED|THU|FRI|SAT|SUN))?)*)(|\s)+(\?|\*|(?:|\d{4})(?:(?:-|\/|\,)(?:|\d{4}))?(?:,(?:|\d{4})(?:(?:-|\/|\,)(?:|\d{4}))?)*))$";
+
+            return valid && Regex.IsMatch(Cron, regex);
         }
 
     }

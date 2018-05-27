@@ -8,17 +8,14 @@
     ViewData["Title"] = "List of users";
     ViewData.AddActivePage(ManageAdminNavPages.ManageUsers);
 }
-
 @if (TempData["ErrorMessage"] != null)
 {
-<div class="alert alert-danger">
-    <strong>Error!</strong> This user is assigned to unhandled reports!
-</div>
+    <div class="alert alert-info">
+        <strong>INFO!</strong> This user is assigned to unhandled reports!
+    </div>
 }
 @{ TempData["ErrorMessage"] = null; }
-
 <h4>@ViewData["Title"]</h4>
-
 <table class="table">
     <thead>
         <tr>
@@ -53,7 +50,6 @@
         }
     </tbody>
 </table>
-
 @*<div id="rolesMenu" class="sidenav">
         <label class="label-header">Roles</label>
         <button id="closeRolesMenu" class="btn btn-info btn-lg" style="float:right; margin-right: 5px" onclick="closeNav()">
