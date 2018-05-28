@@ -68,6 +68,7 @@ namespace Fault_handling_system
             services.AddSingleton<IMailboxFetcher, MailboxFetcher>();
             services.AddSingleton<IReportParser, ReportParser>();
 			services.AddScoped<IReportRepository, ReportRepository>();
+            services.AddTransient<ISchedulerService, SchedulerService>();
 
             services.AddMvc();
         }

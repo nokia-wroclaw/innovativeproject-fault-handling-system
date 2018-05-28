@@ -11,8 +11,8 @@ using System;
 namespace Faulthandlingsystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180511002239_CreateDbSchema")]
-    partial class CreateDbSchema
+    [Migration("20180526175336_CreateDb")]
+    partial class CreateDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -231,6 +231,38 @@ namespace Faulthandlingsystem.Migrations
                     b.ToTable("ReportFilter");
                 });
 
+            modelBuilder.Entity("Fault_handling_system.Models.ScheduleFilter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("Active");
+
+                    b.Property<string>("Cron");
+
+                    b.Property<string>("DayOfWeek");
+
+                    b.Property<int>("FilterId");
+
+                    b.Property<string>("Hour");
+
+                    b.Property<string>("Interval")
+                        .IsRequired();
+
+                    b.Property<string>("MailingList");
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FilterId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ScheduleFilter");
+                });
+
             modelBuilder.Entity("Fault_handling_system.Models.Zone", b =>
                 {
                     b.Property<int>("Id")
@@ -384,6 +416,19 @@ namespace Faulthandlingsystem.Migrations
 
             modelBuilder.Entity("Fault_handling_system.Models.ReportFilter", b =>
                 {
+                    b.HasOne("Fault_handling_system.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Fault_handling_system.Models.ScheduleFilter", b =>
+                {
+                    b.HasOne("Fault_handling_system.Models.ReportFilter", "Filter")
+                        .WithMany()
+                        .HasForeignKey("FilterId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Fault_handling_system.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")

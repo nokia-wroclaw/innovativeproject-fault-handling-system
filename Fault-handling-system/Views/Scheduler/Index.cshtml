@@ -1,0 +1,158 @@
+﻿@model Fault_handling_system.Models.ScheduleFilterViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+<h2>Your own filter scheduler</h2>
+@using (Html.BeginForm("AddNew", "Scheduler", FormMethod.Post, new { @class = "form-inline" }))
+{
+
+    <button id="NewReport" class="btn btn-info " type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+        Create new
+    </button>
+    <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+            <div class="form-group row">
+                @Html.Label("IntervalLabel", "Interval", new { @style = "margin: 5px", @id = "IntervalLabel" })
+                @Html.DropDownList("IntervalDropDown", ViewData["IntervalOptionList"] as List<SelectListItem>, new { @class = "form-control dropdown-toggle", @style = "margin: 5px" })
+                @Html.Label("FilterLabel", "Filter", new { @style = "margin: 5px", @id = "FilterLabel" })
+                @Html.DropDownList("FilterId", ViewData["FilterId"] as IEnumerable<SelectListItem>, new { @class = "form-control dropdown-toggle", @style = "margin: 5px" })
+                @Html.Label("CronLabel", "Cron", new { @style = "margin: 5px", @id = "CronLabel" })
+                @Html.TextBox("Cron", "", new { @class = " form-control", @style = "margin: 5px" })
+                @Html.Label("HourLabel", "Hour", new { @style = "margin: 5px", @id = "HourLabel" })
+                @Html.TextBox("Hour", "", new { @class = "form-control ", @style = "margin: 5px", @type = "time" })
+                @Html.Label("DayofWeekLabel", "Day of week", new { @style = "margin: 5px", @id = "DayOfWeekLabel" })
+                @Html.DropDownList("DayOfWeek", ViewData["DaysOfWeek"] as IEnumerable<SelectListItem>, new { @class = "form-control dropdown-toggle", @style = "margin: 5px" })
+            </div>
+            <div class="form-group row">
+                @Html.Label("MailingListsLabel", "Mailing List", new { @style = "margin: 5px", @id = "MailingListsLabel" })
+                @Html.TextArea("MailingLists", ViewData["MailingLists"] as String, 3, 58, new { @class = "form-control", @style = "margin: 5px" })
+
+                <input class="btn btn-info form-control" type="submit" value="Add new filter to scheduler" style="margin: 5px" />
+            </div>
+        </div>
+    </div>
+}
+<h3>Your scheduled filters</h3>
+<table class="table">
+    <thead>
+        <tr>
+
+            <th>
+                @Html.ActionLink("Interval", "Index")
+            </th>
+
+
+            <th>
+                @Html.ActionLink("Filter Name", "Index")
+            </th>
+            <th>
+                @Html.ActionLink("Mailing List", "Index")
+            </th>
+            <th>
+                @Html.ActionLink("Active", "Index")
+            </th>
+            <th>
+                @Html.ActionLink("Remove", "Index")
+            </th>
+
+    <tbody>
+        @foreach (var item in Model.ScheduleFilter)
+        {
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Interval)
+                    @Html.DisplayFor(modelItem => item.Cron)
+                    @Html.DisplayFor(modelItem => item.Hour)
+                    @Html.DisplayFor(modelItem => item.DayOfWeek)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Filter.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MailingList)
+                </td>
+                <td>
+                    @if (item.Active)
+                    {
+                        using (Html.BeginForm("Stop", "Scheduler", FormMethod.Post, new { @class = "form-inline" }))
+                        {
+                            @Html.Hidden("ID", item.Id)
+                            <input class="btn btn-info form-control" type="submit" value="Stop" style="margin: 5px" />
+                        }
+                    }
+                    else
+                    {
+                        using (Html.BeginForm("Start", "Scheduler", FormMethod.Post, new { @class = "form-inline" }))
+                        {
+                            @Html.Hidden("ID", item.Id)
+                            <input class="btn btn-info form-control" type="submit" value="Start" style="margin: 5px" />
+                        }
+                    }
+
+                </td>
+                <td>
+                    @using (Html.BeginForm("Delete", "Scheduler", FormMethod.Post, new { @class = "form-inline" }))
+                    {
+                        @Html.Hidden("ID", item.Id)
+                        <input class="btn btn-danger form-control" type="submit" value="Remove permanently" style="margin: 5px" />
+                    }
+                </td>
+            </tr>
+        }
+
+    </tbody>
+    </tr>
+    </thead>
+</table>
+
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#Cron,#CronLabel').hide();
+            IntervalDropDown();
+            $('#IntervalDropDown').click(function () {
+                IntervalDropDown();
+            });
+
+            $('#NewReport').click(function () {
+                if ($(this).text().trim() == "Create new") {
+                    $(this).text("Collapse");
+                } else {
+                    $(this).text("Create new");
+                }
+
+
+
+            });
+        });
+
+        function IntervalDropDown() {
+            var interval = $('#IntervalDropDown').find(":selected").val();
+            var cron = $('#Cron,#CronLabel');
+            var hour = $('#Hour,#HourLabel');
+            var dayOfWeek = $('#DayOfWeek,#DayOfWeekLabel');
+            if (interval == "C") { //Cron
+                cron.show();
+                hour.hide();
+                dayOfWeek.hide(); hour
+            } else if (interval == "H") { //Hourly
+                cron.hide();
+                hour.show();
+                dayOfWeek.hide();
+            } else if (interval == "D") { //Daily
+                cron.hide();
+                hour.show();
+                dayOfWeek.hide();
+            } else if (interval == "W") { //Weekly
+                cron.hide();
+                hour.show();
+                dayOfWeek.show();
+            }
+
+        }
+
+    </script>
+}
