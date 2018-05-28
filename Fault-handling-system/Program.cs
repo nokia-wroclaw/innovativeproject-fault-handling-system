@@ -8,6 +8,7 @@ using Fault_handling_system.Models;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -35,6 +36,7 @@ namespace Fault_handling_system
 				var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 				var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 				var dbContext = services.GetRequiredService<ApplicationDbContext>();
+				dbContext.Database.Migrate();
 				DbInitializer.CreateRoles(userManager, roleManager).Wait();
 				DbInitializer.CreateEtrAttributes(dbContext).Wait();
 			}
