@@ -13,4 +13,5 @@ RUN dotnet publish -c Release -o out
 FROM microsoft/aspnetcore:2.0
 WORKDIR /Fault-handling-system
 COPY --from=build-env /Fault-handling-system/out .
+RUN touch /Fault-handling-system/appsettings.json
 ENTRYPOINT ["dotnet", "Fault-handling-system.dll"]

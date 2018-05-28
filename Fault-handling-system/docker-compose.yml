@@ -36,3 +36,5 @@ services:
       ASPNETCORE_ENVIRONMENT: Development
       DoMailboxFetching: 'true'
       CheckInterval: '15'
+    volumes:
+      - ${PWD}/appsettings.json:/Fault-handling-system/appsettings.json

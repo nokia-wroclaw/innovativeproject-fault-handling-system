@@ -47,6 +47,26 @@ First, prepare environment files for the database and the app: `db.env`
 and `fhs.env`. Place e-mail account configuration (and possibly database
 configuration) in `fhs.env`.
 
+You can also place configuration in `appsettings.json`. An example
+file looks like this:
+
+    {
+      "ConnectionStrings": {
+        "DockerConnection": "Server=db;Database=Pwr-fhs-dev;User ID=postgres;Password=example;",
+      },
+      "ImapServer": "",
+      "ImapPort": 993,
+      "SmtpServer": "",
+      "SmtpPort": 587,
+      "MailAddress": "",
+      "MailLogin": "",
+      "MailPassword": "",
+      "DoMailboxFetching": true,
+      "CheckInterval": 15,
+    }
+
+Fill in the correct values.
+
 It is recommended to start both PostgreSQL
 and the application using `docker-compose`:
 ```
