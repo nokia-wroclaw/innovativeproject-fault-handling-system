@@ -21,26 +21,6 @@ your Docker image:
     $ docker-compose build
 ```
 
-Then you have to apply migrations to the database. To do this:
-
-1. Comment out `fault-handling-system` container in `docker-compose.yml`
-to prevent it from starting.
-
-2. Launch the database container:
-```
-docker-compose up
-```
-
-3. Export the variable pointing to the database inside the container:
-```
-export ConnectionStrings__DefaultConnection="Server=localhost;Port=10001;Database=Pwr-fhs-dev;User ID=postgres;Password=example;"
-```
-
-4. Perform the migrations on the selected database:
-```
-dotnet ef database update
-```
-
 ### Running in a Docker container - Ubuntu 16.04 LTS
 
 First, prepare environment files for the database and the app: `db.env`
