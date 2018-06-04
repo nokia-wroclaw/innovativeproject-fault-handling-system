@@ -28,7 +28,7 @@ Place e-mail account configuration (and possibly database configuration) in
 
     {
       "ConnectionStrings": {
-        "DockerConnection": "Server=db;Database=Pwr-fhs-dev;User ID=postgres;Password=example;",
+        "DatabaseConnection": "Server=db;Database=Pwr-fhs-dev;User ID=postgres;Password=example;"
       },
       "ImapServer": "",
       "ImapPort": 993,
@@ -39,6 +39,17 @@ Place e-mail account configuration (and possibly database configuration) in
       "MailPassword": "",
       "DoMailboxFetching": true,
       "CheckInterval": 15,
+	  "AdminContact": {
+		"FullName": "FirstName LastName",
+		"Email": "admin@example.com",
+		"PhoneNumber": "+48 999 888 777" 
+	  },
+	  "Logging": {
+		"IncludeScopes": false,
+		"LogLevel": {
+			"Default": "Warning"
+		}
+	  }
     }
 
 Fill in the correct values.

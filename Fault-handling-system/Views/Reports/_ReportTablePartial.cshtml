@@ -124,7 +124,10 @@
 								<br />
 								<a asp-action="Details" asp-route-id="@item.Id">Details</a>
 								<br />
-								<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+								@if (User.IsInRole("Admin")) //only an admin can delete etr
+								{
+									<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+								}
 							</td>
 						</tr>
 					}

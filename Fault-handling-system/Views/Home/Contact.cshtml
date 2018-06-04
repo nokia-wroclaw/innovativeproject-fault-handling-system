@@ -1,17 +1,13 @@
-﻿@{
+﻿@using Microsoft.Extensions.Options
+@using Fault_handling_system.Models
+@inject IOptions<AdminContact> AdminContactOptions
+
+@{
     ViewData["Title"] = "Contact";
 }
 <h2>@ViewData["Title"]</h2>
-<h3>@ViewData["Message"]</h3>
+<h3>Contact an admin if you have a trouble or need a new account.</h3>
 
-<address>
-    One Microsoft Way<br />
-    Redmond, WA 98052-6399<br />
-    <abbr title="Phone">P:</abbr>
-    425.555.0100
-</address>
-
-<address>
-    <strong>Support:</strong> <a href="mailto:Support@example.com">Support@example.com</a><br />
-    <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
-</address>
+@AdminContactOptions.Value.FullName<br />
+@AdminContactOptions.Value.Email<br />
+@AdminContactOptions.Value.PhoneNumber

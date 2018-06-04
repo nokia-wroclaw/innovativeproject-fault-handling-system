@@ -49,8 +49,6 @@ namespace Fault_handling_system.Controllers
         /// </returns>
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Your contact page.";
-
             return View();
         }
 

@@ -34,76 +34,74 @@
 }
 <h3>Your scheduled filters</h3>
 <table class="table">
-    <thead>
-        <tr>
+	<thead>
+		<tr>
 
-            <th>
-                @Html.ActionLink("Interval", "Index")
-            </th>
+			<th>
+				@Html.ActionLink("Interval", "Index")
+			</th>
 
 
-            <th>
-                @Html.ActionLink("Filter Name", "Index")
-            </th>
-            <th>
-                @Html.ActionLink("Mailing List", "Index")
-            </th>
-            <th>
-                @Html.ActionLink("Active", "Index")
-            </th>
-            <th>
-                @Html.ActionLink("Remove", "Index")
-            </th>
+			<th>
+				@Html.ActionLink("Filter Name", "Index")
+			</th>
+			<th>
+				@Html.ActionLink("Mailing List", "Index")
+			</th>
+			<th>
+				@Html.ActionLink("Active", "Index")
+			</th>
+			<th>
+				@Html.ActionLink("Remove", "Index")
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model.ScheduleFilter)
+		{
 
-    <tbody>
-        @foreach (var item in Model.ScheduleFilter)
-        {
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Interval)
+					@Html.DisplayFor(modelItem => item.Cron)
+					@Html.DisplayFor(modelItem => item.Hour)
+					@Html.DisplayFor(modelItem => item.DayOfWeek)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Filter.Name)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.MailingList)
+				</td>
+				<td>
+					@if (item.Active)
+					{
+						using (Html.BeginForm("Stop", "Scheduler", FormMethod.Post, new { @class = "form-inline" }))
+						{
+							@Html.Hidden("ID", item.Id)
+							<input class="btn btn-info form-control" type="submit" value="Stop" style="margin: 5px" />
+						}
+					}
+					else
+					{
+						using (Html.BeginForm("Start", "Scheduler", FormMethod.Post, new { @class = "form-inline" }))
+						{
+							@Html.Hidden("ID", item.Id)
+							<input class="btn btn-info form-control" type="submit" value="Start" style="margin: 5px" />
+						}
+					}
 
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Interval)
-                    @Html.DisplayFor(modelItem => item.Cron)
-                    @Html.DisplayFor(modelItem => item.Hour)
-                    @Html.DisplayFor(modelItem => item.DayOfWeek)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Filter.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MailingList)
-                </td>
-                <td>
-                    @if (item.Active)
-                    {
-                        using (Html.BeginForm("Stop", "Scheduler", FormMethod.Post, new { @class = "form-inline" }))
-                        {
-                            @Html.Hidden("ID", item.Id)
-                            <input class="btn btn-info form-control" type="submit" value="Stop" style="margin: 5px" />
-                        }
-                    }
-                    else
-                    {
-                        using (Html.BeginForm("Start", "Scheduler", FormMethod.Post, new { @class = "form-inline" }))
-                        {
-                            @Html.Hidden("ID", item.Id)
-                            <input class="btn btn-info form-control" type="submit" value="Start" style="margin: 5px" />
-                        }
-                    }
-
-                </td>
-                <td>
-                    @using (Html.BeginForm("Delete", "Scheduler", FormMethod.Post, new { @class = "form-inline" }))
-                    {
-                        @Html.Hidden("ID", item.Id)
-                        <input class="btn btn-danger form-control" type="submit" value="Remove permanently" style="margin: 5px" />
-                    }
-                </td>
-            </tr>
-        }
-
-    </tbody>
-    </tr>
-    </thead>
+				</td>
+				<td>
+					@using (Html.BeginForm("Delete", "Scheduler", FormMethod.Post, new { @class = "form-inline" }))
+					{
+						@Html.Hidden("ID", item.Id)
+						<input class="btn btn-danger form-control" type="submit" value="Remove permanently" style="margin: 5px" />
+					}
+				</td>
+			</tr>
+		}
+	</tbody>
 </table>
 
 
