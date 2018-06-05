@@ -260,5 +260,6 @@ paket-files/
 __pycache__/
 *.pyc
 
-# Don't let environment files, which may contain with service secrets, into git
+# Don't let environment files and appsettings.json file, which may contain service secrets, into git
 *.env
+Fault-handling-system/appsettings.json

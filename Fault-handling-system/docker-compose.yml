@@ -8,8 +8,6 @@ services:
     hostname: db
     ports:
       - 10001:5432
-    env_file:
-      - db.env
     environment:
       POSTGRES_PASSWORD: example
       POSTGRES_DB: Pwr-fhs-dev
@@ -30,9 +28,9 @@ services:
     restart: always
     ports:
       - 8080:80
-    env_file:
-      - fhs.env
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       DoMailboxFetching: 'true'
       CheckInterval: '15'
+    volumes:
+      - ${PWD}/appsettings.json:/Fault-handling-system/appsettings.json

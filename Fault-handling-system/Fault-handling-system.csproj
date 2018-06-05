@@ -9,6 +9,21 @@
     <DocumentationFile>bin\Debug\netcoreapp2.0\Fault-handling-system.xml</DocumentationFile>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Migrations\20180526142938_ScheduleMigration.cs" />
+    <Compile Remove="Migrations\20180526142938_ScheduleMigration.Designer.cs" />
+    <Compile Remove="Migrations\20180526143214_SchedulerMigration.cs" />
+    <Compile Remove="Migrations\20180526143214_SchedulerMigration.Designer.cs" />
+    <Compile Remove="Migrations\20180526143400_ScheduleMigration.cs" />
+    <Compile Remove="Migrations\20180526143400_ScheduleMigration.Designer.cs" />
+    <Compile Remove="Migrations\20180526181316_CreateDbSchema.cs" />
+    <Compile Remove="Migrations\20180526181316_CreateDbSchema.Designer.cs" />
+    <Compile Remove="Migrations\20180526183142_CreateDbSchema.cs" />
+    <Compile Remove="Migrations\20180526183142_CreateDbSchema.Designer.cs" />
+    <Compile Remove="Migrations\20180526183525_CreateDbS.cs" />
+    <Compile Remove="Migrations\20180526183525_CreateDbS.Designer.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="EPPlus.Core" Version="1.5.4" />
@@ -19,6 +34,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.0.2" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.1" />
+    <PackageReference Include="Quartz" Version="3.0.4" />
   </ItemGroup>
 
   <ItemGroup>

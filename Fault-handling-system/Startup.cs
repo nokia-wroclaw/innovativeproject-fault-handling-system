@@ -54,9 +54,10 @@ namespace Fault_handling_system
         {
             services.Configure<MailboxFetcherSettings>(Configuration);
             services.Configure<EmailSenderSettings>(Configuration);
+			services.Configure<AdminContact>(Configuration.GetSection("AdminContact"));
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("AzureConnection"))); //DefaultConnection
+                options.UseNpgsql(Configuration.GetConnectionString("DatabaseConnection"))); //DefaultConnection
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -68,6 +69,7 @@ namespace Fault_handling_system
             services.AddSingleton<IMailboxFetcher, MailboxFetcher>();
             services.AddSingleton<IReportParser, ReportParser>();
 			services.AddScoped<IReportRepository, ReportRepository>();
+            services.AddTransient<ISchedulerService, SchedulerService>();
 
             services.AddMvc();
         }

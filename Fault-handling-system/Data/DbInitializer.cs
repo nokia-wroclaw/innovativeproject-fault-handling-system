@@ -68,6 +68,11 @@ namespace Fault_handling_system.Data
 			}
 		}
 
+		/// <summary>
+		/// Fills EtrStatus, EtrType and Zone tables if they don't contain
+		/// required data.
+		/// </summary>
+		/// <param name="applicationDbContext">ApplicationDbContext used to connect with db.</param>
 		public static async Task CreateEtrAttributes(ApplicationDbContext applicationDbContext)
 		{
 			var etrTypes = await (from x in applicationDbContext.EtrType
