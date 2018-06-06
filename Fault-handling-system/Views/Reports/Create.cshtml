@@ -10,96 +10,96 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="EtrNumber" class="control-label"></label>
-                <input asp-for="EtrNumber" class="form-control" type="text"/>
+                <input asp-for="EtrNumber" class="form-control" type="text" />
                 <span asp-validation-for="EtrNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="NokiaCaseId" class="control-label"></label>
-                <input asp-for="NokiaCaseId" class="form-control" type="number"/>
+                <input asp-for="NokiaCaseId" class="form-control" type="number" />
                 <span asp-validation-for="NokiaCaseId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="RfaId" class="control-label"></label>
-                <input asp-for="RfaId" class="form-control" type="number"/>
+                <input asp-for="RfaId" class="form-control" type="number" />
                 <span asp-validation-for="RfaId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="RfaName" class="control-label"></label>
-                <input asp-for="RfaName" class="form-control" type="text"/>
+                <input asp-for="RfaName" class="form-control" type="text" />
                 <span asp-validation-for="RfaName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ZoneId" class="control-label"></label>
-                <select asp-for="ZoneId" class ="form-control" asp-items="ViewBag.ZoneId"></select>
+                <select asp-for="ZoneId" class="form-control" asp-items="ViewBag.ZoneId"></select>
             </div>
             <div class="form-group">
                 <label asp-for="AssignedTo" class="control-label"></label>
-                <input asp-for="AssignedTo" class="form-control" type="text"/>
+                <input asp-for="AssignedTo" class="form-control" type="text" />
                 <span asp-validation-for="AssignedTo" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Priority" class="control-label"></label>
-                <input asp-for="Priority" class="form-control" type="text"/>
+                <input asp-for="Priority" class="form-control" type="text" />
                 <span asp-validation-for="Priority" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="EtrTypeId" class="control-label"></label>
-                <select asp-for="EtrTypeId" class ="form-control" asp-items="ViewBag.EtrTypeId"></select>
+                <select asp-for="EtrTypeId" class="form-control" asp-items="ViewBag.EtrTypeId"></select>
             </div>
             <div class="form-group">
                 <label asp-for="EtrStatusId" class="control-label"></label>
-                <select asp-for="EtrStatusId" class ="form-control" asp-items="ViewBag.EtrStatusId"></select>
+                <select asp-for="EtrStatusId" class="form-control" asp-items="ViewBag.EtrStatusId"></select>
             </div>
-			<!--Dropdowns for users allow null values-->
+            <!--Dropdowns for users allow null values-->
             <div class="form-group">
                 <label asp-for="RequestorId" class="control-label"></label>
-                <select asp-for="RequestorId" class ="form-control" asp-items="ViewBag.RequestorId"><option value=""></option></select>
+                <select asp-for="RequestorId" class="form-control" asp-items="ViewBag.RequestorId"><option value=""></option></select>
             </div>
             <div class="form-group">
                 <label asp-for="NsnCoordinatorId" class="control-label"></label>
-                <select asp-for="NsnCoordinatorId" class ="form-control" asp-items="ViewBag.NsnCoordinatorId"><option value=""></option></select>
+                <select asp-for="NsnCoordinatorId" class="form-control" asp-items="ViewBag.NsnCoordinatorId"><option value=""></option></select>
             </div>
             <div class="form-group">
                 <label asp-for="SubcontractorId" class="control-label"></label>
-                <select asp-for="SubcontractorId" class ="form-control" asp-items="ViewBag.SubcontractorId"><option value=""></option></select>
+                <select asp-for="SubcontractorId" class="form-control" asp-items="ViewBag.SubcontractorId"><option value=""></option></select>
             </div>
             <div class="form-group">
                 <label asp-for="Grade" class="control-label"></label>
-                <input asp-for="Grade" class="form-control" type="number"/>
+                <input asp-for="Grade" class="form-control" type="number" />
                 <span asp-validation-for="Grade" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="TroubleType" class="control-label"></label>
-                <input asp-for="TroubleType" class="form-control" type="text"/>
+                <input asp-for="TroubleType" class="form-control" type="text" />
                 <span asp-validation-for="TroubleType" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DateIssued" class="control-label"></label>
-                <input asp-for="DateIssued" class="form-control" type="date"/>
+                <input asp-for="DateIssued" class="form-control" type="date" />
                 <span asp-validation-for="DateIssued" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DateSent" class="control-label"></label>
-                <input asp-for="DateSent" class="form-control" type="date"/>
+                <input asp-for="DateSent" class="form-control" type="date" />
                 <span asp-validation-for="DateSent" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="EtrToDes" class="control-label"></label>
-                <input asp-for="EtrToDes" class="form-control" type="date"/>
+                <input asp-for="EtrToDes" class="form-control" type="date" />
                 <span asp-validation-for="EtrToDes" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ClosingDate" class="control-label"></label>
-                <input asp-for="ClosingDate" class="form-control" type="date"/>
+                <input asp-for="ClosingDate" class="form-control" type="date" />
                 <span asp-validation-for="ClosingDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="EtrDescription" class="control-label"></label>
-                <input asp-for="EtrDescription" class="form-control" type="text"/>
+                <input asp-for="EtrDescription" class="form-control" type="text" />
                 <span asp-validation-for="EtrDescription" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -108,8 +108,12 @@
                 <span asp-validation-for="Comment" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <label for="files">Attachments:</label>
+                <input type="file" name="files" multiple="multiple" id="files" />
             </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+             </div>
         </form>
     </div>
 </div>

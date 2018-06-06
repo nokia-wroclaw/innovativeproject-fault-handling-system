@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,8 @@ using OfficeOpenXml;
 using Newtonsoft.Json;
 using OfficeOpenXml.Style;
 using Fault_handling_system.Repositories;
+using Microsoft.AspNetCore.Http;
+using System.IO.Compression;
 
 namespace Fault_handling_system.Controllers
 {
@@ -299,7 +302,7 @@ namespace Fault_handling_system.Controllers
         /// Action <c>Details</c> render a view containing report details with description.
         /// </summary>
         /// <remarks>
-        /// <para>This action creates <c>Report</c> class instance with total description of report selected form database by ID.</para>
+        /// <para>This action creates <c>Report</c> class instance with total description and attachments of report selected form database by ID.</para>
         /// </remarks>
         /// <returns>ViewResult - report details</returns>
         /// <param name="id">Report ID in database</param>
@@ -347,20 +350,47 @@ namespace Fault_handling_system.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         /// <summary>
-        /// This action accepts user input and posts those input to the server to add new report to the database.
+        /// This action accepts user input and posts those input to the server to add new report to the database and store uploaded attachments.
         /// </summary>
         /// <param name="report">Values of report fields</param>
+        /// <param name="files">Uploaded files</param>
         /// <returns>ViewResult and created report</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,EtrNumber,NokiaCaseId,RfaId,RfaName,ZoneId,AssignedTo,Priority,EtrTypeId,EtrStatusId,RequestorId,NsnCoordinatorId,SubcontractorId,Grade,TroubleType,DateIssued,DateSent,EtrToDes,ClosingDate,EtrDescription,Comment")] Report report)
+        public async Task<IActionResult> Create([Bind("Id,EtrNumber,NokiaCaseId,RfaId,RfaName,ZoneId,AssignedTo,Priority,EtrTypeId,EtrStatusId,RequestorId,NsnCoordinatorId,SubcontractorId,Grade,TroubleType,DateIssued,DateSent,EtrToDes,ClosingDate,EtrDescription,Comment")] Report report, List<IFormFile> files)
         {
 			var existing = await _reportRepository.GetReportByEtrNumber(report.EtrNumber);
 			if (existing != null) ModelState.AddModelError("EtrNumber", "A report with given Etr Number already exists.");
 
 			if (ModelState.IsValid)
             {
-				_context.Add(report);
+                long size = files.Sum(f => f.Length);
+                char[] separators = { (char)47, (char)92 };
+                string etr = report.EtrNumber;
+
+                var path = _hostingEnvironment.ContentRootPath + @"/attachments/" + etr;
+                if (!Directory.Exists(path))
+                {
+                    DirectoryInfo di = Directory.CreateDirectory(path);
+                }
+                path = path + @"/";
+                string filePath;
+                foreach (var formFile in files)
+                {
+                    if (formFile.Length > 0)
+                    {
+
+                        string fileName = string.Join("_", formFile.FileName.Split(Path.GetInvalidFileNameChars()));
+                        fileName = string.Join("_", fileName.Split(separators));
+
+                        filePath = path + formFile.FileName;
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await formFile.CopyToAsync(stream);
+                        }
+                    }
+                }
+                _context.Add(report);
 				await _context.SaveChangesAsync();
 				return RedirectToAction(nameof(Index));
             }
@@ -371,6 +401,82 @@ namespace Fault_handling_system.Controllers
             ViewData["SubcontractorId"] = new SelectList(_context.Users, "Id", "UserName", report.SubcontractorId);
             ViewData["ZoneId"] = new SelectList(_context.Zone, "Id", "ZoneName", report.ZoneId);
             return View(report);
+        }
+
+        /// <summary>
+        /// This action returns .zip file with all attachments related to chosen report.
+        /// </summary>
+        /// <param name="id">Report ID in database</param>
+        /// <returns>Attachments</returns>
+        public async Task<IActionResult> Download(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var report = await _reportRepository.GetReportById(id);
+            if (report == null)
+            {
+                return NotFound();
+            }
+            var etr = report.EtrNumber;
+            var path = _hostingEnvironment.ContentRootPath + @"/attachments/" + etr;
+            var zipPath = _hostingEnvironment.ContentRootPath + @"/attachments/" + etr + ".zip";
+
+            if (!Directory.Exists(path))
+            {
+                return RedirectToAction("UserPage", "Account");
+            } else
+            {
+                ZipFile.CreateFromDirectory(path, zipPath);
+
+                var memory = new MemoryStream();
+                using (var stream = new FileStream(zipPath, FileMode.Open))
+                {
+                    await stream.CopyToAsync(memory);
+                }
+                memory.Position = 0;
+
+                try
+                {
+                    return File(memory, "application/zip", Path.GetFileName(zipPath));
+                }
+                finally
+                {
+                    System.IO.File.Delete(zipPath);
+                }
+            }
+
+            
+        }
+
+        /// <summary>
+        /// This action deletes all existing attachments related with report chosen by ID.
+        /// </summary>
+        /// <param name="id">Report ID in database</param>
+        /// <returns>UserPage view</returns>
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteAttachments(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var report = await _reportRepository.GetReportById(id);
+            if (report == null)
+            {
+                return NotFound();
+            }
+            var etr = report.EtrNumber;
+            var path = _hostingEnvironment.ContentRootPath + @"/attachments/" + etr;
+            if (Directory.Exists(path))
+            {
+                Directory.Delete(path, true);
+            }
+            else return NotFound();
+            return RedirectToAction("UserPage", "Account");
         }
 
         // GET: Reports/Edit/5
@@ -413,14 +519,15 @@ namespace Fault_handling_system.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         /// <summary>
-        /// This action accepts user input and posts those input to the server to update report in database.
+        /// This action accepts user input and posts those input to the server to update report in database and attachments.
         /// </summary>
         /// <param name="id">ID of edited report </param>
         /// <param name="report">Values of report fields</param>
+        /// <param name="files">Uploaded files</param>
         /// <returns>View with updated report</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,EtrNumber,NokiaCaseId,RfaId,RfaName,ZoneId,AssignedTo,Priority,EtrTypeId,EtrStatusId,RequestorId,NsnCoordinatorId,SubcontractorId,Grade,TroubleType,DateIssued,DateSent,EtrToDes,ClosingDate,EtrDescription,Comment")] Report report)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,EtrNumber,NokiaCaseId,RfaId,RfaName,ZoneId,AssignedTo,Priority,EtrTypeId,EtrStatusId,RequestorId,NsnCoordinatorId,SubcontractorId,Grade,TroubleType,DateIssued,DateSent,EtrToDes,ClosingDate,EtrDescription,Comment")] Report report, List<IFormFile> files)
         {
             if (id != report.Id)
             {
@@ -443,6 +550,32 @@ namespace Fault_handling_system.Controllers
                     else
                     {
                         throw;
+                    }
+                }
+                long size = files.Sum(f => f.Length);
+                char[] separators = { (char)47, (char)92 };
+                string etr = report.EtrNumber;
+
+                var path = _hostingEnvironment.ContentRootPath + @"/attachments/" + etr;
+                if (!Directory.Exists(path))
+                {
+                    DirectoryInfo di = Directory.CreateDirectory(path);
+                }
+                path = path + @"/";
+                string filePath;
+                foreach (var formFile in files)
+                {
+                    if (formFile.Length > 0)
+                    {
+
+                        string fileName = string.Join("_", formFile.FileName.Split(Path.GetInvalidFileNameChars()));
+                        fileName = string.Join("_", fileName.Split(separators));
+
+                        filePath = path + formFile.FileName;
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await formFile.CopyToAsync(stream);
+                        }
                     }
                 }
                 return RedirectToAction(nameof(Index));
@@ -530,7 +663,7 @@ namespace Fault_handling_system.Controllers
 
         // POST: Reports/Delete/5
         /// <summary>
-        /// Removes report (selected by id) from database.
+        /// Removes report (selected by id) from database and all related attachments.
         /// </summary>
         /// <param name="id">Report ID</param>
         /// <returns>Redirects to <c>Index</c> action.</returns>
@@ -539,6 +672,12 @@ namespace Fault_handling_system.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
 			var report = await _reportRepository.GetReportById(id);
+            var etr = report.EtrNumber;
+            var path = _hostingEnvironment.ContentRootPath + @"/attachments/" + etr;
+            if (Directory.Exists(path))
+            {
+                Directory.Delete(path, true);
+            }
             _context.Report.Remove(report);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

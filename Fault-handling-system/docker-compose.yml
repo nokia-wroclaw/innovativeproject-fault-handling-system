@@ -34,3 +34,6 @@ services:
       CheckInterval: '15'
     volumes:
       - ${PWD}/appsettings.json:/Fault-handling-system/appsettings.json
+      - attachments:/Fault-handling-system/attachments
+volumes:
+  attachments:

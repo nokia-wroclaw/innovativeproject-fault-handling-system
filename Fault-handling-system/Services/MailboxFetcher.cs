@@ -121,7 +121,13 @@ namespace Fault_handling_system.Services
 
                                 string fileName = string.Join("_", attachment.ContentDisposition.FileName.Split(Path.GetInvalidFileNameChars()));
                                 fileName = string.Join("_", fileName.Split(separators));
-                                string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\attachments\" + etr);
+
+                                //if someone needs to download from email but using IIS instead of docker, uncomment below
+                                //string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\attachments\" + etr);
+
+                                //filepath on docker
+                                var path = @"Fault-handling-system/attachments/" + etr;
+
                                 try
                                 {
                                     if (!Directory.Exists(path))
