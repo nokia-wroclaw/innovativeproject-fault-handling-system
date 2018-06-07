@@ -729,59 +729,6 @@ namespace Fault_handling_system.Controllers
         public async Task<IActionResult> UserPage()
         {
             IQueryable<Report> applicationDbContext;
-            var todaysReportsWithDate = _context.Report.Where(r => r.DateSent != null).ToList();
-            //var todaysReports = _context.Report.Where(r => r.DateSent.Value.Date.Equals(DateTime.Now.Date)).ToList();
-            List<Report> todaysReports = new List<Report>();
-            foreach(Report report in todaysReportsWithDate)
-            {
-                if(report.DateSent.Value.Date.Equals(DateTime.Now.Date))
-                {
-                    todaysReports.Add(report);
-                }
-            }
-
-            //zwraca ID roli admin
-            //var role = _roleManager.FindByNameAsync("Admin");
-            var adminRole = _context.Roles.Where(r => r.Name.Equals("Admin")).First();
-            //zwraca userId, dla ktorych roleId == roleId admina
-            
-            //var id = _context.UserRoles.Where(u => u.RoleId.Equals(role.Id)).First().UserId;
-            var id = _context.UserRoles.Where(u => u.RoleId.Equals(adminRole.Id)).ToList();
-
-            List<string> userIds = new List<string>();
-            foreach(var i in id)
-            {
-                userIds.Add(i.UserId);
-            }
-            //var userId = id.UserId;
-            List<string> emails = new List<string>();
-            foreach(var u in userIds)
-            {
-                emails.Add(_context.Users.Where(x => x.Id.Equals(u)).First().Email);
-            }
-
-            foreach(var e in emails)
-            {
-                await _emailSender.SendDailyReport(e, todaysReports);
-
-            }
-            //var email = _context.Users.Where(u => u.Id.Equals(id)).First().Email;
-            //await _emailSender.SendDailyReport(email);
-
-            //List<string> users = new List<string>();
-            //foreach(var i in id) {
-
-            //    users.Add(_context.Users.Where(u => u.Id.Equals(i)).First().Email);
-            //}
-            //var users = _context.Users.Where(u => u.Id)
-            //var ids = id.ToListAsync();
-            //var list = _context.Users.Where(u => u.Id )
-            //Roles.get
-            //foreach(var i in ids)
-            //foreach(string address in users) {
-              //  await _emailSender.SendDailyReport(address);
-
-            //}
 
             if (User.IsInRole("Admin"))
             {

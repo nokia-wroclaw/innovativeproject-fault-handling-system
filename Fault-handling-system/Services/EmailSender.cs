@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Fault_handling_system.Models;
 using System.Text.Encodings.Web;
-
+using System.Text;
 
 namespace Fault_handling_system.Services
 {
@@ -39,31 +39,45 @@ namespace Fault_handling_system.Services
 
         public Task SendDailyReport(string email, List<Report> todaysReports) 
         {
-            //List<String> adminEmailAddresses = new List<String>();
-            //adminEmailAddresses.Add("226044@student.pwr.edu.pl");
             String subject = "Daily report";
-            String message = "Hello, " + email + "<br><br>Reports created in the last 24 hours:<br><br>\n\n";
-            
-            //
-            foreach(var report in todaysReports) {
-                string link = "http://localhost:5000/Reports/Details/" + report.Id;
-                //message += report.EtrNumber + "\n";
-                message += $"<a href='{HtmlEncoder.Default.Encode(link)}'>" + report.EtrNumber + "</a><br>";
-            }
+            string message = buildMessage(email, todaysReports);
+
             SmtpClient smtpClient = new SmtpClient(_settings.SmtpServer, _settings.SmtpPort);
             smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
             smtpClient.EnableSsl = true;
             smtpClient.UseDefaultCredentials = false;
             smtpClient.Credentials = new NetworkCredential(_settings.MailLogin, _settings.MailPassword);
             
-            //foreach(String mail in adminEmailAddresses) 
-            //{
-                MailMessage msg = new MailMessage(_settings.MailAddress, email, subject, message);
-                msg.IsBodyHtml = true;
-                smtpClient.SendMailAsync(msg);
-            //}
-            return Task.CompletedTask;
+            MailMessage msg = new MailMessage(_settings.MailAddress, email, subject, message);
+            msg.IsBodyHtml = true;
+            smtpClient.SendMailAsync(msg);
 
+            return Task.CompletedTask;
+        }
+
+        private string buildMessage(string email, List<Report> todaysReports) 
+        {
+            StringBuilder builder = new StringBuilder();
+
+            string welcome = "<h3>Hello, " + email + "!</h3><br>";
+            string farewell = "<br>Kind regards,<br>Nokia FHS Team";
+            string reportsCountInfo = "There are: " + todaysReports.Count + " new reports.<br><br>";
+            string etrNumbersTitle = "Their ETR numbers:";
+
+            builder.Append(welcome);
+            builder.Append(reportsCountInfo);
+            
+            if(todaysReports.Count > 0)
+            {
+                builder.Append(etrNumbersTitle);
+                builder.Append("<ol type = \"1\">");
+                todaysReports.ForEach(report => builder.Append("<li>" + report.EtrNumber + "</li>"));
+                builder.Append("</ol>");
+            }
+
+            builder.Append(farewell);
+
+            return builder.ToString();
         }
     }
 }

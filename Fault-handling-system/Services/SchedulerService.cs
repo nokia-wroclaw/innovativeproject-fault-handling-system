@@ -51,6 +51,8 @@ namespace Fault_handling_system.Services
             scheduler.Context.Put("context", _context);
             scheduler.Context.Put("serviceProvider", _serviceProvider);
 
+            InitDailyReportJob();
+
             //InitScheduledFilters();
         }
         async Task InitScheduledFilters()
@@ -66,6 +68,22 @@ namespace Fault_handling_system.Services
             }
            
         }
+
+        void InitDailyReportJob()
+        {
+            IJobDetail job = JobBuilder.Create<DailyReportJob>()
+                        .Build();
+
+            string cron = "0 5 0 1/1 * ? *";
+
+            ITrigger trigger = TriggerBuilder.Create()
+                    .StartNow()
+                    .WithCronSchedule(cron)
+                    .Build();
+
+            AddNewJob(job, trigger).GetAwaiter().GetResult();
+        }
+
         async Task CloseAsync()
         {
             await scheduler.Shutdown();
