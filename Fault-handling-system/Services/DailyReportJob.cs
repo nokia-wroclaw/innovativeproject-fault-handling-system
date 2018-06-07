@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Fault_handling_system.Data;
 using Fault_handling_system.Models;
@@ -24,8 +25,9 @@ namespace Fault_handling_system.Services
 
                 List<Report> yesterdaysReports = filterYesterdaysReports(dbContext);
                 List<string> adminEmails = filterAdminEmails(dbContext);
+                String subject = "Daily report";
                 
-                adminEmails.ForEach(email => emailSender.SendDailyReport(email, yesterdaysReports));
+                adminEmails.ForEach(email => emailSender.SendEmailAsync(email, subject, buildMessage(email, yesterdaysReports)));
             }
 
         }
@@ -58,6 +60,31 @@ namespace Fault_handling_system.Services
             adminIds.ForEach(id => adminEmails.Add(dbContext.Users.Where(x => x.Id.Equals(id)).First().Email));
 
             return adminEmails;
+        }
+
+        private string buildMessage(string email, List<Report> todaysReports) 
+        {
+            StringBuilder builder = new StringBuilder();
+
+            string welcome = "<h3>Hello, " + email + "!</h3><br>";
+            string farewell = "<br>Kind regards,<br>Nokia FHS Team";
+            string reportsCountInfo = "There are: " + todaysReports.Count + " new reports.<br><br>";
+            string etrNumbersTitle = "Their ETR numbers:";
+
+            builder.Append(welcome);
+            builder.Append(reportsCountInfo);
+            
+            if(todaysReports.Count > 0)
+            {
+                builder.Append(etrNumbersTitle);
+                builder.Append("<ol type = \"1\">");
+                todaysReports.ForEach(report => builder.Append("<li>" + report.EtrNumber + "</li>"));
+                builder.Append("</ol>");
+            }
+
+            builder.Append(farewell);
+
+            return builder.ToString();
         }
 
     }

@@ -36,15 +36,6 @@ namespace Fault_handling_system.Services
             smtpClient.SendMailAsync(msg);
             return Task.CompletedTask;
         }
-
-<<<<<<< HEAD
-        public Task SendDailyReport(string email, List<Report> todaysReports) 
-        {
-            String subject = "Daily report";
-            string message = buildMessage(email, todaysReports);
-
-            SmtpClient smtpClient = new SmtpClient(_settings.SmtpServer, _settings.SmtpPort);
-=======
         public Task SendEmailWithAttachmentsAsync(string email, string subject, string message, Attachment[] attachments)
         {
             SmtpClient smtpClient = new SmtpClient(_settings.SmtpServer, _settings.SmtpPort);
@@ -59,47 +50,5 @@ namespace Fault_handling_system.Services
             smtpClient.SendMailAsync(msg);
             return Task.CompletedTask;
         }
->>>>>>> master
-            smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-            smtpClient.EnableSsl = true;
-            smtpClient.UseDefaultCredentials = false;
-            smtpClient.Credentials = new NetworkCredential(_settings.MailLogin, _settings.MailPassword);
-<<<<<<< HEAD
-            
-            MailMessage msg = new MailMessage(_settings.MailAddress, email, subject, message);
-            msg.IsBodyHtml = true;
-            smtpClient.SendMailAsync(msg);
-
-            return Task.CompletedTask;
-        }
-
-        private string buildMessage(string email, List<Report> todaysReports) 
-        {
-            StringBuilder builder = new StringBuilder();
-
-            string welcome = "<h3>Hello, " + email + "!</h3><br>";
-            string farewell = "<br>Kind regards,<br>Nokia FHS Team";
-            string reportsCountInfo = "There are: " + todaysReports.Count + " new reports.<br><br>";
-            string etrNumbersTitle = "Their ETR numbers:";
-
-            builder.Append(welcome);
-            builder.Append(reportsCountInfo);
-            
-            if(todaysReports.Count > 0)
-            {
-                builder.Append(etrNumbersTitle);
-                builder.Append("<ol type = \"1\">");
-                todaysReports.ForEach(report => builder.Append("<li>" + report.EtrNumber + "</li>"));
-                builder.Append("</ol>");
-            }
-
-            builder.Append(farewell);
-
-            return builder.ToString();
-        }
-=======
-
-        }
->>>>>>> master
     }
 }

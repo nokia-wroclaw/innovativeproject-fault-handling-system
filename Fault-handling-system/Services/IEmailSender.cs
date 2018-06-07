@@ -11,7 +11,6 @@ namespace Fault_handling_system.Services
     public interface IEmailSender
     {
         Task SendEmailAsync(string email, string subject, string message);
-        Task SendDailyReport(string email, List<Report> todaysReports);
         Task SendEmailWithAttachmentsAsync(string email, string subject, string message, Attachment[] attachments);
     }
 }
