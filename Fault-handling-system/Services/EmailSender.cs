@@ -37,16 +37,34 @@ namespace Fault_handling_system.Services
             return Task.CompletedTask;
         }
 
+<<<<<<< HEAD
         public Task SendDailyReport(string email, List<Report> todaysReports) 
         {
             String subject = "Daily report";
             string message = buildMessage(email, todaysReports);
 
             SmtpClient smtpClient = new SmtpClient(_settings.SmtpServer, _settings.SmtpPort);
+=======
+        public Task SendEmailWithAttachmentsAsync(string email, string subject, string message, Attachment[] attachments)
+        {
+            SmtpClient smtpClient = new SmtpClient(_settings.SmtpServer, _settings.SmtpPort);
+            MailMessage msg = new MailMessage(_settings.MailAddress, email, subject, message);
+            foreach(Attachment attachment in attachments)
+            {
+                msg.Attachments.Add(attachment);
+            }
+
+            msg.IsBodyHtml = true;
+
+            smtpClient.SendMailAsync(msg);
+            return Task.CompletedTask;
+        }
+>>>>>>> master
             smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
             smtpClient.EnableSsl = true;
             smtpClient.UseDefaultCredentials = false;
             smtpClient.Credentials = new NetworkCredential(_settings.MailLogin, _settings.MailPassword);
+<<<<<<< HEAD
             
             MailMessage msg = new MailMessage(_settings.MailAddress, email, subject, message);
             msg.IsBodyHtml = true;
@@ -79,5 +97,9 @@ namespace Fault_handling_system.Services
 
             return builder.ToString();
         }
+=======
+
+        }
+>>>>>>> master
     }
 }

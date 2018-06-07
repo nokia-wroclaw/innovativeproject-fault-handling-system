@@ -21,6 +21,7 @@ namespace Fault_handling_system.Models
 		/// <value>User's navigation property.</value>
 		public virtual ApplicationUser User { get; set; }
 		/// <value>Filter's name.</value>
+		[Required]
 		public string Name { get; set; }
 		/// <value>Etr Number.</value>
 		public string EtrNumber { get; set; }

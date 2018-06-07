@@ -1,6 +1,8 @@
 ﻿using Fault_handling_system.Controllers;
 using Fault_handling_system.Data;
 using Fault_handling_system.Models;
+using Fault_handling_system.Repositories;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Quartz;
 using Quartz.Impl;
@@ -19,15 +21,18 @@ namespace Fault_handling_system.Services
         private IScheduler scheduler;
         private IEmailSender _emailSender;
         private readonly IServiceProvider _serviceProvider;
+        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IReportRepository _reportRepository;
 
 
-        public SchedulerService(ILogger<SchedulerController> logger, ApplicationDbContext context, IEmailSender emailSender, IServiceProvider serviceProvider)
+        public SchedulerService(ILogger<SchedulerController> logger, ApplicationDbContext context, IEmailSender emailSender, IServiceProvider serviceProvider, IHostingEnvironment hostingEnvironment, IReportRepository reportRepository)
         {
             _logger = logger;
             _context = context;
             _emailSender = emailSender;
             _serviceProvider = serviceProvider;
-
+            _hostingEnvironment = hostingEnvironment;
+            _reportRepository = reportRepository;
             InitSchedulerAsync();
             
         }
@@ -50,6 +55,8 @@ namespace Fault_handling_system.Services
             scheduler.Context.Put("emailSender", _emailSender);
             scheduler.Context.Put("context", _context);
             scheduler.Context.Put("serviceProvider", _serviceProvider);
+            scheduler.Context.Put("hostingEnvironment", _hostingEnvironment);
+            scheduler.Context.Put("reportRepository", _reportRepository);
 
             InitDailyReportJob();
 
@@ -198,6 +205,7 @@ namespace Fault_handling_system.Services
         {
             try
             {
+                String QuartzCron = ConvertUnixCronToQuartzCron(cron);
                 String interval = "Cron";
                 IJobDetail job = JobBuilder.Create<ReportSenderJob>()
                             .WithIdentity("job" + SchedulerFilterId, "group" + SchedulerFilterId)
@@ -208,9 +216,9 @@ namespace Fault_handling_system.Services
 
                 ITrigger trigger = TriggerBuilder.Create()
                        .StartNow()
-                        .WithCronSchedule(cron)
+                        .WithCronSchedule(QuartzCron)
                        .Build();
-
+                
                 AddNewJob(job, trigger).GetAwaiter().GetResult();
                 AddToDB(SchedulerFilterId, FilterId, UserId, interval, cron, null, null, MailingLists);
                 return true;
@@ -338,6 +346,24 @@ namespace Fault_handling_system.Services
             _context.SaveChanges();
         }
 
+        private String ConvertUnixCronToQuartzCron(String UnixCron)
+        {
+            UnixCron = UnixCron.Trim();
+            String QuartzCron;
+
+
+            if (UnixCron[UnixCron.Length-1] == '*')
+            {
+                QuartzCron = "0 " + UnixCron.Substring(0,UnixCron.Length-1) + "? *";
+            } else
+            {
+                QuartzCron = "0 " + UnixCron + " *";
+            }
+
+            _logger.LogDebug(QuartzCron);
+
+            return QuartzCron;
+        }
     }
 }
 
