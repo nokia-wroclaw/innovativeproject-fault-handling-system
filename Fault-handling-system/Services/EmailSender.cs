@@ -34,5 +34,24 @@ namespace Fault_handling_system.Services
             smtpClient.SendMailAsync(msg);
             return Task.CompletedTask;
         }
+
+        public Task SendEmailWithAttachmentsAsync(string email, string subject, string message, Attachment[] attachments)
+        {
+            SmtpClient smtpClient = new SmtpClient(_settings.SmtpServer, _settings.SmtpPort);
+            MailMessage msg = new MailMessage(_settings.MailAddress, email, subject, message);
+            foreach(Attachment attachment in attachments)
+            {
+                msg.Attachments.Add(attachment);
+            }
+            
+            smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+            smtpClient.EnableSsl = true;
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = new NetworkCredential(_settings.MailLogin, _settings.MailPassword);
+            msg.IsBodyHtml = true;
+
+            smtpClient.SendMailAsync(msg);
+            return Task.CompletedTask;
+        }
     }
 }
