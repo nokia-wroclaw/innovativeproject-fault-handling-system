@@ -16,6 +16,10 @@ using Quartz;
 
 namespace Fault_handling_system.Controllers
 {
+    /// <summary>
+    /// The main controller for scheduler.
+    /// Contains actions for create new job and start or stop created jobs
+    /// </summary>
     [Authorize]
     public class SchedulerController : Controller
     {
@@ -23,6 +27,12 @@ namespace Fault_handling_system.Controllers
         private ApplicationDbContext _context;
         private readonly ISchedulerService _scheduler;
 
+        /// <summary>
+        /// SchedulerController constructor.
+        /// </summary>
+        /// <param name="context">Instance of <c>ApplicationDbContext</c> is responsible for communication with SQL server</param>
+        /// <param name="logger">ILogger</param>
+        /// <param name="scheduler">ISchedulerService</param>
         public SchedulerController(ApplicationDbContext context,
             ILogger<SchedulerController> logger, ISchedulerService scheduler)
         {
@@ -31,7 +41,13 @@ namespace Fault_handling_system.Controllers
             _scheduler = scheduler;
             
         }
-
+        // GET: Scheduler
+        /// <summary>
+        /// Action <c>Index</c> can render a view with list of jobs from database.
+        /// </summary>
+        /// <returns>
+        /// ViewResult - list of created jobs
+        /// </returns>
         public async Task<IActionResult> Index()
         {
             var list = new List<SelectListItem>
@@ -74,6 +90,17 @@ namespace Fault_handling_system.Controllers
             return View(new ScheduleFilterViewModel(SchedulerFiltersList));
         }
 
+        // POST: Scheduler/AddNew
+        /// <summary>
+        /// Add new job to scheduler
+        /// </summary>
+        /// <param name="IntervalDropDown">Job interval</param>
+        /// <param name="FilterId">Filter Id</param>
+        /// <param name="Cron">Unix Cron</param>
+        /// <param name="Hour">Job hour</param>
+        /// <param name="DayOfWeek">Day of week</param>
+        /// <param name="MailingLists">List of mail</param>
+        /// <returns>ViewResult with all jobs</returns>
         [HttpPost]
         [Route("AddNew")]
         public async Task<IActionResult> AddNew(String IntervalDropDown, int FilterId, String Cron, String Hour, String DayOfWeek, String MailingLists)
@@ -108,6 +135,11 @@ namespace Fault_handling_system.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // POST: Scheduler/Start
+        /// <summary>
+        /// Start job
+        /// </summary>
+        /// <returns>ViewResult with all jobs</returns>
         [HttpPost]
         [Route("Start")]
         public async Task<IActionResult> Start(int Id)
@@ -116,6 +148,11 @@ namespace Fault_handling_system.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // POST: Scheduler/Stop
+        /// <summary>
+        /// Stop job
+        /// </summary>
+        /// <returns>ViewResult with all jobs</returns>
         [HttpPost]
         [Route("Stop")]
         public async Task<IActionResult> Stop(int Id)
@@ -124,6 +161,11 @@ namespace Fault_handling_system.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // POST: Scheduler/Delete
+        /// <summary>
+        /// Permamently delete job from scheduler
+        /// </summary>
+        /// <returns>ViewResult with all jobs</returns>
         [HttpPost]
         [Route("Delete")]
         public async Task<IActionResult> Delete(int Id)
@@ -132,6 +174,15 @@ namespace Fault_handling_system.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        /// <summary>
+        /// Add Cron Job to Scheduler.
+        /// </summary>
+        /// <param name="NewSchedulerFilterId">Scheduled Filter ID</param>
+        /// <param name="FilterId">Filter Id</param>
+        /// <param name="UserId">Creator Id</param>
+        /// <param name="Cron">Unix Cron</param>
+        /// <param name="MailingLists">List of mail</param>
+        /// <returns>True or false</returns>
         private bool AddCron(int NewSchedulerFilterId, int FilterId, String UserId, String Cron, String MailingLists)
         {
             if (ValidateCron(Cron))
@@ -146,6 +197,11 @@ namespace Fault_handling_system.Controllers
             
         }
 
+        /// <summary>
+        /// Validate Unix Cron.
+        /// </summary>
+        /// <param name="Cron">Unix Cron</param>
+        /// <returns>True or false</returns>
         private bool ValidateCron(String Cron)
         {
             Cron = Cron.Trim();
