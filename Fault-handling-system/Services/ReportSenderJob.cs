@@ -22,15 +22,20 @@ namespace Fault_handling_system.Services
         private IHostingEnvironment _hostingEnvironment;
         private IServiceProvider serviceProvider;
 
+        /// <summary>
+        /// Main functionality of Job.
+        /// Read all report from DB, filtered by Filter, export to Exel and send by Email
+        /// It is started by Scheduler.
+        /// </summary>
+        /// <param name="context">Scheduler Context</param>
         public async Task Execute(IJobExecutionContext context)
-    {
+        {
             var schedulerContext = context.Scheduler.Context;
             var logger = (ILogger)schedulerContext.Get("logger");
             var emailSender = (EmailSender)schedulerContext.Get("emailSender");
             serviceProvider = (IServiceProvider)schedulerContext.Get("serviceProvider");
             _hostingEnvironment = (IHostingEnvironment)schedulerContext.Get("hostingEnvironment");
-            //var DBcontext = (ApplicationDbContext)schedulerContext.Get("context");
-
+            
             JobDataMap dataMap = context.JobDetail.JobDataMap;
 
             string interval = dataMap.GetString("Interval");
@@ -51,7 +56,6 @@ namespace Fault_handling_system.Services
 
 
                 String email = ScheduleFilter.User.Email;
-                email = "fhs_test_scheduler@wp.pl";
                 String subject = ScheduleFilter.Filter.Name;
                 String[] MailinigList = { "" }; 
                 if (ScheduleFilter.MailingList != null)
@@ -82,6 +86,11 @@ namespace Fault_handling_system.Services
 
         }
 
+        /// <summary>
+        /// Email validator
+        /// </summary>
+        /// <param name="email">Email to check</param>
+        /// <returns>True or false</returns>
         private bool IsValidEmail(String email)
         {
             try
@@ -96,6 +105,12 @@ namespace Fault_handling_system.Services
             }
         }
 
+        /// <summary>
+        /// Read reports from DB and export do Excel 
+        /// </summary>
+        /// <param name="dbContext">DB context</param>
+        /// <param name="Filter">Filter</param>
+        /// <return>Excel Attachment</return>
         private Attachment GetExellFile(ApplicationDbContext dbContext, ReportFilter Filter)
         {
             using (IServiceScope scope = serviceProvider.CreateScope())
