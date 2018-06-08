@@ -35,8 +35,7 @@ namespace Fault_handling_system.Services
             var emailSender = (EmailSender)schedulerContext.Get("emailSender");
             serviceProvider = (IServiceProvider)schedulerContext.Get("serviceProvider");
             _hostingEnvironment = (IHostingEnvironment)schedulerContext.Get("hostingEnvironment");
-            //var DBcontext = (ApplicationDbContext)schedulerContext.Get("context");
-
+            
             JobDataMap dataMap = context.JobDetail.JobDataMap;
 
             string interval = dataMap.GetString("Interval");

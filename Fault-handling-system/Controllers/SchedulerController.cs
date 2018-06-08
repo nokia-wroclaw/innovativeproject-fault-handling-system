@@ -69,7 +69,7 @@ namespace Fault_handling_system.Controllers
             };
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            _logger.LogDebug(userId);
+            
             var filters = (from x in _context.ReportFilter
                                 where x.UserId.Equals(userId)
                                 select x);
@@ -78,7 +78,7 @@ namespace Fault_handling_system.Controllers
             ViewData["FilterId"] = new SelectList(filters, "Id", "Name", null);
             ViewData["DaysOfWeek"] = daysOfWeek;
 
-            _logger.LogDebug(userId);
+            
             var SchedulerFilters = _context.ScheduleFilter
                 .Include(r=>r.Filter)
                 .Where(r => r.UserId == userId)
@@ -131,7 +131,6 @@ namespace Fault_handling_system.Controllers
                     _logger.LogError("Wrong interval option");
                     break;
             }
-            _logger.LogDebug(status.ToString());
             return RedirectToAction(nameof(Index));
         }
 

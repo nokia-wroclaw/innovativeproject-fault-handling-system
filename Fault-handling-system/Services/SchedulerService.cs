@@ -89,7 +89,6 @@ namespace Fault_handling_system.Services
             {
                 if (scheduleFilter.Active)
                 {
-                    _logger.LogDebug(scheduleFilter.Id.ToString() + " " + "Odpalono");
                    ((ISchedulerService)this).StartReportSendJob(scheduleFilter.Id);
                 }              
             }
@@ -445,8 +444,6 @@ namespace Fault_handling_system.Services
             {
                 QuartzCron = "0 " + UnixCron + " *";
             }
-
-            _logger.LogDebug(QuartzCron);
 
             return QuartzCron;
         }
