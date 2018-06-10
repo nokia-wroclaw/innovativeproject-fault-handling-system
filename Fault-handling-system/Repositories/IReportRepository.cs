@@ -12,25 +12,26 @@ namespace Fault_handling_system.Repositories
 	public interface IReportRepository
     {
 		/// <summary>
-		/// 
+		/// Gets collection of reports, filters the reports with given
+		/// parameters and returns reports with filters applied.
 		/// </summary>
-		/// <param name="applicationDbContext">ApplicationDbContext used to connect with db.</param>
-		/// <param name="etrnumberS">Etr Number.</param>
-		/// <param name="priorityS">Priority.</param>
-		/// <param name="rfaidS">Rfa Id.</param>
-		/// <param name="rfanameS">Rfa Name.</param>
-		/// <param name="gradeS">Grade.</param>
-		/// <param name="troubletypeS">Trouble Type.</param>
-		/// <param name="dateissuedfromS">Date Issued From.</param>
-		/// <param name="dateissuedtoS">Date Issued To.</param>
-		/// <param name="datesentfromS">Date Sent From.</param>
-		/// <param name="datesenttoS">Date Sent To.</param>
-		/// <param name="etrstatusS">Etr Status.</param>
-		/// <param name="etrtypeS">Etr Type.</param>
-		/// <param name="nsncoordS">Nsn Coordinator name.</param>
-		/// <param name="subconS">Subcontractor name.</param>
-		/// <param name="zoneS">Zone name.</param>
-		/// <returns>Reports with filters applied</returns>
+		/// <param name="applicationDbContext">Reports</param>
+		/// <param name="etrnumberS">EtrNumber filter</param>
+		/// <param name="priorityS">Priority filter</param>
+		/// <param name="rfaidS">RfaId filter</param>
+		/// <param name="rfanameS">RfaName filter</param>
+		/// <param name="gradeS">Grade filter</param>
+		/// <param name="troubletypeS">TroubleType filter</param>
+		/// <param name="dateissuedfromS">DateIssued starting date</param>
+		/// <param name="dateissuedtoS">DateIssued ending date</param>
+		/// <param name="datesentfromS">DateSent starting date</param>
+		/// <param name="datesenttoS">DateSent ending date</param>
+		/// <param name="etrstatusS">EtrStatus filter</param>
+		/// <param name="etrtypeS">EtrType filter</param>
+		/// <param name="nsncoordS">NsnCoordinator filter (their UserName)</param>
+		/// <param name="subconS">Subcontractor filter (their UserName)</param>
+		/// <param name="zoneS">Zone filter</param>
+		/// <returns>Reports with filters applied.</returns>
 		IQueryable<Report> GetFilteredReports(IQueryable<Report> applicationDbContext, string etrnumberS, string priorityS, string rfaidS, string rfanameS, string gradeS, string troubletypeS, string dateissuedfromS, string dateissuedtoS, string datesentfromS, string datesenttoS, string etrstatusS, string etrtypeS, string nsncoordS, string subconS, string zoneS);
 		/// <summary>
 		/// Gets report by its id.

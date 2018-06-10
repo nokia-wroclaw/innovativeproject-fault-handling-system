@@ -20,11 +20,17 @@ namespace Fault_handling_system.Repositories
 		/// <summary>
 		/// Default constructor.
 		/// </summary>
+		/// <param name="applicationDbContext">ApplicationDbContext injected into repository.</param>
 		public ReportRepository(ApplicationDbContext applicationDbContext)
 		{
 			_context = applicationDbContext;
 		}
 
+		/// <summary>
+		/// Gets report by its id.
+		/// </summary>
+		/// <param name="id">Report's id.</param>
+		/// <returns>Report object or null if not found.</returns>
 		public async Task<Report> GetReportById(int? id)
 		{
 			var report = await (from x in _context.Report
@@ -34,6 +40,11 @@ namespace Fault_handling_system.Repositories
 			return report;
 		}
 
+		/// <summary>
+		/// Gets report by its id with entities referenced by foreign keys.
+		/// </summary>
+		/// <param name="id">Report's id.</param>
+		/// <returns>Report object or null if not found.</returns>
 		public async Task<Report> GetReportByIdWithNavigationProperties(int? id)
 		{
 			var report = await _context.Report
@@ -48,6 +59,11 @@ namespace Fault_handling_system.Repositories
 			return report;
 		}
 
+		/// <summary>
+		/// Gets report by its EtrNumber property's value.
+		/// </summary>
+		/// <param name="etrNumber">Report's EtrNumber property value.</param>
+		/// <returns>Report object or null if not found.</returns>
 		public async Task<Report> GetReportByEtrNumber(string etrNumber)
 		{
 			var report = await (from x in _context.Report
@@ -57,11 +73,22 @@ namespace Fault_handling_system.Repositories
 			return report;
 		}
 
+		/// <summary>
+		/// Gets all reports with entities referenced by navigation properties.
+		/// </summary>
+		/// <returns>All reports from database.</returns>
 		public IQueryable<Report> GetAllReportsWithNavigationProperties()
 		{
 			return _context.Report.Include(r => r.EtrStatus).Include(r => r.EtrType).Include(r => r.NsnCoordinator).Include(r => r.Requestor).Include(r => r.Subcontractor).Include(r => r.Zone).AsQueryable();
 		}
 
+		/// <summary>
+		/// Gets all reports where passed userId is present in Requestor, NsnCoordinator or Subcontractor
+		/// properties.
+		/// </summary>
+		/// <param name="userId">User's id.</param>
+		/// <returns>Reports where given user is present in Requestor, NsnCoordinator or Subcontractor
+		/// properties.</returns>
 		public IQueryable<Report> GetReportsWhereInvolved(string userId)
 		{
 			return _context.Report.Include(r => r.EtrStatus).Include(r => r.EtrType).Include(r => r.NsnCoordinator).Include(r => r.Requestor).Include(r => r.Subcontractor).Include(r => r.Zone).Where(r => r.NsnCoordinatorId == userId || r.SubcontractorId == userId || r.RequestorId == userId);
@@ -135,53 +162,5 @@ namespace Fault_handling_system.Repositories
 
 			return applicationDbContext;
 		}
-
-		/*public IQueryable<Report> GetFilteredReports(IQueryable<Report> applicationDbContext, ReportFilter filter)
-		{
-			if (!String.IsNullOrEmpty(filter.EtrNumber))
-				applicationDbContext = applicationDbContext.Where(r => r.EtrNumber.Contains(filter.EtrNumber));
-			if (!String.IsNullOrEmpty(filter.RfaId))
-				applicationDbContext = applicationDbContext.Where(r => r.RfaId.ToString().Contains(filter.RfaId));
-			if (!String.IsNullOrEmpty(filter.RfaName))
-				applicationDbContext = applicationDbContext.Where(r => r.RfaName.Contains(filter.RfaName));
-			if (!String.IsNullOrEmpty(filter.Priority))
-				applicationDbContext = applicationDbContext.Where(r => r.Priority.Contains(filter.Priority));
-			if (!String.IsNullOrEmpty(filter.Grade))
-				applicationDbContext = applicationDbContext.Where(r => r.Grade.ToString().Contains(filter.Grade));
-			if (!String.IsNullOrEmpty(filter.TroubleType))
-				applicationDbContext = applicationDbContext.Where(r => r.TroubleType.Contains(filter.TroubleType));
-			if (!String.IsNullOrEmpty(filter.DateIssuedFrom))
-			{
-				DateTime dateIssuedFrom = DateTime.ParseExact(filter.DateIssuedFrom, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
-				applicationDbContext = applicationDbContext.Where(r => r.DateIssued >= dateIssuedFrom);
-			}
-			if (!String.IsNullOrEmpty(filter.DateIssuedTo))
-			{
-				DateTime dateIssuedTo = DateTime.ParseExact(filter.DateIssuedTo, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
-				applicationDbContext = applicationDbContext.Where(r => r.DateIssued <= dateIssuedTo);
-			}
-			if (!String.IsNullOrEmpty(filter.DateSentFrom))
-			{
-				DateTime dateSentFrom = DateTime.ParseExact(filter.DateSentFrom, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
-				applicationDbContext = applicationDbContext.Where(r => r.DateSent >= dateSentFrom);
-			}
-			if (!String.IsNullOrEmpty(filter.DateSentTo))
-			{
-				DateTime dateSentTo = DateTime.ParseExact(filter.DateSentTo, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
-				applicationDbContext = applicationDbContext.Where(r => r.DateSent <= dateSentTo);
-			}
-			if (!String.IsNullOrEmpty(filter.EtrStatus))
-				applicationDbContext = applicationDbContext.Where(r => r.EtrStatus.Status.Contains(filter.EtrStatus));
-			if (!String.IsNullOrEmpty(filter.EtrType))
-				applicationDbContext = applicationDbContext.Where(r => r.EtrType.Type.Contains(filter.EtrType));
-			if (!String.IsNullOrEmpty(filter.NsnCoordinatorId))
-				applicationDbContext = applicationDbContext.Where(r => r.NsnCoordinator.UserName.Contains(filter.NsnCoordinatorId));
-			if (!String.IsNullOrEmpty(filter.SubcontractorId))
-				applicationDbContext = applicationDbContext.Where(r => r.Subcontractor.UserName.Contains(filter.SubcontractorId));
-			if (!String.IsNullOrEmpty(filter.Zone))
-				applicationDbContext = applicationDbContext.Where(r => r.Zone.ZoneName.Contains(filter.Zone));
-
-			return applicationDbContext;
-		}*/
 	}
 }
