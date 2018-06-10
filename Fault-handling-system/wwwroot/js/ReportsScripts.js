@@ -319,7 +319,7 @@ function startIntro()
 	intro.setOptions(options_before);
 	intro.start().onbeforechange(function ()
 	{
-		if (intro._currentStep == "3")
+		if (intro._currentStep == "2" || intro._currentStep == "3" || intro._currentStep == "4" || intro._currentStep == "5" || intro._currentStep == "6")
 		{
 			$('#filterCollapsible').collapse("show");
 		}

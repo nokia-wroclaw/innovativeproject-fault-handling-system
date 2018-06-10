@@ -39,7 +39,7 @@ namespace Fault_handling_system.Controllers
 		/// <param name="hostingEnvironment">Provides application-management functions and application services.</param>
 		/// <param name="context">Instance of <c>ApplicationDbContext</c> is responsible for communication with SQL server</param>
 		/// <param name="userManager">Instance of <c>UserManager</c> class.</param>
-		/// <param name="reportRepository"></param>
+		/// <param name="reportRepository">Repository that performs certain db related tasks.</param>
 		public ReportsController(IHostingEnvironment hostingEnvironment, ApplicationDbContext context, Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager, IReportRepository reportRepository)
         {
             _context = context;
@@ -692,7 +692,36 @@ namespace Fault_handling_system.Controllers
         {
             return _context.Report.Any(e => e.Id == id);
         }
-        
+
+		/// <summary>
+		/// Checks if a fiilter with given name and user id exists then either updates an existing filter
+		/// or creates a new one and saves the filter to database.
+		/// </summary>
+		/// <param name="filterName">Filter name.</param>
+		/// <param name="etrnumberS">Etr Number.</param>
+		/// <param name="priorityS">Priority.</param>
+		/// <param name="rfaidS">Rfa Id.</param>
+		/// <param name="rfanameS">Rfa Name.</param>
+		/// <param name="gradeS">Grade.</param>
+		/// <param name="troubletypeS">Trouble Type.</param>
+		/// <param name="dateissuedfromS">Date Issued From.</param>
+		/// <param name="dateissuedtoS">Date Issued To.</param>
+		/// <param name="dateissuedfromWeeksS">Date Issued From given by weeks back from now.</param>
+		/// <param name="dateissuedfromDaysS">Date Issued From given by days back from now.</param>
+		/// <param name="dateissuedtoWeeksS">Date Issued To given by weeks back from now.</param>
+		/// <param name="dateissuedtoDaysS">Date Issued To given by days back from now.</param>
+		/// <param name="datesentfromS">Date Sent From.</param>
+		/// <param name="datesenttoS">Date Sent To.</param>
+		/// <param name="datesentfromWeeksS">Date Sent From given by weeks back from now.</param>
+		/// <param name="datesentfromDaysS">Date Sent From given by days back from now.</param>
+		/// <param name="datesenttoWeeksS">Date Sent To given by weeks back from now.</param>
+		/// <param name="datesenttoDaysS">Date Sent To given by days back from now.</param>
+		/// <param name="etrstatusS">Etr Status.</param>
+		/// <param name="etrtypeS">Etr Type.</param>
+		/// <param name="nsncoordS">Nsn Coordinator name.</param>
+		/// <param name="subconS">Subcontractor name.</param>
+		/// <param name="zoneS">Zone name.</param>
+		/// <returns>Redirect to the page.</returns>
 		[HttpPost]
 		public async Task<IActionResult> SaveFilter(string filterName, string etrnumberS, string priorityS, string rfaidS, string rfanameS, string gradeS, string troubletypeS, string dateissuedfromS, string dateissuedtoS, string dateissuedfromWeeksS, string dateissuedfromDaysS, string dateissuedtoWeeksS, string dateissuedtoDaysS, string datesentfromS, string datesenttoS, string datesentfromWeeksS, string datesentfromDaysS, string datesenttoWeeksS, string datesenttoDaysS, string etrstatusS, string etrtypeS, string nsncoordS, string subconS, string zoneS)
 		{
@@ -800,6 +829,11 @@ namespace Fault_handling_system.Controllers
 			return Redirect(HttpContext.Request.Headers["Referer"].ToString());
 		}
 
+		/// <summary>
+		/// Gets filter by its id and returns it as json.
+		/// </summary>
+		/// <param name="id">Filter's id.</param>
+		/// <returns>Json containing the filter properties.</returns>
 		[HttpGet]
 		public async Task<JsonResult> GetFilter(int? id)
 		{
@@ -821,6 +855,11 @@ namespace Fault_handling_system.Controllers
 			return Json(filter);
 		}
 
+		/// <summary>
+		/// Deletes a filter if the name and owner's id match.
+		/// </summary>
+		/// <param name="filterName">Filter's name.</param>
+		/// <returns>Redirect to /Report/Index or 404 error page.</returns>
 		[HttpPost]
 		public async Task<IActionResult> DeleteFilter(string filterName)
 		{
@@ -950,16 +989,5 @@ namespace Fault_handling_system.Controllers
             }
             return File(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", sFileName);
         }
-		private IActionResult RedirectToLocal(string returnUrl)
-		{
-			if (Url.IsLocalUrl(returnUrl))
-			{
-				return Redirect(returnUrl);
-			}
-			else
-			{
-				return RedirectToAction(nameof(Index));
-			}
-		}
 	}
 }

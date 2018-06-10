@@ -1,6 +1,8 @@
 ﻿using Fault_handling_system.Controllers;
 using Fault_handling_system.Data;
 using Fault_handling_system.Models;
+using Fault_handling_system.Repositories;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Quartz;
 using Quartz.Impl;
@@ -12,6 +14,11 @@ using System.Threading.Tasks;
 
 namespace Fault_handling_system.Services
 {
+    /// <summary>
+    /// Scheduler Service.
+    /// Contains all created job and processes them.
+    /// Based on Quartz library.
+    /// </summary>
     public class SchedulerService : ISchedulerService
     {
         private ILogger<SchedulerController> _logger;
@@ -19,19 +26,34 @@ namespace Fault_handling_system.Services
         private IScheduler scheduler;
         private IEmailSender _emailSender;
         private readonly IServiceProvider _serviceProvider;
+        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IReportRepository _reportRepository;
 
-
-        public SchedulerService(ILogger<SchedulerController> logger, ApplicationDbContext context, IEmailSender emailSender, IServiceProvider serviceProvider)
+        /// <summary>
+        /// SchedulerService constructor.
+        /// </summary>
+        /// <param name="logger">ILogger</param>
+        /// <param name="context">Instance of <c>ApplicationDbContext</c> is responsible for communication with SQL server</param>
+        /// <param name="emailSender">emailSender</param>
+        /// <param name="serviceProvider">serviceProvider</param>
+        /// <param name="hostingEnvironment">IHostingEnvironment</param>
+        /// <param name="reportRepository">IReportRepository</param>
+        public SchedulerService(ILogger<SchedulerController> logger, ApplicationDbContext context, IEmailSender emailSender, IServiceProvider serviceProvider, IHostingEnvironment hostingEnvironment, IReportRepository reportRepository)
         {
             _logger = logger;
             _context = context;
             _emailSender = emailSender;
             _serviceProvider = serviceProvider;
-
+            _hostingEnvironment = hostingEnvironment;
+            _reportRepository = reportRepository;
             InitSchedulerAsync();
             
         }
 
+        /// <summary>
+        /// Initlize Scheduler work.
+        /// Create new Scheduler and put services to Context
+        /// </summary>
         async Task InitSchedulerAsync()
         {
             // Grab the Scheduler instance from the Factory
@@ -50,9 +72,16 @@ namespace Fault_handling_system.Services
             scheduler.Context.Put("emailSender", _emailSender);
             scheduler.Context.Put("context", _context);
             scheduler.Context.Put("serviceProvider", _serviceProvider);
+            scheduler.Context.Put("hostingEnvironment", _hostingEnvironment);
+            scheduler.Context.Put("reportRepository", _reportRepository);
 
             //InitScheduledFilters();
         }
+
+        /// <summary>
+        /// Initlize scheduled jobs.
+        /// Run all jobs with active status. Mainly, after app crash.
+        /// </summary>
         async Task InitScheduledFilters()
         {
             var ScheduleFilters = _context.ScheduleFilter;
@@ -60,17 +89,29 @@ namespace Fault_handling_system.Services
             {
                 if (scheduleFilter.Active)
                 {
-                    _logger.LogDebug(scheduleFilter.Id.ToString() + " " + "Odpalono");
                    ((ISchedulerService)this).StartReportSendJob(scheduleFilter.Id);
                 }              
             }
            
         }
+
+        /// <summary>
+        /// Stop scheduler work and shutdown it.
+        /// </summary>
         async Task CloseAsync()
         {
             await scheduler.Shutdown();
         }
 
+        /// <summary>
+        /// Add daily ReportSenderJob to Scheduler
+        /// </summary>
+        /// <param name="SchedulerFilterId">SchedulerFilterId</param>
+        /// <param name="FilterId">FilterId</param>
+        /// <param name="UserId">Creator Id</param>
+        /// <param name="Hour">Hour</param>
+        /// <param name="MailingLists">MailingLists</param>
+        /// <returns>True of false</returns>
         bool ISchedulerService.AddHourly(int SchedulerFilterId, int FilterId,String UserId, String Hour, String MailingLists)
         {
             try
@@ -104,6 +145,16 @@ namespace Fault_handling_system.Services
                 return false;
             }
         }
+
+        /// <summary>
+        /// Add hourly ReportSenderJob to Scheduler
+        /// </summary>
+        /// <param name="SchedulerFilterId">SchedulerFilterId</param>
+        /// <param name="FilterId">FilterId</param>
+        /// <param name="UserId">Creator Id</param>
+        /// <param name="Hour">Hour</param>
+        /// <param name="MailingLists">MailingLists</param>
+        /// <returns>True of false</returns>
         bool ISchedulerService.AddDaily(int SchedulerFilterId, int FilterId, String UserId, String Hour, String MailingLists)
         {
             try
@@ -137,6 +188,17 @@ namespace Fault_handling_system.Services
             }
 
         }
+
+        /// <summary>
+        /// Add weekly ReportSenderJob to Scheduler
+        /// </summary>
+        /// <param name="SchedulerFilterId">SchedulerFilterId</param>
+        /// <param name="FilterId">FilterId</param>
+        /// <param name="UserId">Creator Id</param>
+        /// <param name="Hour">Hour</param>
+        /// <param name="DayOfWeek">Day of week</param>
+        /// <param name="MailingLists">MailingLists</param>
+        /// <returns>True of false</returns>
         bool ISchedulerService.AddWeekly(int SchedulerFilterId, int FilterId, String UserId, String Hour, String DayOfWeek, String MailingLists)
         {
             try
@@ -176,10 +238,21 @@ namespace Fault_handling_system.Services
                 return false;
             }
         }
+
+        /// <summary>
+        /// Add cron ReportSenderJob to Scheduler
+        /// </summary>
+        /// <param name="SchedulerFilterId">SchedulerFilterId</param>
+        /// <param name="FilterId">FilterId</param>
+        /// <param name="UserId">Creator Id</param>
+        /// <param name="cron">Unix cron</param>
+        /// <param name="MailingLists">MailingLists</param>
+        /// <returns>True of false</returns>
         bool ISchedulerService.AddCron(int SchedulerFilterId, int FilterId, String UserId, String cron, String MailingLists)
         {
             try
             {
+                String QuartzCron = ConvertUnixCronToQuartzCron(cron);
                 String interval = "Cron";
                 IJobDetail job = JobBuilder.Create<ReportSenderJob>()
                             .WithIdentity("job" + SchedulerFilterId, "group" + SchedulerFilterId)
@@ -190,9 +263,9 @@ namespace Fault_handling_system.Services
 
                 ITrigger trigger = TriggerBuilder.Create()
                        .StartNow()
-                        .WithCronSchedule(cron)
+                        .WithCronSchedule(QuartzCron)
                        .Build();
-
+                
                 AddNewJob(job, trigger).GetAwaiter().GetResult();
                 AddToDB(SchedulerFilterId, FilterId, UserId, interval, cron, null, null, MailingLists);
                 return true;
@@ -204,6 +277,10 @@ namespace Fault_handling_system.Services
             }
         }
 
+        /// <summary>
+        /// Start ReportSenderJob
+        /// </summary>
+        /// <param name="SchedulerFilterId">SchedulerFilterId</param>
         void ISchedulerService.StartReportSendJob(int SchedulerFilterId)
         {
             var ScheduleFilter = _context.ScheduleFilter
@@ -233,6 +310,10 @@ namespace Fault_handling_system.Services
             }
         }
 
+        /// <summary>
+        /// Stop ReportSenderJob
+        /// </summary>
+        /// <param name="SchedulerFilterId">SchedulerFilterId</param>
         void ISchedulerService.StopReportSendJob(int SchedulerFilterId)
         {
             scheduler.DeleteJob(new JobKey("job"+SchedulerFilterId, "group"+SchedulerFilterId));
@@ -243,6 +324,10 @@ namespace Fault_handling_system.Services
             _context.SaveChanges();
         }
 
+        /// <summary>
+        /// Permamently remove ReportSenderJob
+        /// </summary>
+        /// <param name="SchedulerFilterId">SchedulerFilterId</param>
         void ISchedulerService.DeleteReportSendJob(int SchedulerFilterId)
         {
             scheduler.DeleteJob(new JobKey("job" + SchedulerFilterId, "group" + SchedulerFilterId));
@@ -252,6 +337,11 @@ namespace Fault_handling_system.Services
             _context.SaveChanges();
         }
 
+        /// <summary>
+        /// Add new Job to Scheduler
+        /// </summary>
+        /// <param name="job">Job</param>
+        /// <param name="trigger">Trigger</param>
         public async Task AddNewJob(IJobDetail job, ITrigger trigger)
         {
             try
@@ -266,6 +356,11 @@ namespace Fault_handling_system.Services
             }
         }
 
+        /// <summary>
+        /// Converter day of week
+        /// </summary>
+        /// <param name="DayOfWeek">Day of Week</param>
+        /// <returns>Number of day of week</returns>
         private int DayToInt(String DayOfWeek) {
             switch(DayOfWeek)
             {
@@ -289,6 +384,17 @@ namespace Fault_handling_system.Services
             }
         }
 
+        /// <summary>
+        /// Log information about Job and details to DB
+        /// </summary>
+        /// <param name="SchedulerFilterId">SchedulerFilterId</param>
+        /// <param name="FilterId">FilterId</param>
+        /// <param name="userId">Creator Id</param>
+        /// <param name="Invterval">Job Interval</param>
+        /// <param name="Cron">Unix Cron</param>
+        /// <param name="Hour">Job hour</param>
+        /// <param name="DayOfWeek">Day of Week</param>
+        /// <param name="MailingLists">List of mails</param>
         private async void AddToDB(int SchedulerFilterId, int FilterId, String userId, String Invterval, String Cron, String Hour, String DayOfWeek, String MailingLists)
         {
             var id = SchedulerFilterId;
@@ -320,6 +426,27 @@ namespace Fault_handling_system.Services
             _context.SaveChanges();
         }
 
+        /// <summary>
+        /// Convert Unix Cron to Quartz Cron expression
+        /// </summary>
+        /// <param name="UnixCron">Unix Cron</param>
+        /// <returns>Quartz Cron</returns>
+        private String ConvertUnixCronToQuartzCron(String UnixCron)
+        {
+            UnixCron = UnixCron.Trim();
+            String QuartzCron;
+
+
+            if (UnixCron[UnixCron.Length-1] == '*')
+            {
+                QuartzCron = "0 " + UnixCron.Substring(0,UnixCron.Length-1) + "? *";
+            } else
+            {
+                QuartzCron = "0 " + UnixCron + " *";
+            }
+
+            return QuartzCron;
+        }
     }
 }
 
