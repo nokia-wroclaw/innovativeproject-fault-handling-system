@@ -11,11 +11,11 @@ namespace Fault_handling_system.Models
 	/// </summary>
 	public class AdminContact
     {
-		/// <value>Admin's full name.</value>
-		public string FullName { get; set; }
-		/// <value>Admin's email address.</value>
-		public string Email { get; set; }
-		/// <value>Admin's phone number.</value>
-		public string PhoneNumber { get; set; }
+		/// <value>Line 1, can write anything, eg. admin's full name.</value>
+		public string ContactLine1 { get; set; }
+		/// <value>Line 2, can write anything, eg. admin's email address.</value>
+		public string ContactLine2 { get; set; }
+		/// <value>Line 3, can write anything, eg. admin's phone number.</value>
+		public string ContactLine3 { get; set; }
     }
 }

@@ -40,9 +40,9 @@ Place e-mail account configuration (and possibly database configuration) in
       "DoMailboxFetching": true,
       "CheckInterval": 15,
 	  "AdminContact": {
-		"FullName": "FirstName LastName",
-		"Email": "admin@example.com",
-		"PhoneNumber": "+48 999 888 777" 
+		"ContactLine1": "FirstName LastName",
+		"ContactLine2": "admin@example.com",
+		"ContactLine3": "+48 999 888 777" 
 	  },
 	  "Logging": {
 		"IncludeScopes": false,

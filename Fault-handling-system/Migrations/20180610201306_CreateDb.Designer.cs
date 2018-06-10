@@ -11,8 +11,8 @@ using System;
 namespace Faulthandlingsystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180605201816_ReportFilterNameRequired")]
-    partial class ReportFilterNameRequired
+    [Migration("20180610201306_CreateDb")]
+    partial class CreateDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
