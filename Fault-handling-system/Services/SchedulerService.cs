@@ -75,6 +75,8 @@ namespace Fault_handling_system.Services
             scheduler.Context.Put("hostingEnvironment", _hostingEnvironment);
             scheduler.Context.Put("reportRepository", _reportRepository);
 
+            InitDailyReportJob();
+
             //InitScheduledFilters();
         }
 
@@ -93,6 +95,24 @@ namespace Fault_handling_system.Services
                 }              
             }
            
+        }
+
+        /// <summary>
+        /// Initializes job responsible for sending daily reports to admins.
+        /// </summary>
+        void InitDailyReportJob()
+        {
+            IJobDetail job = JobBuilder.Create<DailyReportJob>()
+                        .Build();
+
+            string cron = "0 5 0 1/1 * ? *";
+
+            ITrigger trigger = TriggerBuilder.Create()
+                    .StartNow()
+                    .WithCronSchedule(cron)
+                    .Build();
+
+            AddNewJob(job, trigger).GetAwaiter().GetResult();
         }
 
         /// <summary>
