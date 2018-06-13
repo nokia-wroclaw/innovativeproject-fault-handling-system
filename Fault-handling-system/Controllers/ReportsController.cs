@@ -426,8 +426,8 @@ namespace Fault_handling_system.Controllers
 
             if (!Directory.Exists(path))
             {
-                return RedirectToAction("UserPage", "Account");
-            } else
+				return Redirect(HttpContext.Request.Headers["Referer"].ToString());
+			} else
             {
                 ZipFile.CreateFromDirectory(path, zipPath);
 
@@ -446,9 +446,7 @@ namespace Fault_handling_system.Controllers
                 {
                     System.IO.File.Delete(zipPath);
                 }
-            }
-
-            
+            }            
         }
 
         /// <summary>
@@ -457,7 +455,7 @@ namespace Fault_handling_system.Controllers
         /// <param name="id">Report ID in database</param>
         /// <returns>UserPage view</returns>
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteAttachments(int id)
+        public async Task<IActionResult> DeleteAttachments(int? id)
         {
             if (id == null)
             {
@@ -475,9 +473,10 @@ namespace Fault_handling_system.Controllers
             {
                 Directory.Delete(path, true);
             }
-            else return NotFound();
-            return RedirectToAction("UserPage", "Account");
-        }
+			//else return NotFound();
+			//return RedirectToAction("UserPage", "Account");
+			return Redirect(HttpContext.Request.Headers["Referer"].ToString());
+		}
 
         // GET: Reports/Edit/5
         /// <summary>
