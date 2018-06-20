@@ -30,8 +30,6 @@ services:
       - 8080:80
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      DoMailboxFetching: 'true'
-      CheckInterval: '15'
     volumes:
       - ./appsettings.json:/Fault-handling-system/appsettings.json
       - attachments:/Fault-handling-system/attachments

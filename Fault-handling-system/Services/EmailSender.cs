@@ -45,7 +45,11 @@ namespace Fault_handling_system.Services
                 msg.Attachments.Add(attachment);
             }
 
-            msg.IsBodyHtml = true;
+			smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+			smtpClient.EnableSsl = true;
+			smtpClient.UseDefaultCredentials = false;
+			smtpClient.Credentials = new NetworkCredential(_settings.MailLogin, _settings.MailPassword);
+			msg.IsBodyHtml = true;
 
             smtpClient.SendMailAsync(msg);
             return Task.CompletedTask;
