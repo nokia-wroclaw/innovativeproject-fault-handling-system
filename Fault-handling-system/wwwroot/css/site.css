@@ -26,20 +26,7 @@
     margin: 15px;
 }
 
-.sidenav {
-    /*height: 100%;
-    width: 0;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    background-color: #111;
-    overflow-x: hidden;
-    transition: 0.5s;
-    padding-top: 56px;*/
-}
-
-.sidenav .label-header {
+.collapsibleForm .label-header {
     color: whitesmoke;
     font-weight: bold;
     font-size: 32px;
@@ -48,7 +35,7 @@
     float: left;*/
 }
 
-.sidenav .label-white {
+.collapsibleForm .label-black {
     color: black;
     font-weight: bold;
     font-size: 14px;
@@ -56,7 +43,7 @@
     margin-bottom: 5px;
 }
 
-.sidenav ul li {
+.collapsibleForm ul li {
     margin-bottom: 3px;
 }
 
